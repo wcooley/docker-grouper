@@ -2,10 +2,6 @@
 
 load ../common
 
-@test "Shibd binary available" {
-  docker run -i $maintainer/$imagename find /usr/sbin/shibd
-}
-
-@test "Shibboleth root available" {
-  docker run -i $maintainer/$imagename find /etc/shibboleth
+@test "Grouper directory created" {
+  docker run -i $maintainer/$imagename find /opt/grouper/$version
 }

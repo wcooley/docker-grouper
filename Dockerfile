@@ -1,4 +1,4 @@
-FROM bigfleet/centos7base
+FROM bigfleet/shibboleth_sp
 
 # Define args and set a default value
 ARG maintainer=tier
@@ -11,29 +11,28 @@ LABEL ImageType="Base"
 LABEL ImageName=$imagename
 LABEL ImageOS=centos7
 LABEL Version=$version
+ENV VERSION=$version
+ENV TOMCAT_VERSION="6.0.35"
 
 LABEL Build docker build --rm --tag $maintainer/$imagename .
 
-RUN curl -o /etc/yum.repos.d/security:shibboleth.repo \
-      http://download.opensuse.org/repositories/security://shibboleth/CentOS_7/security:shibboleth.repo \
+COPY MariaDB.repo /etc/yum.repos.d/MariaDB.repo
+
+RUN mkdir -p /opt/grouper/$VERSION \
+      && curl -o /opt/grouper/$VERSION/grouperInstaller.jar http://software.internet2.edu/grouper/release/$VERSION/grouperInstaller.jar \
       && yum -y update \
       && yum -y install \
         dos2unix \
-        httpd \
+        expect \
         java-1.8.0-openjdk \
         java-1.8.0-openjdk-devel \
+        MariaDB-client \
         mlocate \
-        mod_ssl \
-        shibboleth.x86_64 \
-      && yum clean all \
-      && rm /etc/httpd/conf.d/autoindex.conf \
-      && rm /etc/httpd/conf.d/ssl.conf \
-      && rm /etc/httpd/conf.d/userdir.conf \
-      && rm /etc/httpd/conf.d/welcome.conf \
-      && mkdir -p /opt/grouper \
-      && curl -o /opt/grouper/grouperInstaller.jar http://software.internet2.edu/grouper/release/$version/grouperInstaller.jar
+      && yum clean all
       
-COPY httpd-shib-foreground /usr/local/bin/
+COPY grouper-install-expect.exp /opt/grouper/$version
+WORKDIR /opt/grouper/$version
 
-EXPOSE 80 443
-CMD ["httpd-shib-foreground"]
+VOLUME /opt/grouper/2.3.0/apache-tomcat-$TOMCAT_VERSION/logs
+
+EXPOSE 8080 8009 8005
