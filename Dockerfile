@@ -30,8 +30,9 @@ RUN mkdir -p /opt/grouper/$VERSION \
         mlocate \
       && yum clean all
       
-COPY grouper-install-expect.exp /opt/grouper/$version
+COPY grouper.installer.properties /opt/grouper/$version
 WORKDIR /opt/grouper/$version
+RUN java -cp .:grouperInstaller.jar edu.internet2.middleware.grouperInstaller.GrouperInstaller
 
 VOLUME /opt/grouper/2.3.0/apache-tomcat-$TOMCAT_VERSION/logs
 
