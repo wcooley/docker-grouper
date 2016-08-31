@@ -9,7 +9,7 @@ If you are reading this file in BINSCRIPTS.md, your container project is likely 
 To use these scripts yourself, issue this command:
 
 ```
-curl "https://github.internet2.edu/raw/docker/util/master/bin/install.sh?token=AAAAETsVKUnOEAMM8TvUUZccPYi13wsnks5Xq46jwA%3D%3D" | bash
+curl "https://github.internet2.edu/raw/docker/util/master/bin/install.sh?token=AAAAE4VRBLPB8VExPHSR5nCe791IAYqaks5Xzug5wA%3D%3D" | bash
 ```
 
 ### common.bash
