@@ -14,10 +14,18 @@ node('docker') {
       sh 'mv bin/* ../bin/.'
     }
   stage 'Environment'
-  
+
     def maintainer = maintainer()
     def imagename = imagename()
     def tag = env.BRANCH_NAME
+
+    // Tag images created on master branch with 'latest'
+    if(env.BRANCH_NAME == "master"){
+      tag = "latest"
+    }else{
+      tag = env.BRANCH_NAME
+    }
+    
     if(!imagename){
       echo "You must define an imagename in common.bash"
       currentBuild.result = 'FAILURE'
