@@ -10,9 +10,9 @@ if [ -e "/tmp/firsttimerunning" ]; then
 
     set -e
     
-    /root/configure.sh
-    
-    cd /opt/grouper/2.3.0/grouper.apiBinary-2.3.0 && GROUPER_HOME=/opt/grouper/2.3.0/grouper.apiBinary-2.3.0 bin/gsh.sh -check
+    /opt/bin/configure.sh
+
+    /opt/bin/check.sh
 
     rm -f /tmp/firsttimerunning 
 else

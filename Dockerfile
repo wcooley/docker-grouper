@@ -2,7 +2,7 @@ FROM bigfleet/shibboleth_sp
 
 # Define args and set a default value
 ARG maintainer=tier
-ARG imagename=shibboleth_sp
+ARG imagename=grouper
 ARG version=2.3.0
 
 MAINTAINER $maintainer
@@ -30,7 +30,7 @@ RUN mkdir -p /opt/grouper/$VERSION \
       && yum clean all
       
 # Add starters and installers
-ADD ./container_files /root
+ADD ./container_files /opt
 COPY grouper.installer.properties /opt/grouper/$version
 
 # The installer creates a HSQL DB which we ignore later
@@ -41,4 +41,4 @@ VOLUME /opt/grouper/2.3.0/apache-tomcat-$TOMCAT_VERSION/logs
 
 EXPOSE 8080 8009 8005
 
-CMD ["/root/container_start.sh"]
+CMD ["/opt/bin/container_start.sh"]
