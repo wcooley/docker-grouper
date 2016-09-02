@@ -21,19 +21,24 @@ COPY MariaDB.repo /etc/yum.repos.d/MariaDB.repo
 RUN mkdir -p /opt/grouper/$VERSION \
       && curl -o /opt/grouper/$VERSION/grouperInstaller.jar http://software.internet2.edu/grouper/release/$VERSION/grouperInstaller.jar \
       && yum -y update \
-      && yum -y install \
+      && yum -y install --setopt=tsflags=nodocs \
         dos2unix \
-        expect \
         java-1.8.0-openjdk \
         java-1.8.0-openjdk-devel \
         MariaDB-client \
         mlocate \
       && yum clean all
       
+# Add starters and installers
+ADD ./container_files /root
 COPY grouper.installer.properties /opt/grouper/$version
+
+# The installer creates a HSQL DB which we ignore later
 WORKDIR /opt/grouper/$version
-RUN java -cp .:grouperInstaller.jar edu.internet2.middleware.grouperInstaller.GrouperInstaller
+RUN java -cp :grouperInstaller.jar edu.internet2.middleware.grouperInstaller.GrouperInstaller
 
 VOLUME /opt/grouper/2.3.0/apache-tomcat-$TOMCAT_VERSION/logs
 
 EXPOSE 8080 8009 8005
+
+CMD ["/root/container_start.sh"]
