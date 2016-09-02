@@ -41,4 +41,4 @@ VOLUME /opt/grouper/2.3.0/apache-tomcat-$TOMCAT_VERSION/logs
 
 EXPOSE 8080 8009 8005
 
-CMD ["/opt/bin/container_start.sh"]
+CMD ["/opt/bin/start.sh"]
