@@ -38,3 +38,18 @@ load ../common
   docker run -i $maintainer/$imagename find /opt/grouper/$version/grouper.ws-$version
 }
 
+
+# Skipping: Unknown how much reconstruction we miss this way. [jvf]
+
+@test "Database subjects not created" {
+  skip
+  docker run -i $maintainer/$imagename find /opt/grouper/$version/subjects.sql
+}
+
+@test "Database does not add quickstart data" {
+  skip
+  docker run -i $maintainer/$imagename find /opt/grouper/$version/grouper.apiBinary-$version/ddlScripts
+}
+
+
+
