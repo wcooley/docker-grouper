@@ -16,7 +16,8 @@ if [ -e "/tmp/firsttimerunning" ]; then
 
     rm -f /tmp/firsttimerunning 
 else
-    echo "Grouper DB already provisioned" >> $log
+    echo "Grouper container has run." >> $log
+    echo "If there are problems, docker rm this container and try again." >> $log
 fi
 
 exit 0
