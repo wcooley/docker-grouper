@@ -17,7 +17,7 @@ then
   fi
 else
   echo "Composed so waiting for MariaDB: " > $log
-  /opt/wait-for-it/wait-for-it.sh $MYSQL_HOST:3306 -t 60 --strict --  /opt/bin/main.sh
+  /opt/wait-for-it/wait-for-it.sh $MYSQL_HOST:3306 -t $WAIT_TIME --strict --  /opt/bin/main.sh
   laststatus="$?"
   echo "Composed status: $laststatus"
   if [ "$laststatus" != "0" ]; then

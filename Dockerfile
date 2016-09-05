@@ -14,6 +14,8 @@ LABEL Version=$version
 ENV VERSION=$version
 ENV TOMCAT_VERSION="6.0.35"
 
+ENV WAIT_TIME=60
+
 LABEL Build docker build --rm --tag $maintainer/$imagename .
 
 COPY MariaDB.repo /etc/yum.repos.d/MariaDB.repo
