@@ -10,11 +10,12 @@ if [ -e "/tmp/firsttimerunning" ]; then
 
     set -e
     
-    /opt/bin/configure.sh
+    /opt/bin/configure.sh >> $log
 
-    /opt/bin/check.sh
+    /opt/bin/check.sh >> $log
 
-    rm -f /tmp/firsttimerunning 
+    /opt/bin/cleanup.sh >> $log
+ 
 else
     echo "Grouper container has run." >> $log
     echo "If there are problems, docker rm this container and try again." >> $log

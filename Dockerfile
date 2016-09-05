@@ -18,9 +18,11 @@ ENV WAIT_TIME=60
 
 LABEL Build docker build --rm --tag $maintainer/$imagename .
 
-COPY MariaDB.repo /etc/yum.repos.d/MariaDB.repo
+ADD container_files /opt
 
 RUN mkdir -p /opt/grouper/$VERSION \
+      && mv /opt/etc/grouper.installer.properties /opt/grouper/$VERSION/. \
+      && mv /opt/etc/MariaDB.repo /etc/yum.repos.d/MariaDB.repo \
       && curl -o /opt/grouper/$VERSION/grouperInstaller.jar http://software.internet2.edu/grouper/release/$VERSION/grouperInstaller.jar \
       && yum -y update \
       && yum -y install --setopt=tsflags=nodocs \
@@ -30,10 +32,6 @@ RUN mkdir -p /opt/grouper/$VERSION \
         MariaDB-client \
         mlocate \
       && yum clean all
-      
-# Add starters and installers
-ADD ./container_files /opt
-COPY grouper.installer.properties /opt/grouper/$version
 
 # The installer creates a HSQL DB which we ignore later
 WORKDIR /opt/grouper/$version
