@@ -1,6 +1,6 @@
 #!/bin/bash -x
 
-log="/tmp/start.log"
+log="/tmp/start-main.log"
 
 echo "Starting Container: " > $log
 date >> $log
@@ -20,5 +20,4 @@ else
     echo "Grouper container has run." >> $log
     echo "If there are problems, docker rm this container and try again." >> $log
 fi
-
 exit 0
