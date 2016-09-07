@@ -14,7 +14,8 @@ then
       exit 1
   else
       echo "Grouper was configured"
-      exit 0
+      echo "Starting apache"
+      /usr/local/bin/httpd-shib-foreground
   fi
 else
   echo "Composed so waiting for MariaDB: " > $log
@@ -36,6 +37,7 @@ else
       exit 1
   else
       echo "Grouper was configured"
-      exit 0
+      echo "Starting apache"
+      /usr/local/bin/httpd-shib-foreground
   fi
 fi
