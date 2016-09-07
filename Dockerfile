@@ -29,15 +29,20 @@ RUN mkdir -p /opt/grouper/$VERSION \
         java-1.8.0-openjdk \
         java-1.8.0-openjdk-devel \
         MariaDB-client \
+        supervisor \
         mlocate \
       && yum clean all
 
 # The installer creates a HSQL DB which we ignore later
+
+RUN mkdir -p /var/log/supervisor
+RUN mv /etc/supervisord.conf /etc/supervisord.conf.old
+COPY container_files/conf/supervisord.conf /etc
 WORKDIR /opt/grouper/$version
 RUN java -cp :grouperInstaller.jar edu.internet2.middleware.grouperInstaller.GrouperInstaller
 
 VOLUME /opt/grouper/2.3.0/apache-tomcat-$TOMCAT_VERSION/logs
 
 EXPOSE 8080 8009 8005
-
-CMD ["/opt/bin/start.sh"]
+CMD ["/usr/bin/supervisord"]
+#CMD ["/opt/bin/start.sh"]
