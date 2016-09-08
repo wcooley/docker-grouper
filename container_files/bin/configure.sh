@@ -1,7 +1,7 @@
 #!/bin/bash
 
-log="/tmp/grouper.log"
-
+log="/tmp/grouper-configure.log"
+date >> $log
 #sed -i "s|#GROUPER_SYSTEM_PASSWORD#|$GROUPER_SYSTEM_PASSWORD|g" /opt/etc/grouper.installer.properties >> $log
 
 # Long-lived configuration values, these are symlinked into place
