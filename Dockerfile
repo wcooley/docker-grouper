@@ -43,6 +43,5 @@ RUN java -cp :grouperInstaller.jar edu.internet2.middleware.grouperInstaller.Gro
 
 VOLUME /opt/grouper/2.3.0/apache-tomcat-$TOMCAT_VERSION/logs
 
-EXPOSE 8080 8009 8005
+EXPOSE 8080 8009 8005 9001
 CMD ["/usr/bin/supervisord"]
-#CMD ["/opt/bin/start.sh"]
