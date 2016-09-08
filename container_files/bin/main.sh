@@ -20,4 +20,4 @@ else
     echo "Grouper container has run." >> $log
     echo "If there are problems, docker rm this container and try again." >> $log
 fi
-exit 0
+#exit 0
