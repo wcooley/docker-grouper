@@ -11,12 +11,14 @@ then
   if [ "$laststatus" != "0" ]; then
       echo "Not composed non-zero exit status: $laststatus" >> $log
       echo "Not composed non-zero exit status: $laststatus"
+      /opt/autoexec/bin/firstrun.sh
       exit 1
   else
       echo "Grouper was configured" >>$log
       echo "Grouper was configured"
       echo "Starting tomcat and apache" >>$log
       echo "Starting tomcat and apache"
+      /opt/autoexec/bin/firstrun.sh
       /usr/local/bin/httpd-shib-foreground &
       /opt/grouper/2.3.0/apache-tomcat-6.0.35/bin/catalina.sh run 
   fi
@@ -42,12 +44,14 @@ else
   if [ "$laststatus" != "0" ]; then
       echo "Composed non-zero exit status: $laststatus" >> $log
       echo "Composed non-zero exit status: $laststatus"
+      /opt/autoexec/bin/firstrun.sh
       exit 1
   else
       echo "Grouper was configured" >>$log
       echo "Grouper was configured"
       echo "Starting tomcat and apache" >>$log
       echo "Starting tomcat and apache"
+      /opt/autoexec/bin/firstrun.sh
       date >> $log
       /usr/local/bin/httpd-shib-foreground &
       /opt/grouper/2.3.0/apache-tomcat-6.0.35/bin/catalina.sh run 
