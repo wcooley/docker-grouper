@@ -67,6 +67,10 @@ node('docker') {
           def baseImg = docker.build("$maintainer/$imagename")
           baseImg.push("$tag")
     }
+    
+  stage 'Notify'
+
+    slackSend color: 'good', message: "$maintainer/$imagename:$tag pushed to DockerHub"
 
 
 }
