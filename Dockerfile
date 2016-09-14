@@ -1,4 +1,4 @@
-FROM bigfleet/shibboleth_sp
+FROM tier/shibboleth_sp
 
 # Define args and set a default value
 ARG maintainer=tier
@@ -31,6 +31,8 @@ RUN mkdir -p /opt/grouper/$VERSION \
         MariaDB-client \
         mlocate \
       && yum clean all
+
+
 
 # The installer creates a HSQL DB which we ignore later
 

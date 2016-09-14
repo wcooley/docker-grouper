@@ -36,7 +36,7 @@ node('docker') {
 
   stage 'Build'
     try{
-      sh 'bin/build.sh &> debug'
+      sh 'bin/rebuild.sh &> debug'
     } catch(error) {
       def error_details = readFile('./debug');
       def message = "BUILD ERROR: There was a problem building the Base Image. \n\n ${error_details}"
@@ -49,8 +49,15 @@ node('docker') {
 
   stage 'Tests'
 
-    sh 'bin/test.sh'
-    // should build a finally construct here
+    try{
+      sh 'bin/test.sh &> debug'
+    } catch(error) {
+      def error_details = readFile('./debug');
+      def message = "BUILD ERROR: There was a problem testing ${imagename}:${tag}. \n\n ${error_details}"
+      sh "rm -f ./debug"
+      handleError(message)
+    }
+    
   stage 'Stop container'
 
     sh 'bin/ci-stop.sh'
