@@ -29,9 +29,12 @@ RUN mkdir -p /opt/grouper/$VERSION \
         dos2unix \
         MariaDB-client \
         mlocate \
-      && yum clean all
-      
-RUN /opt/autoexec/bin/onbuild.sh
+      && yum clean all \
+      && /opt/autoexec/bin/onbuild.sh \
+      && rm /opt/grouper/$version/grouper.ws-$version/grouper-ws/build/dist/grouper-ws/WEB-INF/classes/grouper.hibernate.properties && \
+    cp /opt/etc/grouper.hibernate.pointer.properties /opt/grouper/$version/grouper.ws-$version/grouper-ws/build/dist/grouper-ws/WEB-INF/classes/grouper.hibernate.properties && \
+    rm /opt/grouper/$version/grouper.ui-$version/dist/grouper/WEB-INF/classes/grouper.hibernate.properties && \
+    cp /opt/etc/grouper.hibernate.pointer.properties /opt/grouper/$version/grouper.ui-$version/dist/grouper/WEB-INF/classes/grouper.hibernate.properties
 
 # The installer creates a HSQL DB which we ignore later
 
