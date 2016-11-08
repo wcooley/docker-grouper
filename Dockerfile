@@ -18,6 +18,7 @@ ENV WAIT_TIME=60
 LABEL Build docker build --rm --tag $maintainer/$imagename .
 
 ADD container_files /opt
+ONBUILD ADD additional_container_files /opt
 
 RUN mkdir -p /opt/grouper/$VERSION \
       && mv /opt/etc/grouper.installer.properties /opt/grouper/$VERSION/. \
@@ -26,20 +27,17 @@ RUN mkdir -p /opt/grouper/$VERSION \
       && yum -y update \
       && yum -y install --setopt=tsflags=nodocs \
         dos2unix \
-        java-1.8.0-openjdk \
-        java-1.8.0-openjdk-devel \
         MariaDB-client \
         mlocate \
       && yum clean all
-
-
+      
+RUN /opt/autoexec/bin/onbuild.sh
 
 # The installer creates a HSQL DB which we ignore later
 
 WORKDIR /opt/grouper/$version
-RUN java -cp :grouperInstaller.jar edu.internet2.middleware.grouperInstaller.GrouperInstaller
 
-VOLUME /opt/grouper/2.3.0/apache-tomcat-$TOMCAT_VERSION/logs
+#VOLUME /opt/grouper/2.3.0/apache-tomcat-$TOMCAT_VERSION/logs
 
 EXPOSE 8080 8009 8005 
 CMD ["/opt/bin/start.sh"]
