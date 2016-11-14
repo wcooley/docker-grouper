@@ -38,6 +38,10 @@ load ../common
   docker run -i $maintainer/$imagename find /opt/grouper/$version/grouper.ws-$version
 }
 
+@test "Tarball patch directory created" {
+  docker run -i $maintainer/$imagename find /opt/grouper/$version/tarballs/patches
+}
+
 
 # Skipping: Unknown how much reconstruction we miss this way. [jvf]
 
