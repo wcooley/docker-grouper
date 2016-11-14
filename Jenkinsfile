@@ -36,7 +36,7 @@ node('docker') {
 
   stage 'Build'
     try{
-      sh 'bin/rebuild.sh &> debug'
+      sh 'bin/rebuild.sh >> debug'
     } catch(error) {
       def error_details = readFile('./debug');
       def message = "BUILD ERROR: There was a problem building the Base Image. \n\n ${error_details}"

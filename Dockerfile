@@ -23,7 +23,7 @@ ONBUILD ADD additional_container_files /opt
 RUN mkdir -p /opt/grouper/$VERSION \
       && mv /opt/etc/grouper.installer.properties /opt/grouper/$VERSION/. \
       && mv /opt/etc/MariaDB.repo /etc/yum.repos.d/MariaDB.repo \
-      && curl -o /opt/grouper/$VERSION/grouperInstaller.jar http://software.internet2.edu/grouper/release/$VERSION/grouperInstaller.jar \
+      && curl -o /opt/grouper/$VERSION/grouperInstaller.jar https://software.internet2.edu/grouper/release/$VERSION/grouperInstaller.jar \
       && yum -y update \
       && yum -y install --setopt=tsflags=nodocs \
         dos2unix \
