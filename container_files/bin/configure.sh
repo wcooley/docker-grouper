@@ -27,5 +27,8 @@ cat /opt/etc/grouper.hibernate.properties >> $log
 cat /opt/etc/grouper.properties >> $log
 
 #Configure gsh loader
-sed -i '1s/^/PWD=/opt/grouper/$VERSION/grouper.apiBinary-$VERSION/bin/ ' /opt/grouper/$VERSION/grouper.apiBinary-$VERSION/bin/gsh >> $log
-sed -i '1s/^/GROUPER_HOME=/opt/grouper/$VERSION/grouper.apiBinary-$VERSION/bin/ ' /opt/grouper/$VERSION/grouper.apiBinary-$VERSION/bin/gsh  >> $log
+sed -i "1s|^|\n |" /opt/grouper/$VERSION/grouper.apiBinary-$VERSION/bin/gsh >> $log
+sed -i "1s|^|PWD=/opt/grouper/$VERSION/grouper.apiBinary-$VERSION/bin/ |" /opt/grouper/$VERSION/grouper.apiBinary-$VERSION/bin/gsh >> $log
+sed -i "1s|^|\n |" /opt/grouper/$VERSION/grouper.apiBinary-$VERSION/bin/gsh >> $log
+sed -i "1s|^|GROUPER_HOME=/opt/grouper/$VERSION/grouper.apiBinary-$VERSION/bin/ |' /opt/grouper/$VERSION/grouper.apiBinary-$VERSION/bin/gsh  >> $log
+some text at the beginning
