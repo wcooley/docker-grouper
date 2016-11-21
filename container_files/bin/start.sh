@@ -54,8 +54,7 @@ else
       /opt/autoexec/bin/firstrun.sh
       date >> $log
       /usr/local/bin/httpd-shib-foreground &
-      cd /opt/grouper/$VERSION/grouper.apiBinary-$VERSION/
-      ./gsh -loader &
-      /opt/grouper/2.3.0/apache-tomcat-6.0.35/bin/catalina.sh run 
+      /opt/grouper/2.3.0/apache-tomcat-6.0.35/bin/catalina.sh run &
+      PWD=/opt/grouper/$VERSION/grouper.apiBinary-$VERSION/bin /opt/grouper/$VERSION/grouper.apiBinary-$VERSION/bin/gsh -loader
   fi
 fi
