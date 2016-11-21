@@ -25,3 +25,7 @@ sed -i "s|#MYSQL_DATABASE#|$MYSQL_DATABASE|g" /opt/etc/grouper.properties >> $lo
 cat /opt/etc/grouper.hibernate.properties >> $log
 
 cat /opt/etc/grouper.properties >> $log
+
+#Configure gsh loader
+sed -i '1s/^/PWD=/opt/grouper/$version/grouper.apiBinary-$version/bin/' /opt/grouper/$version/grouper.apiBinary-$version/bin/gsh >> $log
+sed -i '1s/^/GROUPER_HOME=/opt/grouper/$version/grouper.apiBinary-$version/bin/' /opt/grouper/$version/grouper.apiBinary-$version/bin/gsh  >> $log
