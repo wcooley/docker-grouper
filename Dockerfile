@@ -39,6 +39,7 @@ RUN mkdir -p /opt/grouper/$VERSION \
     cp /opt/etc/grouper.hibernate.pointer.properties /opt/grouper/$version/grouper.ws-$version/grouper-ws/build/dist/grouper-ws/WEB-INF/classes/grouper.hibernate.properties && \
     rm /opt/grouper/$version/grouper.ui-$version/dist/grouper/WEB-INF/classes/grouper.hibernate.properties && \
     cp /opt/etc/grouper.hibernate.pointer.properties /opt/grouper/$version/grouper.ui-$version/dist/grouper/WEB-INF/classes/grouper.hibernate.properties && \
+    ln -sf /opt/bin/run.sh /usr/local/bin/run.sh && \
     updatedb
 
     #/opt/grouper/2.3.0/grouper.apiBinary-2.3.0/conf/grouper.hibernate.properties

@@ -20,7 +20,9 @@ then
       echo "Starting tomcat and apache"
       /opt/autoexec/bin/firstrun.sh
       /usr/local/bin/httpd-shib-foreground &
-      /opt/grouper/2.3.0/apache-tomcat-6.0.35/bin/catalina.sh run 
+      /opt/grouper/2.3.0/apache-tomcat-6.0.35/bin/catalina.sh run &
+      /opt/grouper/$VERSION/grouper.apiBinary-$VERSION/bin/gsh -loader &
+      /usr/local/bin/run.sh
   fi
 else
   echo "Composed so waiting for MariaDB: " > $log
@@ -54,6 +56,8 @@ else
       /opt/autoexec/bin/firstrun.sh
       date >> $log
       /usr/local/bin/httpd-shib-foreground &
-      /opt/grouper/2.3.0/apache-tomcat-6.0.35/bin/catalina.sh run 
+      /opt/grouper/2.3.0/apache-tomcat-6.0.35/bin/catalina.sh run &
+      /opt/grouper/$VERSION/grouper.apiBinary-$VERSION/bin/gsh -loader &
+      /usr/local/bin/run.sh
   fi
 fi
