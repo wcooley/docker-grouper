@@ -55,6 +55,6 @@ else
       date >> $log
       /usr/local/bin/httpd-shib-foreground &
       /opt/grouper/2.3.0/apache-tomcat-6.0.35/bin/catalina.sh run &
-      /opt/grouper/$version/grouper.apiBinary-$version/bin/gsh -loader
+      /opt/grouper/$VERSION/grouper.apiBinary-$VERSION/bin/gsh -loader
   fi
 fi
