@@ -4,6 +4,7 @@ FROM tier/shibboleth_sp
 ARG maintainer=tier
 ARG imagename=grouper
 ARG version=2.3.0
+ARG tierversion=17020
 
 MAINTAINER $maintainer
 LABEL Vendor="Internet2"
@@ -11,7 +12,12 @@ LABEL ImageType="Base"
 LABEL ImageName=$imagename
 LABEL ImageOS=centos7
 LABEL Version=$version
+
 ENV VERSION=$version
+ENV TIERVERSION=$tierversion
+ENV IMAGENAME=$imagename
+ENV MAINTAINER=$maintainer
+
 ENV TOMCAT_VERSION="6.0.35"
 ENV WAIT_TIME=60
 
@@ -43,8 +49,7 @@ RUN mkdir -p /opt/grouper/$VERSION \
     updatedb
 
     #/opt/grouper/2.3.0/grouper.apiBinary-2.3.0/conf/grouper.hibernate.properties
-    
-
+	
 # The installer creates a HSQL DB which we ignore later
 
 WORKDIR /opt/grouper/$version
@@ -52,4 +57,13 @@ WORKDIR /opt/grouper/$version
 #VOLUME /opt/grouper/2.3.0/apache-tomcat-$TOMCAT_VERSION/logs
 
 EXPOSE 8080 8009 8005 
-CMD ["/opt/bin/start.sh"]
+
+ADD files/bin/setenv.sh /opt/tier/setenv.sh
+RUN chmod +x /opt/tier/setenv.sh
+ADD files/bin/startup.sh /usr/bin/startup.sh
+RUN chmod +x /usr/bin/startup.sh
+ADD files/bin/sendtierbeacon.sh /usr/bin/sendtierbeacon.sh
+RUN chmod +x /usr/bin/sendtierbeacon.sh
+
+
+CMD ["/usr/bin/startup.sh"]
