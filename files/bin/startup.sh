@@ -20,4 +20,4 @@ touch /var/log/cron.log
 /usr/sbin/crond
 
 #from intermediate container's CMD directive
-CMD ["/opt/bin/start.sh"]
+/opt/bin/start.sh
