@@ -49,6 +49,10 @@ RUN mkdir -p /opt/grouper/$VERSION \
     updatedb
 
     #/opt/grouper/2.3.0/grouper.apiBinary-2.3.0/conf/grouper.hibernate.properties
+    
+# Export this variable so that shibd can find it's CURL library
+RUN LD_LIBRARY_PATH="/opt/shibboleth/lib64"
+RUN export LD_LIBRARY_PATH
 	
 # The installer creates a HSQL DB which we ignore later
 
