@@ -67,7 +67,7 @@ node('docker') {
           def baseImg = docker.build("$maintainer/$imagename")
           baseImg.push("$tag")
           // Push to private repo to do security scan on container
-          def baseImg = docker.build("tieradmin/security-scan-$imagename")
+          baseImg = docker.build("tieradmin/security-scan-$imagename")
           baseImg.push("$tag")
     }
     
