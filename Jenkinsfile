@@ -66,9 +66,7 @@ node('docker') {
     docker.withRegistry('https://registry.hub.docker.com/',   "dockerhub-$maintainer") {
           def baseImg = docker.build("$maintainer/$imagename")
           baseImg.push("$tag")
-    }
-    // Push to private repo to do security scan on container
-    docker.withRegistry('https://registry.hub.docker.com/',   "dockerhub-$maintainer") {
+          // Push to private repo to do security scan on container
           def baseImg = docker.build("tieradmin/security-scan-$imagename")
           baseImg.push("$tag")
     }
