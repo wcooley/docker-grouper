@@ -21,7 +21,7 @@ then
       /opt/autoexec/bin/firstrun.sh
       echo "Adding TIER folder structure" >>$log
       echo "Adding TIER folder structure"
-      /opt/bin/tier-bootstrap.gsh
+      /opt/grouper/$VERSION/grouper.apiBinary-$VERSION/bin/gsh /opt/bin/tier-bootstrap.gsh
       /usr/local/bin/httpd-shib-foreground &
       /opt/grouper/2.3.0/apache-tomcat-$TOMCAT_VERSION/bin/catalina.sh run &
       /opt/grouper/$VERSION/grouper.apiBinary-$VERSION/bin/gsh -loader &
