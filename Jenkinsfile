@@ -67,8 +67,8 @@ node('docker') {
           def baseImg = docker.build("$maintainer/$imagename", "--no-cache .")
           baseImg.push("$tag")
           // Push to private repo to do security scan on container
-          baseImg = docker.build("tieradmin/security-scan-$imagename")
-          baseImg.push("$tag")
+          // baseImg = docker.build("tieradmin/security-scan-$imagename")
+          // baseImg.push("$tag")
     }
     
   stage 'Notify'
