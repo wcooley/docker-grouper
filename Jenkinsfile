@@ -1,84 +1,64 @@
-node('docker') {
 
-  stage 'Checkout'
-
-    checkout scm
-
-  stage 'Acquire util'
-
-    sh 'mkdir -p tmp'
-    dir('tmp'){
-      git([ url: "https://github.internet2.edu/docker/util.git",
-          credentialsId: "jenkins-github-access-token" ])
-      sh 'ls'
-      sh 'mv bin/* ../bin/.'
+pipeline {
+    agent any
+    environment { 
+        maintainer = "t"
+        imagename = 'g'
+        tag = 'l'
     }
-  stage 'Environment'
-
-    def maintainer = maintainer()
-    def imagename = imagename()
-    def tag = env.BRANCH_NAME
-
-    // Tag images created on master branch with 'latest'
-    if(env.BRANCH_NAME == "master"){
-      tag = "latest"
-    }else{
-      tag = env.BRANCH_NAME
+    stages {
+        stage('Setting build context') {
+            steps {
+                script {
+                    maintainer = maintain()
+                    imagename = imagename()
+                    if(env.BRANCH_NAME == "master") {
+                       tag = "latest"
+                    } else {
+                       tag = env.BRANCH_NAME
+                    }
+                    if(!imagename){
+                        echo "You must define an imagename in common.bash"
+                        currentBuild.result = 'FAILURE'
+                     }
+                } 
+             }
+        }    
+        stage('Build') {
+            steps {
+                echo 'step 2'
+            }
+        } 
+        stage('Push') {
+            steps {
+                script {
+                   docker.withRegistry('https://registry.hub.docker.com/',   "dockerhub-$maintainer") {
+                      def baseImg = docker.build("$maintainer/$imagename")
+                      baseImg.push("$tag")
+                   }
+               }
+            }
+        }
+        stage('Notify') {
+            steps{
+                echo "$maintainer"
+                slackSend color: 'good', message: "$maintainer/$imagename:$tag pushed to DockerHub"
+            }
+        }
     }
-    
-    if(!imagename){
-      echo "You must define an imagename in common.bash"
-      currentBuild.result = 'FAILURE'
+    post { 
+        always { 
+            echo 'I will always say Hello again!'
+        }
+        failure {
+            // slackSend color: 'good', message: "Build failed"
+            handleError("BUILD ERROR: There was a problem building ${maintainer}/${imagename}:${tag}.")
+        }
     }
-    if(maintainer){
-      echo "Building ${maintainer}:${tag} for ${maintainer}"
-    }
-
-  stage 'Build'
-    try{
-      sh 'bin/rebuild.sh >> debug'
-    } catch(error) {
-      def error_details = readFile('./debug');
-      def message = "BUILD ERROR: There was a problem building the Base Image. \n\n ${error_details}"
-      sh "rm -f ./debug"
-      handleError(message)
-    }
-  stage 'Start container'
-
-    sh 'bin/ci-run.sh'
-
-  stage 'Tests'
-
-    try{
-      sh 'bin/test.sh &> debug'
-    } catch(error) {
-      def error_details = readFile('./debug');
-      def message = "BUILD ERROR: There was a problem testing ${imagename}:${tag}. \n\n ${error_details}"
-      sh "rm -f ./debug"
-      handleError(message)
-    }
-    
-  stage 'Stop container'
-
-    sh 'bin/ci-stop.sh'
-
-  stage 'Push'
-    docker.withRegistry('https://registry.hub.docker.com/',   "dockerhub-$maintainer") {
-          def baseImg = docker.build("$maintainer/$imagename", "--no-cache .")
-          baseImg.push("$tag")
-          // Push to private repo to do security scan on container
-          // baseImg = docker.build("tieradmin/security-scan-$imagename")
-          // baseImg.push("$tag")
-    }
-    
-  stage 'Notify'
-
-    slackSend color: 'good', message: "$maintainer/$imagename:$tag pushed to DockerHub"
-
-
 }
 
-def maintainer() {
+
+def maintain() {
   def matcher = readFile('common.bash') =~ 'maintainer="(.+)"'
   matcher ? matcher[0][1] : 'tier'
 }
@@ -92,5 +72,6 @@ def handleError(String message){
   echo "${message}"
   currentBuild.setResult("FAILED")
   slackSend color: 'danger', message: "${message}"
+  //step([$class: 'Mailer', notifyEveryUnstableBuild: true, recipients: 'chris.bynum@levvel.io', sendToIndividuals: true])
   sh 'exit 1'
 }

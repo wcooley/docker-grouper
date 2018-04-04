@@ -1,73 +1,131 @@
+FROM centos:centos7 as installing
+
+RUN yum update -y \
+    && yum install -y wget tar unzip dos2unix \
+    && yum clean all
+
+ENV GROUPER_VERSION=2.3.0 \
+    JAVA_HOME=/opt/java
+
+RUN java_version=8.0.131; \
+    zulu_version=8.21.0.1; \
+    echo 'Downloading the OpenJDK Zulu...' \
+    && wget -q http://cdn.azul.com/zulu/bin/zulu$zulu_version-jdk$java_version-linux_x64.tar.gz \
+    && echo "1931ed3beedee0b16fb7fd37e069b162  zulu$zulu_version-jdk$java_version-linux_x64.tar.gz" | md5sum -c - \
+    && tar -zxvf zulu$zulu_version-jdk$java_version-linux_x64.tar.gz -C /opt \
+    && ln -s /opt/zulu$zulu_version-jdk$java_version-linux_x64 $JAVA_HOME
+
+#RUN java_version=8u151; \
+#    java_bnumber=12; \
+#    java_semver=1.8.0_151; \
+#    java_hash=123b1d755416aa7579abc03f01ab946e612e141b6f7564130f2ada00ed913f1d; \
+#    echo 'Downloading the Oracle Java...' \ 
+#    && wget --no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie" \
+#    http://download.oracle.com/otn-pub/java/jdk/$java_version-b$java_bnumber/e758a0de34e24606bca991d704f6dcbf/server-jre-$java_version-linux-x64.tar.gz \
+#    && echo "$java_hash  server-jre-$java_version-linux-x64.tar.gz" | sha256sum -c - \
+#    && tar -zxvf server-jre-$java_version-linux-x64.tar.gz -C /opt \
+#    && ln -s /opt/jdk$java_semver/ $JAVA_HOME
+
+RUN echo 'Downloading Grouper Installer...' \
+    && mkdir -p /opt/grouper/$GROUPER_VERSION \
+    && wget -q -O /opt/grouper/$GROUPER_VERSION/grouperInstaller.jar http://software.internet2.edu/grouper/release/$GROUPER_VERSION/grouperInstaller.jar
+
+COPY container_files/grouper.installer.properties /opt/grouper/$GROUPER_VERSION
+
+RUN echo 'Installing Grouper'; \
+    PATH=$PATH:$JAVA_HOME/bin; \
+    cd /opt/grouper/$GROUPER_VERSION/ \
+    && $JAVA_HOME/bin/java -cp :grouperInstaller.jar edu.internet2.middleware.grouperInstaller.GrouperInstaller
+
+
+
+FROM centos:centos7 as cleanup
+
+ENV GROUPER_VERSION=2.3.0 \
+    TOMCAT_VERSION=8.5.12 \    
+    TOMEE_VERSION=7.0.0
+
+COPY --from=installing /opt/grouper/$GROUPER_VERSION/grouperInstaller.jar /opt/grouper/
+COPY --from=installing /opt/grouper/$GROUPER_VERSION/grouper.apiBinary-$GROUPER_VERSION/ /opt/grouper/grouper.apiBinary/
+COPY --from=installing /opt/grouper/$GROUPER_VERSION/grouper.ui-$GROUPER_VERSION/dist/grouper/ /opt/grouper/grouper.ui/
+COPY --from=installing /opt/grouper/$GROUPER_VERSION/grouper.ws-$GROUPER_VERSION/grouper-ws/build/dist/grouper-ws/ /opt/grouper/grouper.ws/
+COPY --from=installing /opt/grouper/$GROUPER_VERSION/grouper.ws-$GROUPER_VERSION/grouper-ws-scim/targetBuiltin/grouper-ws-scim/ /opt/grouper/grouper.scim/
+#COPY --from=installing /opt/grouper/$GROUPER_VERSION/grouper.clientBinary-$GROUPER_VERSION/ /opt/grouper/grouper.clientBinary/
+COPY --from=installing /opt/grouper/$GROUPER_VERSION/apache-tomcat-$TOMCAT_VERSION/ /opt/tomcat/
+COPY --from=installing /opt/grouper/$GROUPER_VERSION/apache-tomee-webprofile-$TOMEE_VERSION/ /opt/tomee/
+
+ADD http://central.maven.org/maven2/org/apache/logging/log4j/log4j-core/2.11.0/log4j-core-2.11.0.jar /opt/tomcat/bin
+ADD http://central.maven.org/maven2/org/apache/logging/log4j/log4j-api/2.11.0/log4j-api-2.11.0.jar /opt/tomcat/bin
+ADD http://central.maven.org/maven2/org/apache/logging/log4j/log4j-jul/2.11.0/log4j-jul-2.11.0.jar /opt/tomcat/bin
+
+ADD http://central.maven.org/maven2/org/apache/logging/log4j/log4j-core/2.11.0/log4j-core-2.11.0.jar /opt/tomee/bin
+ADD http://central.maven.org/maven2/org/apache/logging/log4j/log4j-api/2.11.0/log4j-api-2.11.0.jar /opt/tomee/bin
+ADD http://central.maven.org/maven2/org/apache/logging/log4j/log4j-jul/2.11.0/log4j-jul-2.11.0.jar /opt/tomee/bin
+
+RUN cd /opt/grouper/grouper.apiBinary/; \
+    rm -fr ddlScripts/ grouper.lck grouper.log grouper.script grouper.tmp/ gshAddGrouperSystemWsGroup.gsh logs/
+
+RUN cd /opt/tomcat/; \
+    chmod +r bin/log4j-*.jar; \
+    rm -fr webapps/docs/ webapps/examples/ webapps/host-manager/ webapps/manager/ logs/* temp/* work/* conf/logging.properties
+
+RUN cd /opt/tomee/; \
+    chmod +r bin/log4j-*.jar; \
+    rm -fr webapps/docs/ webapps/host-manager/ webapps/manager/ logs/* temp/* work/* conf/logging.properties
+
+COPY container_files/api/* /opt/grouper/grouper.apiBinary/conf/
+COPY container_files/ui/ /opt/grouper/grouper.ui/WEB-INF/
+COPY container_files/ws/ /opt/grouper/grouper.ws/WEB-INF/
+COPY container_files/tomcat/ /opt/tomcat/
+COPY container_files/tomee/ /opt/tomee/
+
+
 FROM tier/shibboleth_sp
 
-# Define args and set a default value
-ARG maintainer=tier
-ARG imagename=grouper
-ARG version=2.3.0
-ARG tierversion=17070
+LABEL author="tier-packaging@internet2.edu <tier-packaging@internet2.edu>" \
+      Vendor="TIER" \
+      ImageType="Grouper" \
+      ImageName=$imagename \
+      ImageOS=centos7
 
-MAINTAINER $maintainer
-LABEL Vendor="Internet2"
-LABEL ImageType="Base"
-LABEL ImageName=$imagename
-LABEL ImageOS=centos7
-LABEL Version=$version
+ENV JAVA_HOME=/opt/java \
+    PATH=$PATH:$JAVA_HOME/bin \
+    GROUPER_HOME=/opt/grouper/grouper.apiBinary
 
-ENV VERSION=$version
-ENV TIERVERSION=$tierversion
-ENV IMAGENAME=$imagename
-ENV MAINTAINER=$maintainer
+RUN ln -sf /usr/share/zoneinfo/UTC /etc/localtime
 
-ENV TOMCAT_VERSION="8.5.12"
-ENV WAIT_TIME=60
+RUN yum update -y \
+    && yum install -y cron logrotate python-pip \
+    && pip install --upgrade pip \
+    && pip install supervisor \
+    && yum clean -y all
 
-LABEL Build docker build --rm --tag $maintainer/$imagename .
+COPY --from=installing $JAVA_HOME $JAVA_HOME
+COPY --from=cleanup /opt/tomcat/ /opt/tomcat/
+COPY --from=cleanup /opt/tomee/ /opt/tomee/
+COPY --from=cleanup /opt/grouper/ /opt/grouper/
 
-ADD container_files /opt
-ONBUILD ADD additional_container_files /opt
+RUN groupadd -r tomcat \
+    && useradd -r -m -s /sbin/nologin -g tomcat tomcat \
+    && mkdir -p /opt/tomcat/logs/ /opt/tomcat/temp/ /opt/tomcat/work/ \
+    && chown -R tomcat:tomcat /opt/tomcat/logs/ /opt/tomcat/temp/ /opt/tomcat/work/ \
+    && chown -R tomcat:tomcat /opt/tomee/logs/ /opt/tomee/temp/ /opt/tomee/work/
 
-RUN mkdir -p /opt/grouper/$VERSION \
-      && mv /opt/etc/grouper.installer.properties /opt/grouper/$VERSION/. \
-      && mv /opt/etc/MariaDB.repo /etc/yum.repos.d/MariaDB.repo \
-      && curl -o /opt/grouper/$VERSION/grouperInstaller.jar https://software.internet2.edu/grouper/release/$VERSION/grouperInstaller.jar \
-      && yum -y update \
-      && yum -y install --setopt=tsflags=nodocs \
-        dos2unix \
-        MariaDB-client \
-	telnet \
-	emacs  \
-        mlocate \
-      && yum clean all \
-      && /opt/autoexec/bin/onbuild.sh \
-      && rm /opt/grouper/$version/grouper.apiBinary-$version/conf/grouper.hibernate.properties && \
-    cp /opt/etc/grouper.hibernate.pointer.properties /opt/grouper/$version/grouper.apiBinary-$version/conf/grouper.hibernate.properties && \
-      rm /opt/grouper/$version/grouper.ws-$version/grouper-ws/build/dist/grouper-ws/WEB-INF/classes/grouper.hibernate.properties && \
-    cp /opt/etc/grouper.hibernate.pointer.properties /opt/grouper/$version/grouper.ws-$version/grouper-ws/build/dist/grouper-ws/WEB-INF/classes/grouper.hibernate.properties && \
-    rm /opt/grouper/$version/grouper.ui-$version/dist/grouper/WEB-INF/classes/grouper.hibernate.properties && \
-    cp /opt/etc/grouper.hibernate.pointer.properties /opt/grouper/$version/grouper.ui-$version/dist/grouper/WEB-INF/classes/grouper.hibernate.properties && \
-    ln -sf /opt/bin/run.sh /usr/local/bin/run.sh && \
-    updatedb
+COPY container_files/tier-support/ /opt/tier-support/
+COPY container_files/usr-local-bin/ /usr/local/bin/
+COPY container_files/httpd/* /etc/httpd/conf.d/
+COPY container_files/shibboleth/* /etc/shibboleth/
 
-    #/opt/grouper/2.3.0/grouper.apiBinary-2.3.0/conf/grouper.hibernate.properties
-    
-# Export this variable so that shibd can find it's CURL library
-RUN LD_LIBRARY_PATH="/opt/shibboleth/lib64"
-RUN export LD_LIBRARY_PATH
-	
-# The installer creates a HSQL DB which we ignore later
+RUN cp /dev/null /etc/httpd/conf.d/ssl.conf \
+    && sed -i 's/LogFormat "/LogFormat "httpd;access_log;%{ENV}e;%{USERTOKEN}e;/g' /etc/httpd/conf/httpd.conf \
+    && echo -e "\nErrorLogFormat \"httpd;error_log;%{ENV}e;%{USERTOKEN}e;[%{u}t] [%-m:%l] [pid %P:tid %T] %7F: %E: [client\ %a] %M% ,\ referer\ %{Referer}i\"" >> /etc/httpd/conf/httpd.conf \
+    && sed -i 's/CustomLog "logs\/access_log"/CustomLog "\/tmp\/logpipe"/g' /etc/httpd/conf/httpd.conf \
+    && sed -i 's/ErrorLog "logs\/error_log"/ErrorLog "\/tmp\/logpipe"/g' /etc/httpd/conf/httpd.conf \
+    && echo -e "\nPassEnv ENV" >> /etc/httpd/conf/httpd.conf \
+    && echo -e "\nPassEnv USERTOKEN" >> /etc/httpd/conf/httpd.conf
 
-WORKDIR /opt/grouper/$version
+WORKDIR /opt/grouper/grouper.apiBinary/
 
-#VOLUME /opt/grouper/2.3.0/apache-tomcat-$TOMCAT_VERSION/logs
+EXPOSE 80 443
 
-EXPOSE 8080 8009 8005 
-
-ADD files/bin/setenv.sh /opt/tier/setenv.sh
-RUN chmod +x /opt/tier/setenv.sh
-ADD files/bin/startup.sh /usr/bin/startup.sh
-RUN chmod +x /usr/bin/startup.sh
-ADD files/bin/sendtierbeacon.sh /usr/bin/sendtierbeacon.sh
-RUN chmod +x /usr/bin/sendtierbeacon.sh
-
-
-CMD ["/usr/bin/startup.sh"]
+CMD ["bin/gsh", "-loader"]

@@ -1,3 +1,2 @@
 maintainer="tier"
-imagename="grouper"
-version="2.3.0"
+imagename="grouper-multi-purpose"
