@@ -14,9 +14,10 @@
 # Quick reference
 
 -	**Where to get help**:  
-    [tier-packaging@internet2.edu](mailto:tier-packaging@internet2.edu?subject=Grouper%20Image%20Help)
+        [tier-packaging@internet2.edu](mailto:tier-packaging@internet2.edu?subject=Grouper%20Image%20Help)
+
 -	**Where to file issues**:  
-	[https://github.internet2.edu/docker/grouper_noVM/issues](https://github.internet2.edu/docker/grouper_noVM/issues)
+	[https://github.internet2.edu/docker/grouper/issues](https://github.internet2.edu/docker/grouper/issues)
 
 -	**Maintained by**:  
 	[TIER Packaging Working Group](https://spaces.internet2.edu/display/TPWG)
