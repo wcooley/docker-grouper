@@ -33,7 +33,7 @@ pipeline {
             steps {
                 script {
                    docker.withRegistry('https://registry.hub.docker.com/',   "dockerhub-$maintainer") {
-                      def baseImg = docker.build("$maintainer/$imagename")
+                      def baseImg = docker.build("$maintainer/$imagename", "--no-cache .")
                       baseImg.push("$tag")
                    }
                }
@@ -72,6 +72,6 @@ def handleError(String message){
   echo "${message}"
   currentBuild.setResult("FAILED")
   slackSend color: 'danger', message: "${message}"
-  //step([$class: 'Mailer', notifyEveryUnstableBuild: true, recipients: 'chris.bynum@levvel.io', sendToIndividuals: true])
+  //step([$class: 'Mailer', notifyEveryUnstableBuild: true, recipients: 'chubing@internet2.edu', sendToIndividuals: true])
   sh 'exit 1'
 }
