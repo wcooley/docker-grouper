@@ -50,10 +50,10 @@ prepDaemon() {
     linkGrouperSecrets $dest/conf
 
     if [ -d "/opt/grouper/conf" ]; then
-        cp /opt/grouper/conf/* $dest/conf/
+        cp -r /opt/grouper/conf/* $dest/conf/
     fi
     if [ -d "/opt/grouper/lib" ]; then
-        cp /opt/grouper/lib/* $dest/lib/
+        cp -r /opt/grouper/lib/* $dest/lib/
     fi      
 }
 
@@ -62,10 +62,10 @@ prepSCIM() {
     linkGrouperSecrets $dest/classes
 
     if [ -d "/opt/grouper/conf" ]; then
-        cp /opt/grouper/conf/* $dest/classes/
+        cp -r /opt/grouper/conf/* $dest/classes/
     fi
     if [ -d "/opt/grouper/lib" ]; then
-        cp /opt/grouper/lib/* $dest/lib/
+        cp -r /opt/grouper/lib/* $dest/lib/
     fi
 
     cp /opt/tier-support/grouper-ws-scim.xml /opt/tomee/conf/Catalina/localhost/
@@ -76,10 +76,10 @@ prepUI() {
     linkGrouperSecrets $dest/classes
 
     if [ -d "/opt/grouper/conf" ]; then
-        cp /opt/grouper/conf/* $dest/classes/
+        cp -r /opt/grouper/conf/* $dest/classes/
     fi
     if [ -d "/opt/grouper/lib" ]; then
-        cp /opt/grouper/lib/* $dest/lib/
+        cp -r /opt/grouper/lib/* $dest/lib/
     fi
 
     cp /opt/tier-support/grouper.xml /opt/tomcat/conf/Catalina/localhost/
@@ -90,10 +90,10 @@ prepWS() {
     linkGrouperSecrets $dest/classes
     
     if [ -d "/opt/grouper/conf" ]; then
-        cp /opt/grouper/conf/* $dest/classes/
+        cp -r /opt/grouper/conf/* $dest/classes/
     fi
     if [ -d "/opt/grouper/lib" ]; then
-        cp /opt/grouper/lib/* $dest/lib/
+        cp -r /opt/grouper/lib/* $dest/lib/
     fi
 
     cp /opt/tier-support/grouper-ws.xml /opt/tomcat/conf/Catalina/localhost/
