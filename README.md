@@ -286,42 +286,42 @@ The generated DDL will be on the host in the `ddlScripts` directory.
 
 Note: a less privileged database user maybe used when running the typical Grouper roles. This user needs SELECT, INSERT, UPDATE, and DELETE privileges on the schema objects.
 
-# Configuring the SP 
+# Configuring the embedded Shibboleth SP 
 
 The Shibboleth SP needs to be configured to integrate with one or more SAML IdPs. Reference the Shibboleth SP documentation for specific instructions, but here is information on generating an encryption key/cert pair and mounting them (all of which are environment specific) and the shibboleth2.xml into the container.
 
 1. Start a temporary container and generate the key/cert pair:
-```
-$ docker container run -it --name grouper \
-  tier/grouper bash
+    ```
+    $ docker container run -it --name grouper \
+      tier/grouper bash
 
-cd /etc/shibboleth
-./keygen.sh -f -h <public_hostname> 
-exit 
-```
+    cd /etc/shibboleth
+    ./keygen.sh -f -h <public_hostname> 
+    exit 
+   ```
 
 1. Copy the key, cert, and `shibboleth2.xml` files out of the container (and remove the container)
-```console
-$ docker container cp grouper:/etc/shibboleth/shibboleth2.xml .
-$ docker container cp grouper:/etc/shibboleth/sp-cert.pem .
-$ docker container cp grouper:/etc/shibboleth/sp-key.pem .
+    ```console
+    $ docker container cp grouper:/etc/shibboleth/shibboleth2.xml .
+    $ docker container cp grouper:/etc/shibboleth/sp-cert.pem .
+    $ docker container cp grouper:/etc/shibboleth/sp-key.pem .
 
-$ docker container rm grouper
-```
-
+    $ docker container rm grouper
+    ```
+    
 1. After updating the `shibboleth2.xml` file, save the key, cert, and shibboleth2.xml as secrets/config:
-```console
-$ docker secret create sp-key.pem sp-key.pem
-$ docker config create sp-cert.pem sp-cert.pem
-$ docker config create shibboleth2.xml shibboleth2.xml
-```
+    ```console
+    $ docker secret create sp-key.pem sp-key.pem
+    $ docker config create sp-cert.pem sp-cert.pem
+    $ docker config create shibboleth2.xml shibboleth2.xml
+    ```
 
-1. Add the following to the service creation command to mount the environment specific settings:
-```
-  --secret source=sp-key.pem.pem,target=shib_sp-key.pem \
-  --config source=sp-cert.pem,target=/etc/shibboleth/sp-cert.pem \
-  --config source=shibboleth2.xml,target=/etc/shibboleth/shibboleth2.xml \
-```
+1. Add the following to the UI service creation command to mount the environment specific settings:
+    ```
+      --secret source=sp-key.pem.pem,target=shib_sp-key.pem \
+      --config source=sp-cert.pem,target=/etc/shibboleth/sp-cert.pem \
+      --config source=shibboleth2.xml,target=/etc/shibboleth/shibboleth2.xml \
+    ```
 
 # Logging
 
