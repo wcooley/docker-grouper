@@ -139,7 +139,9 @@ The Grouper UI also requires some basic Shibboleth SP configuration. The `/etc/s
 - set the SP's encryption keys
 - the identity attribute of the subject to be passed to Grouper
 
-If encryption keys are defined in the `shibboleth2.xml` file, then the key/cert files should be provided as well. The `attribute-map.xml` file has most of the common identity attributes pre-configured, but it (and other Shibboleth SP files) can be overlaid/replaced as necessary. 
+If encryption keys are defined in the `shibboleth2.xml` file, then the key/cert files should be provided as well. The `attribute-map.xml` file has most of the common identity attributes pre-configured, but it (and other Shibboleth SP files) can be overlaid/replaced as necessary.
+
+(See the section below.)
 
 ## General Configuration Mechanism
 
@@ -253,6 +255,73 @@ $ docker run -it --rm \
 ```
 
 Note: a less privileged database user maybe used when running the typical Grouper roles. This user needs SELECT, INSERT, UPDATE, and DELETE privileges on the schema objects.
+
+# Provisioning a Grouper Database
+
+Using standard methods, create a MariaDb Server and an empty Grouper database. Create a database user with privileges to create and populate schema objects. Set the appropriate database connection properties in `grouper.hibernate.properties`. Be sure to the user created with schema manipulation privileges as the db user.
+
+Next populate the database by using the following command.
+
+```console
+$ docker container run -it --rm \
+  --mount type=bind,src=$(pwd)/grouper.hibernate.properties,dst=/run/secrets/grouper_grouper.hibernate.properties \
+  tier/grouper gsh -registry -check -runscript -noprompt
+```
+
+Also, it is possible to just connect directly to the container, create the DDL, and copy it out:
+
+```console
+$ docker container run -it --name grouper \
+  --mount type=bind,src=$(pwd)/grouper.hibernate.properties,dst=/run/secrets/grouper_grouper.hibernate.properties \
+  tier/grouper
+
+  gsh -registry -check
+
+  exit
+
+$ docker container cp grouper:/opt/grouper/grouper.apiBinary/ddlScripts/ .
+$ docker container rm -f grouper
+``` 
+The generated DDL will be on the host in the `ddlScripts` directory.
+
+Note: a less privileged database user maybe used when running the typical Grouper roles. This user needs SELECT, INSERT, UPDATE, and DELETE privileges on the schema objects.
+
+# Configuring the SP 
+
+The Shibboleth SP needs to be configured to integrate with one or more SAML IdPs. Reference the Shibboleth SP documentation for specific instructions, but here is information on generating an encryption key/cert pair and mounting them (all of which are environment specific) and the shibboleth2.xml into the container.
+
+1. Start a temporary container and generate the key/cert pair:
+```
+$ docker container run -it --name grouper \
+  tier/grouper bash
+
+cd /etc/shibboleth
+./keygen.sh -f -h <public_hostname> 
+exit 
+```
+
+1. Copy the key, cert, and `shibboleth2.xml` files out of the container (and remove the container)
+```console
+$ docker container cp grouper:/etc/shibboleth/shibboleth2.xml .
+$ docker container cp grouper:/etc/shibboleth/sp-cert.pem .
+$ docker container cp grouper:/etc/shibboleth/sp-key.pem .
+
+$ docker container rm grouper
+```
+
+1. After updating the `shibboleth2.xml` file, save the key, cert, and shibboleth2.xml as secrets/config:
+```console
+$ docker secret create sp-key.pem sp-key.pem
+$ docker config create sp-cert.pem sp-cert.pem
+$ docker config create shibboleth2.xml shibboleth2.xml
+```
+
+1. Add the following to the service creation command to mount the environment specific settings:
+```
+  --secret source=sp-key.pem.pem,target=shib_sp-key.pem \
+  --config source=sp-cert.pem,target=/etc/shibboleth/sp-cert.pem \
+  --config source=shibboleth2.xml,target=/etc/shibboleth/shibboleth2.xml \
+```
 
 # Logging
 

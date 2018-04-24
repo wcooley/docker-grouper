@@ -111,6 +111,8 @@ RUN groupadd -r tomcat \
     && chown -R tomcat:tomcat /opt/tomcat/logs/ /opt/tomcat/temp/ /opt/tomcat/work/ \
     && chown -R tomcat:tomcat /opt/tomee/logs/ /opt/tomee/temp/ /opt/tomee/work/
 
+RUN rm /etc/shibboleth/sp-key.pem /etc/shibboleth/sp-cert.pem
+
 COPY container_files/tier-support/ /opt/tier-support/
 COPY container_files/usr-local-bin/ /usr/local/bin/
 COPY container_files/httpd/* /etc/httpd/conf.d/
