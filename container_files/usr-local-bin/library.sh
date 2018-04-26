@@ -53,7 +53,7 @@ prepDaemon() {
         cp -r /opt/grouper/conf/* $dest/conf/
     fi
     if [ -d "/opt/grouper/lib" ]; then
-        cp -r /opt/grouper/lib/* $dest/lib/
+        cp -r /opt/grouper/lib/* $dest/lib/custom/
     fi      
 }
 
