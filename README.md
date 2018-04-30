@@ -258,7 +258,7 @@ Note: a less privileged database user maybe used when running the typical Groupe
 
 # Provisioning a Grouper Database
 
-Using standard methods, create a MariaDb Server and an empty Grouper database. Create a database user with privileges to create and populate schema objects. Set the appropriate database connection properties in `grouper.hibernate.properties`. Be sure to the user created with schema manipulation privileges as the db user.
+Using standard methods, create a MariaDb Server and an empty Grouper database. Create a database user with privileges to create and populate schema objects. Set the appropriate database connection properties in `grouper.hibernate.properties`. Be sure that the user is created with schema manipulation privileges.
 
 Next populate the database by using the following command.
 
@@ -268,7 +268,7 @@ $ docker container run -it --rm \
   tier/grouper gsh -registry -check -runscript -noprompt
 ```
 
-Also, it is possible to just connect directly to the container, create the DDL, and copy it out:
+Also, it is possible to just connect directly to the container, create the DDL, and copy it out. This is necessary if your DBAs would prefer to manually execute the DDL to create the schema objects:
 
 ```console
 $ docker container run -it --name grouper \
@@ -284,7 +284,7 @@ $ docker container rm -f grouper
 ``` 
 The generated DDL will be on the host in the `ddlScripts` directory.
 
-Note: a less privileged database user maybe used when running the typical Grouper roles. This user needs SELECT, INSERT, UPDATE, and DELETE privileges on the schema objects.
+Note: A less privileged database user maybe used when running the typical Grouper roles. This user just needs SELECT, INSERT, UPDATE, and DELETE privileges on the tables and views. Running in this configuration requires DBAs to manually run the DDL scripts.
 
 # Configuring the embedded Shibboleth SP 
 
