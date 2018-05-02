@@ -23,10 +23,10 @@ pipeline {
                      }
                     sh 'mkdir -p tmp'
                     dir('tmp'){
-                    git([ url: "https://github.internet2.edu/docker/util.git",
-                    credentialsId: "jenkins-github-access-token" ])
-                    sh 'ls'
-                    sh 'mv bin/* ../bin/.'
+                      git([ url: "https://github.internet2.edu/docker/util.git", credentialsId: "jenkins-github-access-token" ])
+                      sh 'ls'
+                      sh 'mv bin/* ../bin/.'
+                    }
                 }  
              }
         }    
@@ -63,7 +63,7 @@ pipeline {
     }
     post { 
         always { 
-            echo 'I will always say Hello again!'
+            echo 'Done Building.'
         }
         failure {
             // slackSend color: 'good', message: "Build failed"
