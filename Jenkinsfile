@@ -21,12 +21,28 @@ pipeline {
                         echo "You must define an imagename in common.bash"
                         currentBuild.result = 'FAILURE'
                      }
-                } 
+                    sh 'mkdir -p bin'
+                    sh 'mkdir -p tmp'
+                    dir('tmp'){
+                      git([ url: "https://github.internet2.edu/docker/util.git", credentialsId: "jenkins-github-access-token" ])
+                      sh 'ls'
+                      sh 'mv bin/* ../bin/.'
+                    }
+                }  
              }
         }    
         stage('Build') {
             steps {
-                echo 'step 2'
+                script {
+                   try{
+                     sh 'bin/destroy.sh >> debug'
+                   } catch(error) {
+                     def error_details = readFile('./debug');
+                     def message = "BUILD ERROR: There was a problem building the Base Image. \n\n ${error_details}"
+                     sh "rm -f ./debug"
+                     handleError(message)
+                   }
+                }
             }
         } 
         stage('Push') {
@@ -48,7 +64,7 @@ pipeline {
     }
     post { 
         always { 
-            echo 'I will always say Hello again!'
+            echo 'Done Building.'
         }
         failure {
             // slackSend color: 'good', message: "Build failed"
