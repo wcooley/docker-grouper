@@ -211,8 +211,8 @@ services:
      - "389:389"
      - "3306:3306"
     volumes:
-     - grouper_mysql: /var/lib/mysql  
-     - grouper_ldap: /var/lib/dirsrv
+     - grouper_mysql:/var/lib/mysql  
+     - grouper_ldap:/var/lib/dirsrv
 
 
   idp:
