@@ -1,7 +1,5 @@
 #!/bin/bash
 
-. /usr/local/bin/library.sh
-
 prepUI
 prepWS
 

@@ -130,4 +130,6 @@ WORKDIR /opt/grouper/grouper.apiBinary/
 
 EXPOSE 80 443
 
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+
 CMD ["bin/gsh", "-loader"]

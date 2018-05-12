@@ -1,7 +1,5 @@
 #!/bin/bash
 
-. /usr/local/bin/library.sh
-
 prepUI
 
 export LD_LIBRARY_PATH=/opt/shibboleth/lib64:$LD_LIBRARY_PATH
