@@ -3,7 +3,7 @@ version: "3.3"
 services:
   daemon:
     build: ./daemon/
-    command: bash -c "while ! curl -s data:3306 > /dev/null; do echo waiting for mysql to start; sleep 3; done; exec daemon"
+    command: bash -c "while ! curl -s data:3306 > /dev/null; do echo waiting for mysql to start; sleep 3; done; while ! curl -s ldap://data:389 > /dev/null; do echo waiting for ldap to start; sleep 3; done; exec daemon"
     depends_on:
      - data
     environment:
