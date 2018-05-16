@@ -36,7 +36,7 @@ RUN useradd ldapadmin \
     && sed -i '/if (@errs = startServer($inf))/,/}/d' /usr/lib64/dirsrv/perl/* \
     && setup-ds.pl --silent --file /seed-data/ds-setup.inf \
     && /usr/sbin/ns-slapd -D /etc/dirsrv/slapd-dir \ 
-    && sleep 3 \
+    && while ! curl -s ldap://localhost:389 > /dev/null; do echo waiting for ldap to start; sleep 1; done; \
     && ldapadd -H ldap:/// -f /seed-data/users.ldif -x -D "cn=Directory Manager" -w password
 
 RUN (/usr/sbin/ns-slapd -D /etc/dirsrv/slapd-dir &) \
