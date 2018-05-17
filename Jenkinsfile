@@ -50,7 +50,7 @@ pipeline {
                 script {
                    docker.withRegistry('https://registry.hub.docker.com/',   "dockerhub-$maintainer") {
                       def baseImg = docker.build("$maintainer/$imagename", "--no-cache .")
-                      sh 'cd test-compose && ./compose/sh'
+                      sh 'cd test-compose && ./compose.sh'
                       baseImg.push("$tag")
                    }
                }
