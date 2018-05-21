@@ -53,7 +53,7 @@ Note that when accessing the Grouper UI, Grouper WS, or Shibboleth IdP, your bro
 - In this example, we use a variety of ways to pass in passwords (Grouper database, LDAP, Grouper Client, and RabbitMQ). The point is to demonstrate possibilities and not demonstrating what is required. (See the image readme for more details.)
 - Docker `configs` are not supported by Docker Compose (when run in a non-Swarm mode), so those are represented in the `docker-compose.yml` file as bind mount volumes.
 - The Grouper config files in the `data` image's `conf` directory are used to build the sample grouper database and ldap store. They are not used when the container is instantiated as there is no Grouper runtime in this container.
-- The containers will use Docker Secrets and bind mounts for non-sensitive files that are read from the `configs-ans-secrets` directory in the `test-compose` directory.
+- The containers will use Docker Secrets and bind mounts for non-sensitive files that are read from the `configs-and-secrets` directory in the `test-compose` directory.
 - With regard to RabbitMQ, the deployer must manually add a queue named `sampleQueue` to see Grouper messages in RabbitMQ. Messages will be dropped by RabbitMQ (and the Grouper Deamon will log errors) until this occurs.
 - In this example, we don't care about the IdP secrets. They are baked into the overlay instead of using Docker Secrets. (This is not best practice for an IdP configuration, but that isn't the focus of this example.)
 
