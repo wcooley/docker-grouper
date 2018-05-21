@@ -198,6 +198,9 @@ services:
     ports:
      - "389:389"
      - "3306:3306"
+    volumes:
+     - grouper_mysql:/var/lib/mysql  
+     - grouper_ldap:/var/lib/dirsrv
 
 
   idp:
@@ -249,3 +252,10 @@ secrets:
     file: ./configs-and-secrets/grouper/subject.properties
   sp-key.pem:
     file: ./configs-and-secrets/shibboleth/sp-key.pem
+    
+    
+volumes:
+  grouper_mysql:
+    driver: local
+  grouper_ldap:  
+    driver: local

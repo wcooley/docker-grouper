@@ -31,7 +31,7 @@ pipeline {
                 }  
              }
         }    
-        stage('Build') {
+        stage('Clean') {
             steps {
                 script {
                    try{
@@ -45,11 +45,15 @@ pipeline {
                 }
             }
         } 
-        stage('Push') {
+        stage('Build') {
             steps {
                 script {
                    docker.withRegistry('https://registry.hub.docker.com/',   "dockerhub-$maintainer") {
                       def baseImg = docker.build("$maintainer/$imagename", "--no-cache .")
+                      // test the environment 
+                      sh 'cd test-compose && ./compose.sh'
+                      // bring down after testing
+                      sh 'cd test-compose && docker-compose down'
                       baseImg.push("$tag")
                    }
                }
