@@ -45,7 +45,7 @@ While TIER recommends/supports using Docker Swarm for orchestrating the Grouper 
 
 ### Daemon/Loader
 
-Run the Grouper Daemon/Loader as a service.
+Run the Grouper Daemon/Loader as a service. If the daemon/loader container dies unexpectedly, it may be due to memory contraints. Refer to the "Grouper Shell/Loader" section below for information on how to tweak memory settings. The default   
 
 ```console
 $ docker service create --detach --name grouper-daemon tier/grouper:latest daemon
@@ -208,8 +208,8 @@ Deployers can set runtime variables to both the Grouper Shell and Loader/Daemon 
 ### Grouper Shell/Loader
 
 The following environment variables are used by the Grouper Shell/Loader: 
-- MEM_START: corresponds to the java's `-Xms`.
-- MEM_MAX: corresponds to java's `-Xmx`.
+- MEM_START: corresponds to the java's `-Xms`. (default is 64m)
+- MEM_MAX: corresponds to java's `-Xmx`. (default is 750m)
 
 ### Tomcat/TomEE
 
