@@ -45,7 +45,7 @@ While TIER recommends/supports using Docker Swarm for orchestrating the Grouper 
 
 ### Daemon/Loader
 
-Run the Grouper Daemon/Loader as a service. If the daemon/loader container dies unexpectedly, it may be due to memory contraints. Refer to the "Grouper Shell/Loader" section below for information on how to tweak memory settings. The default   
+Run the Grouper Daemon/Loader as a service. If the daemon/loader container dies unexpectedly, it may be due to memory contraints. Refer to the "Grouper Shell/Loader" section below for information on how to tweak memory settings.   
 
 ```console
 $ docker service create --detach --name grouper-daemon tier/grouper:latest daemon
