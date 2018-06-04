@@ -7,8 +7,8 @@ RUN yum update -y \
 ENV GROUPER_VERSION=2.3.0 \
     JAVA_HOME=/opt/java
 
-RUN java_version=8.0.131; \
-    zulu_version=8.21.0.1; \
+RUN java_version=8.0.172; \
+    zulu_version=8.30.0.1; \
     echo 'Downloading the OpenJDK Zulu...' \
     && wget -q http://cdn.azul.com/zulu/bin/zulu$zulu_version-jdk$java_version-linux_x64.tar.gz \
     && echo "1931ed3beedee0b16fb7fd37e069b162  zulu$zulu_version-jdk$java_version-linux_x64.tar.gz" | md5sum -c - \
