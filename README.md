@@ -231,6 +231,7 @@ Here is a list of significant directories and files that deployers should be awa
 - `/opt/tomcat/`: used to run Grouper UI and Grouper WS
 - `/opt/tomee/`: used to run the Grouper SCIM Server.
 - `/var/run/secrets`: location where Docker Secrets are mounted into the container. Secrets starting with `grouper_`, `shib_`, and `httpd_` have special meaning. See `Secrets/Configs` above.
+- `/usr/lib/jvm/zulu-8/jre/lib/security/cacerts`: location of the Java trust store.
 
 To examine baseline image files, one might run `docker run --name=temp -it tier/grouper bash` and browse through these file system endpoints. While the container is running one may copy files out of the image/container using something like `docker cp containerId:/opt/grouper/grouper.api/conf/grouper.properties .`, which will copy the `grouper.properties` to the Docker client's present working directory. These files can then be edited and applied via the mechanisms outlined above.
 
