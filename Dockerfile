@@ -5,15 +5,20 @@ RUN yum update -y \
     && yum clean all
 
 ENV GROUPER_VERSION=2.3.0 \
-    JAVA_HOME=/opt/java
+     JAVA_HOME=/usr
 
-RUN java_version=8.0.172; \
-    zulu_version=8.30.0.1; \
-    echo 'Downloading the OpenJDK Zulu...' \
-    && wget -q http://cdn.azul.com/zulu/bin/zulu$zulu_version-jdk$java_version-linux_x64.tar.gz \
-    && echo "0a101a592a177c1c7bc63738d7bc2930  zulu$zulu_version-jdk$java_version-linux_x64.tar.gz" | md5sum -c - \
-    && tar -zxvf zulu$zulu_version-jdk$java_version-linux_x64.tar.gz -C /opt \
-    && ln -s /opt/zulu$zulu_version-jdk$java_version-linux_x64 $JAVA_HOME
+# use Zulu package
+RUN rpm --import http://repos.azulsystems.com/RPM-GPG-KEY-azulsystems \
+       && curl -o /etc/yum.repos.d/zulu.repo http://repos.azulsystems.com/rhel/zulu.repo \
+       && yum -y install zulu-8
+
+#RUN java_version=8.0.172; \
+#    zulu_version=8.30.0.1; \
+#    echo 'Downloading the OpenJDK Zulu...' \
+#    && wget -q http://cdn.azul.com/zulu/bin/zulu$zulu_version-jdk$java_version-linux_x64.tar.gz \
+#    && echo "0a101a592a177c1c7bc63738d7bc2930  zulu$zulu_version-jdk$java_version-linux_x64.tar.gz" | md5sum -c - \
+#    && tar -zxvf zulu$zulu_version-jdk$java_version-linux_x64.tar.gz -C /opt \
+#    && ln -s /opt/zulu$zulu_version-jdk$java_version-linux_x64 $JAVA_HOME
 
 #RUN java_version=8u151; \
 #    java_bnumber=12; \
@@ -88,7 +93,7 @@ LABEL author="tier-packaging@internet2.edu <tier-packaging@internet2.edu>" \
       ImageName=$imagename \
       ImageOS=centos7
 
-ENV JAVA_HOME=/opt/java \
+ENV JAVA_HOME=/usr \
     PATH=$PATH:$JAVA_HOME/bin \
     GROUPER_HOME=/opt/grouper/grouper.apiBinary
 
