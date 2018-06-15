@@ -11,6 +11,7 @@ ENV GROUPER_VERSION=2.3.0 \
 RUN rpm --import http://repos.azulsystems.com/RPM-GPG-KEY-azulsystems \
        && curl -o /etc/yum.repos.d/zulu.repo http://repos.azulsystems.com/rhel/zulu.repo \
        && yum -y install zulu-8
+       && ln -s $JAVA_HOME/bin/java /etc/alternatives
 
 #RUN java_version=8.0.172; \
 #    zulu_version=8.30.0.1; \
