@@ -94,7 +94,7 @@ LABEL author="tier-packaging@internet2.edu <tier-packaging@internet2.edu>" \
       ImageName=$imagename \
       ImageOS=centos7
 
-ENV JAVA_HOME=/usr \
+ENV JAVA_HOME=/usr/lib/jvm/zulu-8/ \
     PATH=$PATH:$JAVA_HOME/bin \
     GROUPER_HOME=/opt/grouper/grouper.apiBinary
 
@@ -115,7 +115,9 @@ RUN groupadd -r tomcat \
     && useradd -r -m -s /sbin/nologin -g tomcat tomcat \
     && mkdir -p /opt/tomcat/logs/ /opt/tomcat/temp/ /opt/tomcat/work/ \
     && chown -R tomcat:tomcat /opt/tomcat/logs/ /opt/tomcat/temp/ /opt/tomcat/work/ \
-    && chown -R tomcat:tomcat /opt/tomee/logs/ /opt/tomee/temp/ /opt/tomee/work/
+    && chown -R tomcat:tomcat /opt/tomee/logs/ /opt/tomee/temp/ /opt/tomee/work/ \
+    && rm /etc/alternatives/java \
+    && ln -s $JAVA_HOME/bin/java /etc/alternatives/java
 
 RUN rm /etc/shibboleth/sp-key.pem /etc/shibboleth/sp-cert.pem
 
