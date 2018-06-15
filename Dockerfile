@@ -10,9 +10,7 @@ ENV GROUPER_VERSION=2.3.0 \
 # use Zulu package
 RUN rpm --import http://repos.azulsystems.com/RPM-GPG-KEY-azulsystems \
        && curl -o /etc/yum.repos.d/zulu.repo http://repos.azulsystems.com/rhel/zulu.repo \
-       && yum -y install zulu-8 \
-       && ls -ld /etc/alternatives/java \
-       && ln -s $JAVA_HOME/bin/java /etc/alternatives
+       && yum -y install zulu-8 
 
 #RUN java_version=8.0.172; \
 #    zulu_version=8.30.0.1; \
@@ -60,6 +58,7 @@ COPY --from=installing /opt/grouper/$GROUPER_VERSION/grouper.ws-$GROUPER_VERSION
 #COPY --from=installing /opt/grouper/$GROUPER_VERSION/grouper.clientBinary-$GROUPER_VERSION/ /opt/grouper/grouper.clientBinary/
 COPY --from=installing /opt/grouper/$GROUPER_VERSION/apache-tomcat-$TOMCAT_VERSION/ /opt/tomcat/
 COPY --from=installing /opt/grouper/$GROUPER_VERSION/apache-tomee-webprofile-$TOMEE_VERSION/ /opt/tomee/
+COPY --from=installing /etc/alternatives/java /etc/alternatives/java
 
 ADD http://central.maven.org/maven2/org/apache/logging/log4j/log4j-core/2.11.0/log4j-core-2.11.0.jar /opt/tomcat/bin
 ADD http://central.maven.org/maven2/org/apache/logging/log4j/log4j-api/2.11.0/log4j-api-2.11.0.jar /opt/tomcat/bin
