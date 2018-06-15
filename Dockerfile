@@ -5,12 +5,12 @@ RUN yum update -y \
     && yum clean all
 
 ENV GROUPER_VERSION=2.3.0 \
-     JAVA_HOME=/usr
+     JAVA_HOME=/usr/lib/jvm/zulu-8/
 
 # use Zulu package
 RUN rpm --import http://repos.azulsystems.com/RPM-GPG-KEY-azulsystems \
        && curl -o /etc/yum.repos.d/zulu.repo http://repos.azulsystems.com/rhel/zulu.repo \
-       && yum -y install zulu-8
+       && yum -y install zulu-8 
 
 #RUN java_version=8.0.172; \
 #    zulu_version=8.30.0.1; \
@@ -58,6 +58,7 @@ COPY --from=installing /opt/grouper/$GROUPER_VERSION/grouper.ws-$GROUPER_VERSION
 #COPY --from=installing /opt/grouper/$GROUPER_VERSION/grouper.clientBinary-$GROUPER_VERSION/ /opt/grouper/grouper.clientBinary/
 COPY --from=installing /opt/grouper/$GROUPER_VERSION/apache-tomcat-$TOMCAT_VERSION/ /opt/tomcat/
 COPY --from=installing /opt/grouper/$GROUPER_VERSION/apache-tomee-webprofile-$TOMEE_VERSION/ /opt/tomee/
+COPY --from=installing /etc/alternatives/java /etc/alternatives/java
 
 ADD http://central.maven.org/maven2/org/apache/logging/log4j/log4j-core/2.11.0/log4j-core-2.11.0.jar /opt/tomcat/bin
 ADD http://central.maven.org/maven2/org/apache/logging/log4j/log4j-api/2.11.0/log4j-api-2.11.0.jar /opt/tomcat/bin
@@ -93,7 +94,7 @@ LABEL author="tier-packaging@internet2.edu <tier-packaging@internet2.edu>" \
       ImageName=$imagename \
       ImageOS=centos7
 
-ENV JAVA_HOME=/usr \
+ENV JAVA_HOME=/usr/lib/jvm/zulu-8/ \
     PATH=$PATH:$JAVA_HOME/bin \
     GROUPER_HOME=/opt/grouper/grouper.apiBinary
 
@@ -114,7 +115,8 @@ RUN groupadd -r tomcat \
     && useradd -r -m -s /sbin/nologin -g tomcat tomcat \
     && mkdir -p /opt/tomcat/logs/ /opt/tomcat/temp/ /opt/tomcat/work/ \
     && chown -R tomcat:tomcat /opt/tomcat/logs/ /opt/tomcat/temp/ /opt/tomcat/work/ \
-    && chown -R tomcat:tomcat /opt/tomee/logs/ /opt/tomee/temp/ /opt/tomee/work/
+    && chown -R tomcat:tomcat /opt/tomee/logs/ /opt/tomee/temp/ /opt/tomee/work/ \
+    && ln -s $JAVA_HOME/bin/java /etc/alternatives/java
 
 RUN rm /etc/shibboleth/sp-key.pem /etc/shibboleth/sp-cert.pem
 
