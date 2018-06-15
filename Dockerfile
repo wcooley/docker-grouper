@@ -5,7 +5,7 @@ RUN yum update -y \
     && yum clean all
 
 ENV GROUPER_VERSION=2.3.0 \
-     JAVA_HOME=/usr
+     JAVA_HOME=/usr/lib/jvm/zulu-8/
 
 # use Zulu package
 RUN rpm --import http://repos.azulsystems.com/RPM-GPG-KEY-azulsystems \
