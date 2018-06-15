@@ -116,7 +116,6 @@ RUN groupadd -r tomcat \
     && mkdir -p /opt/tomcat/logs/ /opt/tomcat/temp/ /opt/tomcat/work/ \
     && chown -R tomcat:tomcat /opt/tomcat/logs/ /opt/tomcat/temp/ /opt/tomcat/work/ \
     && chown -R tomcat:tomcat /opt/tomee/logs/ /opt/tomee/temp/ /opt/tomee/work/ \
-    && rm /etc/alternatives/java \
     && ln -s $JAVA_HOME/bin/java /etc/alternatives/java
 
 RUN rm /etc/shibboleth/sp-key.pem /etc/shibboleth/sp-cert.pem
