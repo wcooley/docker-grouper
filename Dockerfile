@@ -118,7 +118,7 @@ RUN groupadd -r tomcat \
     && chown -R tomcat:tomcat /opt/tomee/logs/ /opt/tomee/temp/ /opt/tomee/work/ \
     && ln -s $JAVA_HOME/bin/java /etc/alternatives/java
 
-RUN rm /etc/shibboleth/sp-key.pem /etc/shibboleth/sp-cert.pem
+# RUN rm /etc/shibboleth/sp-key.pem /etc/shibboleth/sp-cert.pem
 
 COPY container_files/tier-support/ /opt/tier-support/
 COPY container_files/usr-local-bin/ /usr/local/bin/
