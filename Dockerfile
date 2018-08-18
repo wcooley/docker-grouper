@@ -4,7 +4,7 @@ RUN yum update -y \
     && yum install -y wget tar unzip dos2unix \
     && yum clean all
 
-ENV GROUPER_VERSION=2.3.0 \
+ENV GROUPER_VERSION=2.4.0 \
      JAVA_HOME=/usr/lib/jvm/zulu-8/
 
 # use Zulu package
@@ -46,7 +46,7 @@ RUN echo 'Installing Grouper'; \
 
 FROM centos:centos7 as cleanup
 
-ENV GROUPER_VERSION=2.3.0 \
+ENV GROUPER_VERSION=2.4.0 \
     TOMCAT_VERSION=8.5.12 \    
     TOMEE_VERSION=7.0.0
 
