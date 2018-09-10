@@ -1,6 +1,13 @@
 [![Build Status](https://jenkins.testbed.tier.internet2.edu/job/docker/job/grouper/job/master/badge/icon)](https://jenkins.testbed.tier.internet2.edu/job/docker/job/grouper/job/master/)
 
 
+# Upgrading from 2.3 to 2.4
+
+If upgrading from Grouper version 2.3 to 2.4, modifications will be needed in subject.properties and grouper-loaders.proprties. Further details about this can be found at the following URL:
+https://spaces.at.internet2.edu/display/Grouper/vt-ldap+to+ldaptive+migration+for+LDAP+access
+
+Additional upgrade information can be found at the following URL: https://spaces.at.internet2.edu/display/Grouper/v2.4+Upgrade+Instructions+from+v2.3
+
 # Supported tags
 
 -	latest
