@@ -51,10 +51,12 @@ pipeline {
                    docker.withRegistry('https://registry.hub.docker.com/',   "dockerhub-$maintainer") {
                       def baseImg = docker.build("$maintainer/$imagename", "--no-cache .")
                       // test the environment 
+                      aquaMicroscanner imageName: "$maintainer/$imagename"
                       sh 'cd test-compose && ./compose.sh'
                       // bring down after testing
                       sh 'cd test-compose && docker-compose down'
                       baseImg.push("$tag")
+                      
                    }
                }
             }
