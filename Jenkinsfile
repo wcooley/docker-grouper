@@ -51,7 +51,7 @@ pipeline {
                    docker.withRegistry('https://registry.hub.docker.com/',   "dockerhub-$maintainer") {
                       def baseImg = docker.build("$maintainer/$imagename", "--no-cache .")
                       // scan the image with clair
-                      sh 'docker run -p 5432:5432 -d --name clairdb arminc/clair-db:2018-10-04'
+                      sh 'docker run -p 5432:5432 -d --name clairdb arminc/clair-db:latest'
                       sh 'docker run -p 6060:6060 --link clairdb:postgres -d --name clair arminc/clair-local-scan:v2.0.5'
                       sh 'curl -L -o clair-scanner https://github.com/arminc/clair-scanner/releases/download/v8/clair-scanner_linux_amd64'
                       sh 'chmod 755 clair-scanner'
