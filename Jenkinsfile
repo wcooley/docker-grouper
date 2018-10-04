@@ -55,7 +55,7 @@ pipeline {
                       sh 'docker run -p 6060:6060 --link clairdb:postgres -d --name clair arminc/clair-local-scan:v2.0.5'
                       sh 'curl -L -o clair-scanner https://github.com/arminc/clair-scanner/releases/download/v8/clair-scanner_linux_amd64'
                       sh 'chmod 755 clair-scanner'
-                      sh "./clair-scanner --ip 172.17.0.1 -r test.out $maintainer/$imagename:$tag"
+                      sh "./clair-scanner --ip 172.17.0.1 -r test.out $maintainer/$imagename:latest"
                       // test the environment
                       sh 'docker kill clairdb'
                       sh 'docker rm clairdb'
