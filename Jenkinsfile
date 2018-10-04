@@ -51,11 +51,11 @@ pipeline {
                    docker.withRegistry('https://registry.hub.docker.com/',   "dockerhub-$maintainer") {
                       def baseImg = docker.build("$maintainer/$imagename", "--no-cache .")
                       // scan the image with clair
-                      docker run -p 5432:5432 -d --name db arminc/clair-db:2017-10-04
-                      docker run -p 6060:6060 --link db:postgres -d --name clair arminc/clair-local-scan:v2.0.5
-                      curl -L -o clair-scanner https://github.com/arminc/clair-scanner/releases/download/v8/clair-scanner_linux_amd64
-                      chmod 755 clair-scanner
-                      ./clair-scanner --ip 172.17.0.1 -r test.out $maintainer/$imagename
+                      sh 'docker run -p 5432:5432 -d --name db arminc/clair-db:2017-10-04'
+                      sh 'docker run -p 6060:6060 --link db:postgres -d --name clair arminc/clair-local-scan:v2.0.5'
+                      sh 'curl -L -o clair-scanner https://github.com/arminc/clair-scanner/releases/download/v8/clair-scanner_linux_amd64'
+                      sh 'chmod 755 clair-scanner'
+                      sh './clair-scanner --ip 172.17.0.1 -r test.out $maintainer/$imagename'
                       // test the environment 
                       sh 'cd test-compose && ./compose.sh'
                       // bring down after testing
