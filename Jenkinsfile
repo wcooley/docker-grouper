@@ -50,8 +50,13 @@ pipeline {
                 script {
                    docker.withRegistry('https://registry.hub.docker.com/',   "dockerhub-$maintainer") {
                       def baseImg = docker.build("$maintainer/$imagename", "--no-cache .")
+                      // scan the image with clair
+                      docker run -p 5432:5432 -d --name db arminc/clair-db:2017-10-04
+                      docker run -p 6060:6060 --link db:postgres -d --name clair arminc/clair-local-scan:v2.0.5
+                      curl -L -o clair-scanner https://github.com/arminc/clair-scanner/releases/download/v8/clair-scanner_linux_amd64
+                      chmod 755 clair-scanner
+                      ./clair-scanner --ip 172.17.0.1 -r test.out $maintainer/$imagename
                       // test the environment 
-                      aquaMicroscanner imageName: "$maintainer/$imagename"
                       sh 'cd test-compose && ./compose.sh'
                       // bring down after testing
                       sh 'cd test-compose && docker-compose down'
