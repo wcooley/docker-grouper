@@ -49,7 +49,7 @@ pipeline {
             steps {
                 script {
                   try{
-                    sh 'bin/rebuild.sh &> debug'
+                    sh 'bin/rebuild.sh | tee debug ; test ${PIPESTATUS[0]} -eq 0'
                   } catch(error) {
                      def error_details = readFile('./debug');
                      def message = "BUILD ERROR: There was a problem building ${imagename}:${tag}. \n\n ${error_details}"
