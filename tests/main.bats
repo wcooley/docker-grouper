@@ -7,7 +7,7 @@ load ../common
 }
 
 @test "030 Port 443/https is listening" {
-    docker run -d ${maintainer}/${imagename}
+    docker run -d ${maintainer}/${imagename} ui
     sleep 25
     #get cont id
     contid=$(docker ps | grep ${maintainer}/${imagename} | cut -f 1 -d ' ')
