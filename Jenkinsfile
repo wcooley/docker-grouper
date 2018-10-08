@@ -57,6 +57,7 @@ pipeline {
                      handleError(message)
                   }
                 }
+            }
         }
         stage('Test') {
             steps {
@@ -70,6 +71,7 @@ pipeline {
                      handleError(message)
                    } 
                 }    
+             }
         }
         
         stage('Push') {
