@@ -7,8 +7,7 @@ load ../common
 }
 
 @test "030 Test Compose the environment" {
-    cd test-compose && ./compose.sh
-    cd test-compose && docker-compose down
+    cd test-compose && ./compose.sh && docker-compose down
     [ "$status" -eq 0 ]
 }
 
