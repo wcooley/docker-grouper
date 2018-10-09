@@ -1,6 +1,7 @@
 
 pipeline {
     agent any
+    def baseImg
     environment { 
         maintainer = "t"
         imagename = 'g'
@@ -52,7 +53,9 @@ pipeline {
             steps {
                 script {
                   try{
-                    sh 'bin/rebuild.sh | tee debug ; test ${PIPESTATUS[0]} -eq 0'
+                      docker.withRegistry('https://registry.hub.docker.com/',   "dockerhub-$maintainer") {
+                        baseImg = docker.build("$maintainer/$imagename", "--no-cache .")
+                      }
                   } catch(error) {
                      def error_details = readFile('./debug');
                      def message = "BUILD ERROR: There was a problem building ${imagename}:${tag}. \n\n ${error_details}"
@@ -80,8 +83,6 @@ pipeline {
         stage('Push') {
             steps {
                 script {
-                   docker.withRegistry('https://registry.hub.docker.com/',   "dockerhub-$maintainer") {
-                      def baseImg = docker.build("$maintainer/$imagename", "--no-cache .")
                       //// scan the image with clair
                       // sh 'docker run -p 5432:5432 -d --name clairdb arminc/clair-db:latest'
                       // sh 'docker run -p 6060:6060 --link clairdb:postgres -d --name clair arminc/clair-local-scan:v2.0.5'
@@ -97,9 +98,7 @@ pipeline {
                       //// bring down after testing
                       //sh 'cd test-compose && docker-compose down'
                       baseImg.push("$tag")
-                      
-                   }
-               }
+                  }
             }
         }
         stage('Notify') {
