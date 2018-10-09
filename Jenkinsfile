@@ -96,7 +96,9 @@ pipeline {
                       // sh 'cd test-compose && ./compose.sh'
                       //// bring down after testing
                       //sh 'cd test-compose && docker-compose down'
-                      baseImg.push("$tag")
+                      docker.withRegistry('https://registry.hub.docker.com/',   "dockerhub-$maintainer") {
+                        baseImg.push("$tag")
+                      }
                   }
             }
         }
