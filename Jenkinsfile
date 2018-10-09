@@ -1,7 +1,6 @@
 
 pipeline {
     agent any
-    def baseImg = ''
     environment { 
         maintainer = "t"
         imagename = 'g'
