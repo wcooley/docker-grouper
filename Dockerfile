@@ -3,9 +3,12 @@ FROM centos:centos7 as installing
 RUN yum update -y \
     && yum install -y wget tar unzip dos2unix \
     && yum clean all
+    
+ARG GROUPER_CONTAINER_VERSION
 
 ENV GROUPER_VERSION=2.4.0 \
-     JAVA_HOME=/usr/lib/jvm/zulu-8/
+     JAVA_HOME=/usr/lib/jvm/zulu-8/ \
+     GROUPER_CONTAINER_VERSION=$GROUPER_CONTAINER_VERSION
 
 # use Zulu package
 RUN rpm --import http://repos.azulsystems.com/RPM-GPG-KEY-azulsystems \
