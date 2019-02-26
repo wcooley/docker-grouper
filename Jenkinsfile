@@ -21,12 +21,12 @@ pipeline {
                         echo "You must define an imagename in common.bash"
                         currentBuild.result = 'FAILURE'
                      }
-                    sh 'mkdir -p bin'
-                    sh 'mkdir -p tmp'
+                    
+                    sh 'mkdir -p tmp && mkdir -p bin'
                     dir('tmp'){
                       git([ url: "https://github.internet2.edu/docker/util.git", credentialsId: "jenkins-github-access-token" ])
-                      sh 'ls'
-                      sh 'mv bin/* ../bin'
+                      sh 'rm -rf ../bin/*'
+                      sh 'mv ./bin/* ../bin/.'
                     }
                     // Build and test scripts expect that 'tag' is present in common.bash. This is necessary for both Jenkins and standalone testing.
                     // We don't care if there are more 'tag' assignments there. The latest one wins.
