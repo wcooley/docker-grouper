@@ -1,4 +1,5 @@
-[![Build Status](https://jenkins.testbed.tier.internet2.edu/job/docker/job/grouper/job/master/badge/icon)](https://jenkins.testbed.tier.internet2.edu/job/docker/job/grouper/job/master/)
+[![Build Status](https://jenkins.testbed.tier.internet2.edu/buildStatus/icon?job=docker/grouper/2.4.0-a29-u14-w3-p2-20190217)](https://jenkins.testbed.tier.internet2.edu/buildStatus/icon?job=docker/grouper/2.4.0-a29-u14-w3-p2-20190217)
+
 
 
 # Upgrading from 2.3 to 2.4
