@@ -3,9 +3,12 @@ FROM centos:centos7 as installing
 RUN yum update -y \
     && yum install -y wget tar unzip dos2unix \
     && yum clean all
+    
+ARG GROUPER_CONTAINER_VERSION
 
-ENV GROUPER_VERSION=2.3.0 \
-     JAVA_HOME=/usr/lib/jvm/zulu-8/
+ENV GROUPER_VERSION=2.4.0 \
+     JAVA_HOME=/usr/lib/jvm/zulu-8/ \
+     GROUPER_CONTAINER_VERSION=$GROUPER_CONTAINER_VERSION
 
 # use Zulu package
 RUN rpm --import http://repos.azulsystems.com/RPM-GPG-KEY-azulsystems \
@@ -46,7 +49,7 @@ RUN echo 'Installing Grouper'; \
 
 FROM centos:centos7 as cleanup
 
-ENV GROUPER_VERSION=2.3.0 \
+ENV GROUPER_VERSION=2.4.0 \
     TOMCAT_VERSION=8.5.12 \    
     TOMEE_VERSION=7.0.0
 
@@ -93,10 +96,13 @@ LABEL author="tier-packaging@internet2.edu <tier-packaging@internet2.edu>" \
       ImageType="Grouper" \
       ImageName=$imagename \
       ImageOS=centos7
+      
+ARG GROUPER_CONTAINER_VERSION
 
 ENV JAVA_HOME=/usr/lib/jvm/zulu-8/ \
     PATH=$PATH:$JAVA_HOME/bin \
-    GROUPER_HOME=/opt/grouper/grouper.apiBinary
+    GROUPER_HOME=/opt/grouper/grouper.apiBinary \
+    GROUPER_CONTAINER_VERSION=$GROUPER_CONTAINER_VERSION
 
 RUN ln -sf /usr/share/zoneinfo/UTC /etc/localtime
 
@@ -118,7 +124,8 @@ RUN groupadd -r tomcat \
     && chown -R tomcat:tomcat /opt/tomee/logs/ /opt/tomee/temp/ /opt/tomee/work/ \
     && ln -s $JAVA_HOME/bin/java /etc/alternatives/java
 
-RUN rm /etc/shibboleth/sp-key.pem /etc/shibboleth/sp-cert.pem
+# does shib sp3 not generate these files?
+# RUN rm /etc/shibboleth/sp-key.pem /etc/shibboleth/sp-cert.pem
 
 COPY container_files/tier-support/ /opt/tier-support/
 COPY container_files/usr-local-bin/ /usr/local/bin/

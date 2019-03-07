@@ -1,5 +1,15 @@
-[![Build Status](https://jenkins.testbed.tier.internet2.edu/job/docker/job/grouper/job/master/badge/icon)](https://jenkins.testbed.tier.internet2.edu/job/docker/job/grouper/job/master/)
+[![Build Status](https://jenkins.testbed.tier.internet2.edu/buildStatus/icon?job=docker/grouper/2.4.0-a29-u14-w3-p2-20190217)](https://jenkins.testbed.tier.internet2.edu/buildStatus/icon?job=docker/grouper/2.4.0-a29-u14-w3-p2-20190217)
 
+
+
+# Upgrading from 2.3 to 2.4
+
+If upgrading from Grouper version 2.3 to 2.4 and using LDAP, modifications will be needed in subject.properties and grouper-loaders.proprties. Further details about this can be found at the following URL:
+https://spaces.at.internet2.edu/display/Grouper/vt-ldap+to+ldaptive+migration+for+LDAP+access
+
+In particular, in subject.properties, *.param.base.value should be adjusted to only contain the RDN (Relative Distinguished Name), not the full DN.  For example, "OU=People", not "OU=People,DC=domain,DC=edu"
+
+Additional upgrade information can be found at the following URL: https://spaces.at.internet2.edu/display/Grouper/v2.4+Upgrade+Instructions+from+v2.3
 
 # Supported tags
 

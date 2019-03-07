@@ -27,6 +27,9 @@ pipeline {
                       sh 'rm -rf ../bin/*'
                       sh 'mv ./bin/* ../bin/.'
                     }
+                    // Build and test scripts expect that 'tag' is present in common.bash. This is necessary for both Jenkins and standalone testing.
+                    // We don't care if there are more 'tag' assignments there. The latest one wins.
+                    sh "echo >> common.bash ; echo \"tag=\\\"${tag}\\\"\" >> common.bash ; echo common.bash ; cat common.bash"
                 }  
              }
         }    
@@ -47,15 +50,55 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                   docker.withRegistry('https://registry.hub.docker.com/',   "dockerhub-$maintainer") {
-                      def baseImg = docker.build("$maintainer/$imagename", "--no-cache .")
-                      // test the environment 
-                      sh 'cd test-compose && ./compose.sh'
-                      // bring down after testing
-                      sh 'cd test-compose && docker-compose down'
-                      baseImg.push("$tag")
-                   }
-               }
+                  try{
+                      docker.withRegistry('https://registry.hub.docker.com/',   "dockerhub-$maintainer") {
+                        baseImg = docker.build("$maintainer/$imagename", "--build-arg GROUPER_CONTAINER_VERSION=$tag --no-cache .")
+                      }
+                  } catch(error) {
+                     def error_details = readFile('./debug');
+                     def message = "BUILD ERROR: There was a problem building ${imagename}:${tag}. \n\n ${error_details}"
+                     sh "rm -f ./debug"
+                     handleError(message)
+                  }
+                }
+            }
+        }
+        stage('Test') {
+            steps {
+                script {
+                   try {
+                     sh 'bin/test.sh 2>&1 | tee debug ; test ${PIPESTATUS[0]} -eq 0'
+                   } catch (error) {
+                     def error_details = readFile('./debug')
+                     def message = "BUILD ERROR: There was a problem testing ${imagename}:${tag}. \n\n ${error_details}"
+                     sh "rm -f ./debug"
+                     handleError(message)
+                   } 
+                }    
+             }
+        }
+        
+        stage('Push') {
+            steps {
+                script {
+                      //// scan the image with clair
+                      // sh 'docker run -p 5432:5432 -d --name clairdb arminc/clair-db:latest'
+                      // sh 'docker run -p 6060:6060 --link clairdb:postgres -d --name clair arminc/clair-local-scan:v2.0.5'
+                      // sh 'curl -L -o clair-scanner https://github.com/arminc/clair-scanner/releases/download/v8/clair-scanner_linux_amd64'
+                      // sh 'chmod 755 clair-scanner'
+                      // sh "./clair-scanner --ip 172.17.0.1 -r test.out $maintainer/$imagename:latest"
+                      //// test the environment
+                      // sh 'docker kill clairdb'
+                      // sh 'docker rm clairdb'
+                      // sh 'docker kill clair'
+                      // sh 'docker rm clair'
+                      // sh 'cd test-compose && ./compose.sh'
+                      //// bring down after testing
+                      //sh 'cd test-compose && docker-compose down'
+                      docker.withRegistry('https://registry.hub.docker.com/',   "dockerhub-$maintainer") {
+                        baseImg.push("$tag")
+                      }
+                  }
             }
         }
         stage('Notify') {
