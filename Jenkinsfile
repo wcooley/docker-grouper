@@ -21,7 +21,6 @@ pipeline {
                         echo "You must define an imagename in common.bash"
                         currentBuild.result = 'FAILURE'
                      }
-                    
                     sh 'mkdir -p tmp && mkdir -p bin'
                     dir('tmp'){
                       git([ url: "https://github.internet2.edu/docker/util.git", credentialsId: "jenkins-github-access-token" ])
