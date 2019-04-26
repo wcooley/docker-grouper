@@ -89,7 +89,7 @@ COPY container_files/tomcat/ /opt/tomcat/
 COPY container_files/tomee/ /opt/tomee/
 
 
-FROM tier/shibboleth_sp
+FROM tier/shibboleth_sp:3.0.4_03122019
 
 LABEL author="tier-packaging@internet2.edu <tier-packaging@internet2.edu>" \
       Vendor="TIER" \
