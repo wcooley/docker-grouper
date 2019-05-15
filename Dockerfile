@@ -76,7 +76,7 @@ RUN cd /opt/grouper/grouper.apiBinary/; \
 
 RUN cd /opt/tomcat/; \
     chmod +r bin/log4j-*.jar; \
-    rm -fr webapps/docs/ webapps/examples/ webapps/host-manager/ webapps/manager/ logs/* temp/* work/* conf/logging.properties
+    rm -fr webapps/docs/ webapps/examples/ webapps/host-manager/ webapps/manager/ webapps/ROOT/ logs/* temp/* work/* conf/logging.properties
 
 RUN cd /opt/tomee/; \
     chmod +r bin/log4j-*.jar; \
