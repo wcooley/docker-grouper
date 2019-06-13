@@ -168,7 +168,7 @@ For passing full files into the container, this container will make any secrets 
 Docker Secrets can also be used to pass in strings, such as a database connection string password, into the component config. To pass in the Grouper database connection string, one might set the property and value as such:
 
 ```text
-hibernate.connection.password.elConfig = ${java.lang.System.getenv().get('GROUPER_DATABASE_PASSWORD_FILE') != null ? org.apache.commons.io.FileUtils.readFileToString(java.lang.System.getenv().get('GROUPER_DATABASE_PASSWORD_FILE'), "utf-8") : java.lang.System.getenv().get('GROUPER_DATABASE_PASSWORD') }
+hibernate.connection.password.elConfig = ${java.lang.System.getenv().get('GROUPER_DATABASE_PASSWORD_FILE') != null ? org.apache.commons.io.FileUtils.readFileToString(new("java.io.File", java.lang.System.getenv().get('GROUPER_DATABASE_PASSWORD_FILE')), "utf-8") : java.lang.System.getenv().get('GROUPER_DATABASE_PASSWORD') }
 ```
 
 Note that the default property name has been changed by appending `.elConfig`. (This causes Grouper to evaluate the string before saving the value.) The expression allows deployers to use a file containing only the database password as a Docker Secret and reference the file name via the `GROUPER_DATABASE_PASSWORD_FILE` environment property. This allows the config files to be baked into the image, if desired. Also, but not recommended, the database password could just be set in the Docker Service definition as an environment variable, `GROUPER_DATABASE_PASSWORD`. (Technically the expression can be broken up and just the desired functionality used.) Of course, using Grouper's MorphString functionality is supported and likely is the best option, but does require more effort in setting it up.
