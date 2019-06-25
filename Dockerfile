@@ -50,7 +50,7 @@ RUN echo 'Installing Grouper'; \
 FROM centos:centos7 as cleanup
 
 ENV GROUPER_VERSION=2.4.0 \
-    TOMCAT_VERSION=8.5.12 \    
+    TOMCAT_VERSION=8.5.42 \    
     TOMEE_VERSION=7.0.0
 
 COPY --from=installing /opt/grouper/$GROUPER_VERSION/grouperInstaller.jar /opt/grouper/
