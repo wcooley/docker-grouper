@@ -11,7 +11,7 @@ RUN yum install -y epel-release \
     && yum clean all \
     && rm -rf /var/cache/yum
 
-RUN mysql_install_db \
+RUN mysql_install_db --force \
     && chown -R mysql:mysql /var/lib/mysql/ \
     && sed -i 's/^\(bind-address\s.*\)/# \1/' /etc/my.cnf \
     && sed -i 's/^\(log_error\s.*\)/# \1/' /etc/my.cnf \
