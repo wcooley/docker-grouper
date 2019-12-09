@@ -1,6 +1,10 @@
 [![Build Status](https://jenkins.testbed.tier.internet2.edu/buildStatus/icon?job=docker/grouper/2.4.0-a29-u14-w3-p2-20190217)](https://jenkins.testbed.tier.internet2.edu/buildStatus/icon?job=docker/grouper/2.4.0-a29-u14-w3-p2-20190217)
 
 
+This repository contains the source code used to create the InCommon Trusted Access Platform Grouper container. This standalone container is pushed to Dockerhub, various tags are avalailable at the following URL: https://hub.docker.com/r/tier/grouper/tags. This repo can also be cloned and the container built locally. 
+
+The test-compose directory contains an example Grouper environment that starts up the various Grouper components. This example demonstrates how one might go about customizing and deploying their Grouper containers, using the TIER Grouper image as a base image. If evaluating Grouper, this is a good place to start. 
+
 
 # Upgrading from 2.3 to 2.4
 
@@ -11,10 +15,12 @@ In particular, in subject.properties, *.param.base.value should be adjusted to o
 
 Additional upgrade information can be found at the following URL: https://spaces.at.internet2.edu/display/Grouper/v2.4+Upgrade+Instructions+from+v2.3
 
+
+
 # Supported tags
 
 -	latest
--   patch specific tags* (i.e. 2.3.0-a97-u41-w11-p16)
+-   patch specific tags with date timestamp* (i.e. 2.4.0-80-u51-w10-p11-20191118)
 
 \* Patch builds are routinely produced, but not necessarily for each patch release. The following monikers are used to construct the tag name:
  
@@ -22,6 +28,7 @@ Additional upgrade information can be found at the following URL: https://spaces
 - u = ui patch number
 - w = ws patch number
 - p = pspng patch number
+- last field = the year, month and day the image was built
 
 # Quick reference
 
