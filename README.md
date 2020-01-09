@@ -1,4 +1,4 @@
-[![Build Status](https://jenkins.testbed.tier.internet2.edu/buildStatus/icon?job=docker/grouper/2.4.0-80-u51-w10-p11-20191118)](https://jenkins.testbed.tier.internet2.edu/buildStatus/icon?job=docker/grouper/2.4.0-80-u51-w10-p11-20191118)
+[![Build Status](https://jenkins.testbed.tier.internet2.edu/buildStatus/icon?job=docker/grouper/2.4.0-a88-u55-w11-p12-20200109-rc1)](https://jenkins.testbed.tier.internet2.edu/buildStatus/icon?job=docker/grouper/2.4.0-a88-u55-w11-p12-20200109-rc1)
 
 
 This repository contains the source code used to create the InCommon Trusted Access Platform Grouper container. This standalone container is pushed to Dockerhub, various tags are available at the following URL: https://hub.docker.com/r/tier/grouper/tags. This repo can also be cloned and the container built locally. 
