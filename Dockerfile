@@ -75,7 +75,7 @@ ADD http://central.maven.org/maven2/org/apache/logging/log4j/log4j-api/2.11.0/lo
 ADD http://central.maven.org/maven2/org/apache/logging/log4j/log4j-jul/2.11.0/log4j-jul-2.11.0.jar /opt/tomee/bin
 
 RUN cd /opt/grouper/grouper.apiBinary/; \
-    rm -fr ddlScripts/ grouper.lck grouper.log grouper.script grouper.tmp/ gshAddGrouperSystemWsGroup.gsh logs/
+    rm -fr ddlScripts/ grouper.properties grouper.lck grouper.log grouper.script grouper.tmp/ gshAddGrouperSystemWsGroup.gsh logs/
 
 RUN cd /opt/tomcat/; \
     chmod +r bin/log4j-*.jar; \
