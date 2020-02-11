@@ -6,7 +6,7 @@ RUN yum update -y \
     
 ARG GROUPER_CONTAINER_VERSION
 
-ENV GROUPER_VERSION=2.4.0 \
+ENV GROUPER_VERSION=2.5.8 \
      JAVA_HOME=/usr/lib/jvm/zulu-8/ \
      GROUPER_CONTAINER_VERSION=$GROUPER_CONTAINER_VERSION
 
@@ -36,7 +36,8 @@ RUN rpm --import http://repos.azulsystems.com/RPM-GPG-KEY-azulsystems \
 
 RUN echo 'Downloading Grouper Installer...' \
     && mkdir -p /opt/grouper/$GROUPER_VERSION \
-    && wget -q -O /opt/grouper/$GROUPER_VERSION/grouperInstaller.jar http://software.internet2.edu/grouper/release/$GROUPER_VERSION/grouperInstaller.jar
+    && wget -q -O /opt/grouper/$GROUPER_VERSION/grouperInstaller.jar https://oss.sonatype.org/service/local/repositories/releases/content/edu/internet2/middleware/grouper/grouper-installer/$GROUPER_VERSION/grouper-installer-$GROUPER_VERSION.jar
+
 
 COPY container_files/grouper.installer.properties /opt/grouper/$GROUPER_VERSION
 # Temporary morphString file used for building, not used in production
