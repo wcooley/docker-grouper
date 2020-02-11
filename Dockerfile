@@ -1,8 +1,10 @@
 FROM centos:centos7 as installing
 
-RUN yum update -y \
-    && yum install -y wget tar unzip dos2unix \
-    && yum clean all
+#RUN yum update -y \
+#    && yum install -y wget tar unzip dos2unix \
+#    && yum clean all
+    
+RUN yum install -y wget tar unzip dos2unix
     
 ARG GROUPER_CONTAINER_VERSION
 
@@ -53,7 +55,7 @@ RUN echo 'Installing Grouper'; \
 
 FROM centos:centos7 as cleanup
 
-ENV GROUPER_VERSION=2.4.0 \
+ENV GROUPER_VERSION=2.5.8 \
     TOMCAT_VERSION=8.5.42 \    
     TOMEE_VERSION=7.0.0
 
