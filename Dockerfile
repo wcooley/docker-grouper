@@ -135,4 +135,4 @@ HEALTHCHECK NONE
 
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 
-CMD ["bin/gsh", "-loader"]
+CMD ["bin/gsh.sh", "-loader"]
