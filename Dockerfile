@@ -8,7 +8,7 @@ RUN yum install -y wget tar unzip dos2unix
     
 ARG GROUPER_CONTAINER_VERSION
 
-ENV GROUPER_VERSION=2.5.8 \
+ENV GROUPER_VERSION=2.5.11 \
      JAVA_HOME=/usr/lib/jvm/zulu-8/ \
      GROUPER_CONTAINER_VERSION=$GROUPER_CONTAINER_VERSION
 
@@ -55,7 +55,7 @@ RUN echo 'Installing Grouper'; \
 
 FROM centos:centos7 as cleanup
 
-ENV GROUPER_VERSION=2.5.8 \
+ENV GROUPER_VERSION=2.5.11 \
     TOMCAT_VERSION=8.5.42 \    
     TOMEE_VERSION=7.0.0
 
