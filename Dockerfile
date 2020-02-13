@@ -103,7 +103,6 @@ RUN yum update -y \
     && yum clean -y all
 
 COPY --from=installing $JAVA_HOME $JAVA_HOME
-COPY --from=cleanup /opt/tomcat/ /opt/tomcat/
 COPY --from=cleanup /opt/tomee/ /opt/tomee/
 COPY --from=cleanup /opt/grouper/ /opt/grouper/
 
