@@ -127,7 +127,7 @@ RUN cp /dev/null /etc/httpd/conf.d/ssl.conf \
     && echo -e "\nPassEnv ENV" >> /etc/httpd/conf/httpd.conf \
     && echo -e "\nPassEnv USERTOKEN" >> /etc/httpd/conf/httpd.conf
 
-WORKDIR /opt/grouper/
+WORKDIR /opt/grouper/grouperWebapp
 
 EXPOSE 80 443
 
