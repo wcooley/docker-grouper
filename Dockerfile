@@ -60,38 +60,22 @@ ENV GROUPER_VERSION=2.5.11 \
     TOMEE_VERSION=7.0.0
 
 COPY --from=installing /opt/grouper/$GROUPER_VERSION/grouperInstaller.jar /opt/grouper/
-COPY --from=installing /opt/grouper/$GROUPER_VERSION/grouper.apiBinary-$GROUPER_VERSION/ /opt/grouper/grouper.apiBinary/
-COPY --from=installing /opt/grouper/$GROUPER_VERSION/grouper.ui-$GROUPER_VERSION/dist/grouper/ /opt/grouper/grouper.ui/
-COPY --from=installing /opt/grouper/$GROUPER_VERSION/grouper.ws-$GROUPER_VERSION/grouper-ws/build/dist/grouper-ws/ /opt/grouper/grouper.ws/
-COPY --from=installing /opt/grouper/$GROUPER_VERSION/grouper.ws-$GROUPER_VERSION/grouper-ws-scim/targetBuiltin/grouper-ws-scim/ /opt/grouper/grouper.scim/
-#COPY --from=installing /opt/grouper/$GROUPER_VERSION/grouper.clientBinary-$GROUPER_VERSION/ /opt/grouper/grouper.clientBinary/
-COPY --from=installing /opt/grouper/$GROUPER_VERSION/apache-tomcat-$TOMCAT_VERSION/ /opt/tomcat/
-COPY --from=installing /opt/grouper/$GROUPER_VERSION/apache-tomee-webprofile-$TOMEE_VERSION/ /opt/tomee/
+COPY --from=installing /opt/grouper/$GROUPER_VERSION/container/tomee/ /opt/
+RUN mkdir /opt/grouper/grouperWebapp/
+COPY --from=installing /opt/grouper/$GROUPER_VERSION/container/webapp/* /opt/grouper/grouperWebapp/
+
 COPY --from=installing /etc/alternatives/java /etc/alternatives/java
 
-ADD https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-core/2.11.0/log4j-core-2.11.0.jar /opt/tomcat/bin
-ADD https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-api/2.11.0/log4j-api-2.11.0.jar /opt/tomcat/bin
-ADD https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-jul/2.11.0/log4j-jul-2.11.0.jar /opt/tomcat/bin
-
-ADD https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-core/2.11.0/log4j-core-2.11.0.jar /opt/tomee/bin
-ADD https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-api/2.11.0/log4j-api-2.11.0.jar /opt/tomee/bin
-ADD https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-jul/2.11.0/log4j-jul-2.11.0.jar /opt/tomee/bin
-
-RUN cd /opt/grouper/grouper.apiBinary/; \
-    rm -fr ddlScripts/ grouper.properties grouper.lck grouper.log grouper.script grouper.tmp/ gshAddGrouperSystemWsGroup.gsh logs/
-
-RUN cd /opt/tomcat/; \
-    chmod +r bin/log4j-*.jar; \
-    rm -fr webapps/docs/ webapps/examples/ webapps/host-manager/ webapps/manager/ webapps/ROOT/ logs/* temp/* work/* conf/logging.properties
+#ADD https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-core/2.11.0/log4j-core-2.11.0.jar /opt/tomee/bin
+#ADD https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-api/2.11.0/log4j-api-2.11.0.jar /opt/tomee/bin
+#ADD https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-jul/2.11.0/log4j-jul-2.11.0.jar /opt/tomee/bin
 
 RUN cd /opt/tomee/; \
-    chmod +r bin/log4j-*.jar; \
     rm -fr webapps/docs/ webapps/host-manager/ webapps/manager/ logs/* temp/* work/* conf/logging.properties
 
-COPY container_files/api/* /opt/grouper/grouper.apiBinary/conf/
-COPY container_files/ui/ /opt/grouper/grouper.ui/WEB-INF/
-COPY container_files/ws/ /opt/grouper/grouper.ws/WEB-INF/
-COPY container_files/tomcat/ /opt/tomcat/
+COPY container_files/api/* /opt/grouper/grouperWebapp/WEB-INF/classes/
+COPY container_files/ui/ /opt/grouper/grouperWebapp/WEB-INF/classes/
+
 COPY container_files/tomee/ /opt/tomee/
 
 
