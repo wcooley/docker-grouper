@@ -52,7 +52,8 @@ pipeline {
                 script {
                   try{
                       docker.withRegistry('https://registry.hub.docker.com/',   "dockerhub-$maintainer") {
-                        baseImg = docker.build("$maintainer/$imagename", "--build-arg GROUPER_CONTAINER_VERSION=$tag --no-cache .")
+                        // baseImg = docker.build("$maintainer/$imagename", "--build-arg GROUPER_CONTAINER_VERSION=$tag --no-cache .")
+                        baseImg = docker.build("$maintainer/$imagename", "--build-arg GROUPER_CONTAINER_VERSION=$tag .")
                       }
                   } catch(error) {
                      def error_details = readFile('./debug');
