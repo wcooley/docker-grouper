@@ -91,7 +91,7 @@ ARG GROUPER_CONTAINER_VERSION
 
 ENV JAVA_HOME=/usr/lib/jvm/zulu-8/ \
     PATH=$PATH:$JAVA_HOME/bin \
-    GROUPER_HOME=/opt/grouper/ \
+    GROUPER_HOME=/opt/grouper/grouperWebapp \
     GROUPER_CONTAINER_VERSION=$GROUPER_CONTAINER_VERSION
 
 RUN ln -sf /usr/share/zoneinfo/UTC /etc/localtime
