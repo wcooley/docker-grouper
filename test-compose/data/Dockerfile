@@ -44,8 +44,8 @@ RUN (/usr/sbin/ns-slapd -D /etc/dirsrv/slapd-dir &) \
     && while ! curl -s ldap://localhost:389 > /dev/null; do echo waiting for ldap to start; sleep 1; done; \
     (mysqld_safe & ) \
     && while ! curl -s localhost:3306 > /dev/null; do echo waiting for mysqld to start; sleep 1; done; \
-    bin/gsh -registry -check -runscript -noprompt \
-    && bin/gsh /seed-data/bootstrap.gsh
+    bin/gsh.sh -registry -check -runscript -noprompt \
+    && bin/gsh.sh /seed-data/bootstrap.gsh
 
 EXPOSE 389 3306
 
