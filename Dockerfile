@@ -108,9 +108,7 @@ COPY --from=cleanup /opt/grouper/ /opt/grouper/
 
 RUN groupadd -r tomcat \
     && useradd -r -m -s /sbin/nologin -g tomcat tomcat \
-    && mkdir -p /opt/tomcat/logs/ /opt/tomcat/temp/ /opt/tomcat/work/ \
-    && chown -R tomcat:tomcat /opt/tomcat/logs/ /opt/tomcat/temp/ /opt/tomcat/work/ \
-    && chown -R tomcat:tomcat /opt/tomee/logs/ /opt/tomee/temp/ /opt/tomee/work/ \
+    && chown -R tomcat:tomcat /opt/tomee  \
     && ln -s $JAVA_HOME/bin/java /etc/alternatives/java
 
 # does shib sp3 not generate these files?
