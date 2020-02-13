@@ -59,6 +59,7 @@ linkGrouperSecrets() {
 prepDaemon() {
     setupLoggingPipe
     setupGrouperLogPipe
+    cp /opt/tier-support/grouper.xml /opt/tomee/conf/Catalina/localhost/
 }
 
 prepDaemonConf() {
@@ -80,7 +81,8 @@ prepSCIM() {
     setupTomcatLogPipe
 
     
-    cp /opt/tier-support/grouper-ws-scim.xml /opt/tomee/conf/Catalina/localhost/
+    cp /opt/tier-support/grouper.xml /opt/tomee/conf/Catalina/localhost/
+
 }
 
 prepSCIMConf() {
@@ -103,7 +105,7 @@ prepUI() {
     setupTomcatLogPipe
     setupSupervisordLogPipe
 
-    cp /opt/tier-support/grouper.xml /opt/tomcat/conf/Catalina/localhost/
+    cp /opt/tier-support/grouper.xml /opt/tomee/conf/Catalina/localhost/
 }
 
 prepUIConf() {
@@ -125,7 +127,7 @@ prepWS() {
     setupTomcatLogPipe
     setupSupervisordLogPipe
 
-    cp /opt/tier-support/grouper-ws.xml /opt/tomcat/conf/Catalina/localhost/
+    cp /opt/tier-support/grouper.xml /opt/tomee/conf/Catalina/localhost/
 }
 
 prepWSConf() {
