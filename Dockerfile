@@ -91,7 +91,7 @@ ARG GROUPER_CONTAINER_VERSION
 
 ENV JAVA_HOME=/usr/lib/jvm/zulu-8/ \
     PATH=$PATH:$JAVA_HOME/bin \
-    GROUPER_HOME=/opt/grouper/grouper.apiBinary \
+    GROUPER_HOME=/opt/grouper/ \
     GROUPER_CONTAINER_VERSION=$GROUPER_CONTAINER_VERSION
 
 RUN ln -sf /usr/share/zoneinfo/UTC /etc/localtime
@@ -130,7 +130,7 @@ RUN cp /dev/null /etc/httpd/conf.d/ssl.conf \
     && echo -e "\nPassEnv ENV" >> /etc/httpd/conf/httpd.conf \
     && echo -e "\nPassEnv USERTOKEN" >> /etc/httpd/conf/httpd.conf
 
-WORKDIR /opt/grouper/grouper.apiBinary/
+WORKDIR /opt/grouper/
 
 EXPOSE 80 443
 
