@@ -59,12 +59,18 @@ ENV GROUPER_VERSION=2.5.11 \
     TOMCAT_VERSION=8.5.42 \    
     TOMEE_VERSION=7.0.0
 
+RUN ls /opt/grouper/
+RUN ls /opt/grouper/grouperWebapp/
+
 COPY --from=installing /opt/grouper/$GROUPER_VERSION/grouperInstaller.jar /opt/grouper/
 COPY --from=installing /opt/grouper/$GROUPER_VERSION/container/tomee/ /opt/
 RUN mkdir /opt/grouper/grouperWebapp/
 COPY --from=installing /opt/grouper/$GROUPER_VERSION/container/webapp/* /opt/grouper/grouperWebapp/
 
 COPY --from=installing /etc/alternatives/java /etc/alternatives/java
+RUN ls /opt/grouper/
+RUN ls /opt/grouper/grouperWebapp/
+
 
 #ADD https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-core/2.11.0/log4j-core-2.11.0.jar /opt/tomee/bin
 #ADD https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-api/2.11.0/log4j-api-2.11.0.jar /opt/tomee/bin
