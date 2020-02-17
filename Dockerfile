@@ -52,7 +52,7 @@ COPY --from=installing /opt/grouper/$GROUPER_VERSION/container/webapp/ /opt/grou
 RUN ls /opt/grouper/grouperWebapp/
 COPY --from=installing /etc/alternatives/java /etc/alternatives/java
 RUN ls /opt/grouper/
-RUN ls /opt/grouper/grouperWebapp/
+RUN ls /opt/grouper/grouperWebapp/grouper
 #ADD https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-core/2.11.0/log4j-core-2.11.0.jar /opt/tomee/bin
 #ADD https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-api/2.11.0/log4j-api-2.11.0.jar /opt/tomee/bin
 #ADD https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-jul/2.11.0/log4j-jul-2.11.0.jar /opt/tomee/bin
