@@ -207,6 +207,8 @@ services:
        target: grouper_grouper-loader.properties
      - source: subject.properties
        target: grouper_subject.properties
+     - source: morphString.properties
+       target: grouper_morphString.properties
     volumes:
      - type: bind
        source: ./configs-and-secrets/grouper/grouper.properties
