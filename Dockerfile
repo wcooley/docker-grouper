@@ -99,7 +99,7 @@ RUN cp /dev/null /etc/httpd/conf.d/ssl.conf \
     && sed -i 's/ErrorLog "logs\/error_log"/ErrorLog "\/tmp\/logpipe"/g' /etc/httpd/conf/httpd.conf \
     && echo -e "\nPassEnv ENV" >> /etc/httpd/conf/httpd.conf \
     && echo -e "\nPassEnv USERTOKEN" >> /etc/httpd/conf/httpd.conf
-WORKDIR /opt/grouper/grouperWebapp/WEB-INF
+WORKDIR /opt/grouper/grouperWebapp
 EXPOSE 80 443
 HEALTHCHECK NONE
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
