@@ -3,7 +3,7 @@ FROM tier/grouper:latest
 LABEL author="tier-packaging@internet2.edu <tier-packaging@internet2.edu>"
  
 COPY container_files/seed-data/ /seed-data/
-COPY container_files/conf/ /opt/grouper/grouper.apiBinary/conf/
+COPY container_files/conf/ /opt/grouper/grouperWebapp/conf/
 
 RUN yum install -y epel-release \
     && yum update -y \
