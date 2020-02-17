@@ -6,11 +6,11 @@ load ../common
     docker image inspect ${maintainer}/${imagename}
 }
 
-@test "030 Test Compose the environment" {
-    cd test-compose && ./compose.sh && docker-compose down
-}
+#@test "030 Test Compose the environment" {
+#    cd test-compose && ./compose.sh && docker-compose down
+#}
 
 
-@test "070 There are no known security vulnerabilities" {
-    ./tests/clairscan.sh ${maintainer}/${imagename}:latest
-}
+#@test "070 There are no known security vulnerabilities" {
+#    ./tests/clairscan.sh ${maintainer}/${imagename}:latest
+#}
