@@ -269,6 +269,9 @@ secrets:
     file: ./configs-and-secrets/grouper/subject.properties
   sp-key.pem:
     file: ./configs-and-secrets/shibboleth/sp-key.pem
+  morphString.properties:
+    file: ./configs-and-secrets/grouper/morphString.properties
+     
     
     
 volumes:
