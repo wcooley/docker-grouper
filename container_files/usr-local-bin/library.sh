@@ -1,5 +1,8 @@
 #!/bin/sh
 
+local dest=/opt/grouper/grouperWebapp/WEB-INF/
+
+
 setupPipe() {
     if [ -e $1 ]; then
         rm $1
@@ -63,11 +66,10 @@ prepDaemon() {
 }
 
 prepDaemonConf() {
-    local dest=/opt/grouper/grouper.apiBinary
-    linkGrouperSecrets $dest/conf
+    linkGrouperSecrets $dest
 
     if [ -d "/opt/grouper/conf" ]; then
-        cp -r /opt/grouper/conf/* $dest/conf/
+        cp -r /opt/grouper/conf/* $dest/classes/
     fi
     if [ -d "/opt/grouper/lib" ]; then
         cp -r /opt/grouper/lib/* $dest/lib/custom/
@@ -86,7 +88,6 @@ prepSCIM() {
 }
 
 prepSCIMConf() {
-    local dest=/opt/grouper/grouper.scim/WEB-INF
     linkGrouperSecrets $dest/classes
 
     if [ -d "/opt/grouper/conf" ]; then
@@ -109,7 +110,6 @@ prepUI() {
 }
 
 prepUIConf() {
-    local dest=/opt/grouper/grouper.ui/WEB-INF
     linkGrouperSecrets $dest/classes
 
     if [ -d "/opt/grouper/conf" ]; then
@@ -131,7 +131,6 @@ prepWS() {
 }
 
 prepWSConf() {
-    local dest=/opt/grouper/grouper.ws/WEB-INF
     linkGrouperSecrets $dest/classes
     
     if [ -d "/opt/grouper/conf" ]; then
