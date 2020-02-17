@@ -7,12 +7,25 @@ RUN yum install -y wget tar unzip dos2unix
     
 ARG GROUPER_CONTAINER_VERSION
 ENV GROUPER_VERSION=2.5.11 \
-     JAVA_HOME=/usr/lib/jvm/zulu-8/ \
      GROUPER_CONTAINER_VERSION=$GROUPER_CONTAINER_VERSION
+
+# Install Corretto Java JDK
+#Corretto download page: https://docs.aws.amazon.com/corretto/latest/corretto-8-ug/downloads-list.html
+ARG CORRETTO_URL_PERM=https://corretto.aws/downloads/latest/amazon-corretto-8-x64-linux-jdk.rpm
+ARG CORRETTO_RPM=amazon-corretto-8-x64-linux-jdk.rpm
+COPY container_files/java-corretto/corretto-signing-key.pub .
+RUN curl -O -L $CORRETTO_URL_PERM \
+    && rpm --import corretto-signing-key.pub \
+    && rpm -K $CORRETTO_RPM \
+    && rpm -i $CORRETTO_RPM \
+    && rm -r corretto-signing-key.pub $CORRETTO_RPM
+ENV JAVA_HOME=/usr/lib/jvm/java-1.8.0-amazon-corretto
+     
+     
 # use Zulu package
-RUN rpm --import http://repos.azulsystems.com/RPM-GPG-KEY-azulsystems \
-       && curl -o /etc/yum.repos.d/zulu.repo http://repos.azulsystems.com/rhel/zulu.repo \
-       && yum -y install zulu-8 
+# RUN rpm --import http://repos.azulsystems.com/RPM-GPG-KEY-azulsystems \
+#       && curl -o /etc/yum.repos.d/zulu.repo http://repos.azulsystems.com/rhel/zulu.repo \
+#       && yum -y install zulu-8 
 #RUN java_version=8.0.172; \
 #    zulu_version=8.30.0.1; \
 #    echo 'Downloading the OpenJDK Zulu...' \
@@ -42,7 +55,6 @@ RUN echo 'Installing Grouper'; \
     && $JAVA_HOME/bin/java -cp :grouperInstaller.jar edu.internet2.middleware.grouperInstaller.GrouperInstaller
 FROM centos:centos7 as cleanup
 ENV GROUPER_VERSION=2.5.11 \
-    TOMCAT_VERSION=8.5.42 \    
     TOMEE_VERSION=7.0.0
 RUN mkdir -p /opt/grouper/grouperWebapp/
 RUN mkdir -p /opt/tomee/
