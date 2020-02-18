@@ -1,7 +1,7 @@
 FROM centos:centos7 as installing
-#RUN yum update -y \
-#    && yum install -y wget tar unzip dos2unix \
-#    && yum clean all
+RUN yum update -y \
+    && yum install -y wget tar unzip dos2unix \
+    && yum clean all
     
 RUN yum install -y wget tar unzip dos2unix
     
@@ -20,29 +20,7 @@ RUN curl -O -L $CORRETTO_URL_PERM \
     && rpm -i $CORRETTO_RPM \
     && rm -r corretto-signing-key.pub $CORRETTO_RPM
 ENV JAVA_HOME=/usr/lib/jvm/java-1.8.0-amazon-corretto
-     
-     
-# use Zulu package
-# RUN rpm --import http://repos.azulsystems.com/RPM-GPG-KEY-azulsystems \
-#       && curl -o /etc/yum.repos.d/zulu.repo http://repos.azulsystems.com/rhel/zulu.repo \
-#       && yum -y install zulu-8 
-#RUN java_version=8.0.172; \
-#    zulu_version=8.30.0.1; \
-#    echo 'Downloading the OpenJDK Zulu...' \
-#    && wget -q http://cdn.azul.com/zulu/bin/zulu$zulu_version-jdk$java_version-linux_x64.tar.gz \
-#    && echo "0a101a592a177c1c7bc63738d7bc2930  zulu$zulu_version-jdk$java_version-linux_x64.tar.gz" | md5sum -c - \
-#    && tar -zxvf zulu$zulu_version-jdk$java_version-linux_x64.tar.gz -C /opt \
-#    && ln -s /opt/zulu$zulu_version-jdk$java_version-linux_x64 $JAVA_HOME
-#RUN java_version=8u151; \
-#    java_bnumber=12; \
-#    java_semver=1.8.0_151; \
-#    java_hash=123b1d755416aa7579abc03f01ab946e612e141b6f7564130f2ada00ed913f1d; \
-#    echo 'Downloading the Oracle Java...' \ 
-#    && wget --no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie" \
-#    http://download.oracle.com/otn-pub/java/jdk/$java_version-b$java_bnumber/e758a0de34e24606bca991d704f6dcbf/server-jre-$java_version-linux-x64.tar.gz \
-#    && echo "$java_hash  server-jre-$java_version-linux-x64.tar.gz" | sha256sum -c - \
-#    && tar -zxvf server-jre-$java_version-linux-x64.tar.gz -C /opt \
-#    && ln -s /opt/jdk$java_semver/ $JAVA_HOME
+
 RUN echo 'Downloading Grouper Installer...' \
     && mkdir -p /opt/grouper/$GROUPER_VERSION \
     && wget -q -O /opt/grouper/$GROUPER_VERSION/grouperInstaller.jar https://oss.sonatype.org/service/local/repositories/releases/content/edu/internet2/middleware/grouper/grouper-installer/$GROUPER_VERSION/grouper-installer-$GROUPER_VERSION.jar
@@ -98,8 +76,7 @@ RUN groupadd -r tomcat \
     && useradd -r -m -s /sbin/nologin -g tomcat tomcat \
     && chown -R tomcat:tomcat /opt/tomee  \
     && ln -s $JAVA_HOME/bin/java /etc/alternatives/java
-# does shib sp3 not generate these files?
-# RUN rm /etc/shibboleth/sp-key.pem /etc/shibboleth/sp-cert.pem
+
 COPY container_files/tier-support/ /opt/tier-support/
 COPY container_files/usr-local-bin/ /usr/local/bin/
 COPY container_files/httpd/* /etc/httpd/conf.d/
