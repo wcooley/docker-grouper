@@ -4,4 +4,4 @@
 
 prepWS
 
-exec /usr/bin/supervisord -c /opt/tier-support/supervisord-tomcat.conf
+exec /usr/bin/supervisord -c /opt/tier-support/supervisord-tomee.conf
