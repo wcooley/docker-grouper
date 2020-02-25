@@ -1,6 +1,6 @@
 #!/bin/sh
 
-local dest=/opt/grouper/grouperWebapp/WEB-INF/
+dest=/opt/grouper/grouperWebapp/WEB-INF/
 
 
 setupPipe() {
@@ -34,7 +34,7 @@ setupShibdLogPipe() {
 
 setupTomcatLogPipe() {
     setupPipe /tmp/logtomcat
-    (cat <> /tmp/logtomcat | awk -v ENV="$ENV" -v UT="$USERTOKEN" '{printf "tomcat;console;%s;%s;%s\n", ENV, UT, $0; fflush()}' &>/tmp/logpipe) &
+    (cat <> /tmp/logtomcat | awk -v ENV="$ENV" -v UT="$USERTOKEN" '{printf "tomee;console;%s;%s;%s\n", ENV, UT, $0; fflush()}' &>/tmp/logpipe) &
 }
 
 setupSupervisordLogPipe() {
@@ -48,7 +48,7 @@ linkGrouperSecrets() {
         local file=$(echo $label_file| cut -d'_' -f 2)
 
         if [[ $label_file == grouper_* ]]; then
-            ln -sf /run/secrets/$label_file $1/$file
+            ln -sf /run/secrets/$label_file $dest/classes/$file
         elif [[ $label_file == shib_* ]]; then
             ln -sf /run/secrets/$label_file /etc/shibboleth/$file
         elif [[ $label_file == httpd_* ]]; then
