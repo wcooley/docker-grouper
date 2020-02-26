@@ -61,7 +61,7 @@ LABEL author="tier-packaging@internet2.edu <tier-packaging@internet2.edu>" \
 ARG GROUPER_CONTAINER_VERSION
 ENV JAVA_HOME=/usr/lib/jvm/java-1.8.0-amazon-corretto \
     PATH=$PATH:$JAVA_HOME/bin \
-    GROUPER_HOME=/opt/grouper/grouperWebapp/WEB-INF/classes \
+    GROUPER_HOME=/opt/grouper/grouperWebapp/WEB-INF/ \
     GROUPER_CONTAINER_VERSION=$GROUPER_CONTAINER_VERSION
 RUN ln -sf /usr/share/zoneinfo/UTC /etc/localtime
 RUN yum update -y \
@@ -84,7 +84,7 @@ COPY container_files/httpd/* /etc/httpd/conf.d/
 COPY container_files/shibboleth/* /etc/shibboleth/
 RUN cp /dev/null /etc/httpd/conf.d/ssl.conf 
 
-WORKDIR /opt/grouper/grouperWebapp/WEB-INF
+WORKDIR /opt/grouper/grouperWebapp/WEB-INF/
 EXPOSE 80 443
 HEALTHCHECK NONE
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
