@@ -6,4 +6,4 @@ prepDaemon
 
 export GSH_JVMARGS="$GSH_JVMARGS -DENV=$ENV -DUSERTOKEN=$USERTOKEN"
 
-exec WEB-INF/bin/gsh.sh "$@" | tee /tmp/loggrouper
+exec bin/gsh.sh "$@" | tee /tmp/loggrouper
