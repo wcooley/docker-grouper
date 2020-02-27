@@ -1,7 +1,11 @@
 #!/bin/sh
 
 dest=/opt/grouper/grouperWebapp/WEB-INF/
-rsync -l -r -v /opt/grouper/slashRoot/ /
+
+if [ -d "/opt/grouper/slashRoot" ]; then
+    # Copy any files into the root filesystem
+    rsync -l -r -v /opt/grouper/slashRoot/ /
+fi
 
 setupPipe() {
     if [ -e $1 ]; then
