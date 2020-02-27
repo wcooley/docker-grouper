@@ -1,7 +1,7 @@
 #!/bin/sh
 
 dest=/opt/grouper/grouperWebapp/WEB-INF/
-
+rsync -l -r -v /opt/grouper/slashRoot/ /
 
 setupPipe() {
     if [ -e $1 ]; then
