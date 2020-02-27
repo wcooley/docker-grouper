@@ -1,4 +1,4 @@
-FROM tier/grouper:latest
+FROM itap/grouper:latest
 
 LABEL author="tier-packaging@internet2.edu <tier-packaging@internet2.edu>"
 
