@@ -3,7 +3,7 @@ RUN yum update -y \
     && yum install -y wget tar unzip dos2unix \
     && yum clean all
     
-RUN yum install -y wget tar unzip dos2unix rsync
+RUN yum install -y wget tar unzip dos2unix
     
 ARG GROUPER_CONTAINER_VERSION
 ENV GROUPER_VERSION=2.5.11 \
@@ -65,7 +65,7 @@ ENV JAVA_HOME=/usr/lib/jvm/java-1.8.0-amazon-corretto \
     GROUPER_CONTAINER_VERSION=$GROUPER_CONTAINER_VERSION
 RUN ln -sf /usr/share/zoneinfo/UTC /etc/localtime
 RUN yum update -y \
-    && yum install -y cron logrotate python-pip \
+    && yum install -y cron logrotate python-pip rsync \
     && pip install --upgrade pip \
     && pip install supervisor \
     && yum clean -y all
