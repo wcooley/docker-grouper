@@ -56,7 +56,7 @@ pipeline {
                       }
                   } catch(error) {
                      def error_details = readFile('./debug');
-                     def message = "BUILD ERROR: There was a problem building ${imagename}:${tag}. \n\n ${error_details}"
+                      def message = "BUILD ERROR: There was a problem building ${maintainer}/${imagename}:${tag}. \n\n ${error_details}"
                      sh "rm -f ./debug"
                      handleError(message)
                   }
@@ -70,7 +70,7 @@ pipeline {
                      sh 'bin/test.sh 2>&1 | tee debug ; test ${PIPESTATUS[0]} -eq 0'
                    } catch (error) {
                      def error_details = readFile('./debug')
-                     def message = "BUILD ERROR: There was a problem testing ${imagename}:${tag}. \n\n ${error_details}"
+                     def message = "BUILD ERROR: There was a problem testing ${maintainer}/${imagename}:${tag}. \n\n ${error_details}"
                      sh "rm -f ./debug"
                      handleError(message)
                    } 
