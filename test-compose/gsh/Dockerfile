@@ -1,4 +1,4 @@
-FROM tier/grouper:latest
+FROM itap/grouper:latest
 
 MAINTAINER tier-packaging@internet2.edu <tier-packaging@internet2.edu>
 
