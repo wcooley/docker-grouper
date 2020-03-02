@@ -64,6 +64,9 @@ linkGrouperSecrets() {
 }
 
 prepDaemon() {
+    export GROUPER_DAEMON=true
+    export RUN_TOMEE=true
+
     setupLoggingPipe
     setupGrouperLogPipe
     cp /opt/tier-support/grouper.xml /opt/tomee/conf/Catalina/localhost/
@@ -81,6 +84,10 @@ prepDaemonConf() {
 }
 
 prepSCIM() {
+    export GROUPER_SCIM=true
+    export RUN_APACHE=true
+    export RUN_TOMEE=true
+
     setupLoggingPipe
     setupGrouperLogPipe
     setupHttpdLogPipe
@@ -103,6 +110,11 @@ prepSCIMConf() {
 }
 
 prepUI() {
+    export GROUPER_UI=true
+    export RUN_APACHE=true
+    export RUN_SHIB_SP=true
+    export RUN_TOMEE=true
+
     setupLoggingPipe
     setupGrouperLogPipe
     setupHttpdLogPipe
@@ -125,6 +137,10 @@ prepUIConf() {
 }
 
 prepWS() {
+
+    export GROUPER_WS=true
+    export RUN_APACHE=true
+    export RUN_TOMEE=true
     setupLoggingPipe
     setupGrouperLogPipe
     setupHttpdLogPipe
