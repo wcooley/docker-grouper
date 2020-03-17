@@ -168,3 +168,23 @@ prepConf() {
     prepUIConf
     prepWSConf
 }
+
+if [ "$RUN_APACHE" = "true" ]
+  then
+    cat /opt/tier-support/supervisord-httpd.conf >> /opt/tier-support/supervisord-base.conf
+fi
+
+
+if [ "$RUN_TOMEE" = "true" ]
+  then
+    cat /opt/tier-support/supervisord-tomee.conf >> /opt/tier-support/supervisord-base.conf
+fi
+
+if [ "$RUN_SHIB_SP" = "true" ]
+  then
+    cat /opt/tier-support/supervisord-shibsp.conf >> /opt/tier-support/supervisord-base.conf
+fi
+
+
+cat /opt/tier-support/supervisord-base.conf > /opt/tier-support/supervisord.conf
+
