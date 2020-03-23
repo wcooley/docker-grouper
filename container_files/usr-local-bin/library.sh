@@ -7,6 +7,10 @@ if [ -d "/opt/grouper/slashRoot" ]; then
     rsync -l -r -v /opt/grouper/slashRoot/ /
 fi
 
+if [ -d "/opt/grouper/lib" ]; then
+    cp -r /opt/grouper/lib/* $dest/libUiAndDaemon/
+fi   
+
 setupPipe() {
     if [ -e $1 ]; then
         rm $1
@@ -78,9 +82,7 @@ prepDaemonConf() {
     if [ -d "/opt/grouper/conf" ]; then
         cp -r /opt/grouper/conf/* $dest/classes/
     fi
-    if [ -d "/opt/grouper/lib" ]; then
-        cp -r /opt/grouper/lib/* $dest/lib/custom/
-    fi      
+   
 }
 
 prepSCIM() {
@@ -104,9 +106,7 @@ prepSCIMConf() {
     if [ -d "/opt/grouper/conf" ]; then
         cp -r /opt/grouper/conf/* $dest/classes/
     fi
-    if [ -d "/opt/grouper/lib" ]; then
-        cp -r /opt/grouper/lib/* $dest/lib/
-    fi    
+
 }
 
 prepUI() {
@@ -131,9 +131,7 @@ prepUIConf() {
     if [ -d "/opt/grouper/conf" ]; then
         cp -r /opt/grouper/conf/* $dest/classes/
     fi
-    if [ -d "/opt/grouper/lib" ]; then
-        cp -r /opt/grouper/lib/* $dest/lib/
-    fi
+
 }
 
 prepWS() {
@@ -156,9 +154,7 @@ prepWSConf() {
     if [ -d "/opt/grouper/conf" ]; then
         cp -r /opt/grouper/conf/* $dest/classes/
     fi
-    if [ -d "/opt/grouper/lib" ]; then
-        cp -r /opt/grouper/lib/* $dest/lib/
-    fi
+    
 }
 
 
