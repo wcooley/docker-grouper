@@ -169,6 +169,7 @@ prepConf() {
     prepWSConf
 }
 
+# construct the supervisord file based on FLAGS passed in or what was in CMD
 if [ "$RUN_APACHE" = "true" ]
   then
     cat /opt/tier-support/supervisord-httpd.conf >> /opt/tier-support/supervisord-base.conf
@@ -185,6 +186,22 @@ if [ "$RUN_SHIB_SP" = "true" ]
     cat /opt/tier-support/supervisord-shibsp.conf >> /opt/tier-support/supervisord-base.conf
 fi
 
-
 cat /opt/tier-support/supervisord-base.conf > /opt/tier-support/supervisord.conf
+
+
+# copy files to their appropriate locations based on passed in flags
+if [ "GROUPER_WS" = "true" ]
+   then
+     cp -r $dest/libWs/* $dest/lib/
+fi
+
+if [ "GROUPER_SCIM" = "true" ]
+   then
+     cp -r $dest/libScim/* $dest/lib/
+fi
+
+if [ "GROUPER_UI" = "true" ] || [ "GROUPER_DAEMON" = "true" ]
+   then
+     cp -r $dest/libUiAndDaemon/* $dest/lib/
+fi
 
