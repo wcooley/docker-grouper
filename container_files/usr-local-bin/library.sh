@@ -156,17 +156,17 @@ finishPrep() {
 
 
     # copy files to their appropriate locations based on passed in flags
-    if [ "GROUPER_WS" = "true" ]
+    if [ "$GROUPER_WS" = "true" ]
        then
          cp -r $dest/libWs/* $dest/lib/
     fi
 
-    if [ "GROUPER_SCIM" = "true" ]
+    if [ "$GROUPER_SCIM" = "true" ]
        then
          cp -r $dest/libScim/* $dest/lib/
     fi
 
-    if [ "GROUPER_UI" = "true" ] || [ "GROUPER_DAEMON" = "true" ]
+    if [ "$GROUPER_UI" = "true" ] || [ "$GROUPER_DAEMON" = "true" ]
        then
          cp -r $dest/libUiAndDaemon/* $dest/lib/
     fi
