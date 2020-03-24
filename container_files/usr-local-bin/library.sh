@@ -131,7 +131,6 @@ prepConf() {
     if [ -d "/opt/grouper/conf" ]; then
         cp -r /opt/grouper/conf/* $dest/classes/
     fi
-    finishPrep
 }
 
 
