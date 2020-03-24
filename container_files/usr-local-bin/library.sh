@@ -68,8 +68,9 @@ linkGrouperSecrets() {
 }
 
 prepDaemon() {
-    export GROUPER_DAEMON=true
-    export RUN_TOMEE=true
+    
+    if [ -z "$GROUPER_DAEMON" ]; then export GROUPER_DAEMON=true; fi
+    if [ -z "$RUN_TOMEE" ]; then export RUN_TOMEE=true; fi
 
     setupLoggingPipe
     setupGrouperLogPipe
@@ -78,9 +79,9 @@ prepDaemon() {
 }
 
 prepSCIM() {
-    export GROUPER_SCIM=true
-    export RUN_APACHE=true
-    export RUN_TOMEE=true
+    if [ -z "$GROUPER_SCIM" ]; then export GROUPER_SCIM=true; fi
+    if [ -z "$RUN_APACHE" ]; then export RUN_APACHE=true; fi
+    if [ -z "$RUN_TOMEE" ]; then export RUN_TOMEE=true; fi
 
     setupLoggingPipe
     setupGrouperLogPipe
@@ -93,10 +94,10 @@ prepSCIM() {
 }
 
 prepUI() {
-    export GROUPER_UI=true
-    export RUN_APACHE=true
-    export RUN_SHIB_SP=true
-    export RUN_TOMEE=true
+    if [ -z "$GROUPER_UI" ]; then export GROUPER_UI=true; fi
+    if [ -z "$RUN_APACHE" ]; then export RUN_APACHE=true; fi
+    if [ -z "$RUN_SHIB_SP" ]; then export RUN_SHIB_SP=true; fi
+    if [ -z "$RUN_TOMEE" ]; then export RUN_TOMEE=true; fi
 
     setupLoggingPipe
     setupGrouperLogPipe
@@ -111,9 +112,9 @@ prepUI() {
 
 prepWS() {
 
-    export GROUPER_WS=true
-    export RUN_APACHE=true
-    export RUN_TOMEE=true
+    if [ -z "$GROUPER_WS" ]; then export GROUPER_WS=true; fi
+    if [ -z "$RUN_APACHE" ]; then export RUN_APACHE=true; fi
+    if [ -z "$RUN_TOMEE" ]; then export RUN_TOMEE=true; fi
     setupLoggingPipe
     setupGrouperLogPipe
     setupHttpdLogPipe
