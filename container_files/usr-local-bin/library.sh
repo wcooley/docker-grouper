@@ -74,6 +74,7 @@ prepDaemon() {
     setupLoggingPipe
     setupGrouperLogPipe
     cp /opt/tier-support/grouper.xml /opt/tomee/conf/Catalina/localhost/
+    finishPrep
 }
 
 prepDaemonConf() {
@@ -97,7 +98,7 @@ prepSCIM() {
 
     
     cp /opt/tier-support/grouper.xml /opt/tomee/conf/Catalina/localhost/
-
+    finishPrep
 }
 
 prepSCIMConf() {
@@ -123,6 +124,7 @@ prepUI() {
     setupSupervisordLogPipe
 
     cp /opt/tier-support/grouper.xml /opt/tomee/conf/Catalina/localhost/
+    finishPrep
 }
 
 prepUIConf() {
@@ -146,6 +148,7 @@ prepWS() {
     setupSupervisordLogPipe
 
     cp /opt/tier-support/grouper.xml /opt/tomee/conf/Catalina/localhost/
+    finishPrep
 }
 
 prepWSConf() {
@@ -163,41 +166,44 @@ prepConf() {
     prepSCIMConf
     prepUIConf
     prepWSConf
+    finishPrep
 }
 
-# construct the supervisord file based on FLAGS passed in or what was in CMD
-if [ "$RUN_APACHE" = "true" ]
-  then
-    cat /opt/tier-support/supervisord-httpd.conf >> /opt/tier-support/supervisord-base.conf
-fi
+
+finishPrep() {
+    # construct the supervisord file based on FLAGS passed in or what was in CMD
+    if [ "$RUN_APACHE" = "true" ]
+      then
+        cat /opt/tier-support/supervisord-httpd.conf >> /opt/tier-support/supervisord-base.conf
+    fi
 
 
-if [ "$RUN_TOMEE" = "true" ]
-  then
-    cat /opt/tier-support/supervisord-tomee.conf >> /opt/tier-support/supervisord-base.conf
-fi
+    if [ "$RUN_TOMEE" = "true" ]
+      then
+        cat /opt/tier-support/supervisord-tomee.conf >> /opt/tier-support/supervisord-base.conf
+    fi
 
-if [ "$RUN_SHIB_SP" = "true" ]
-  then
-    cat /opt/tier-support/supervisord-shibsp.conf >> /opt/tier-support/supervisord-base.conf
-fi
+    if [ "$RUN_SHIB_SP" = "true" ]
+      then
+        cat /opt/tier-support/supervisord-shibsp.conf >> /opt/tier-support/supervisord-base.conf
+    fi
 
-cat /opt/tier-support/supervisord-base.conf > /opt/tier-support/supervisord.conf
+    cat /opt/tier-support/supervisord-base.conf > /opt/tier-support/supervisord.conf
 
 
-# copy files to their appropriate locations based on passed in flags
-if [ "GROUPER_WS" = "true" ]
-   then
-     cp -r $dest/libWs/* $dest/lib/
-fi
+    # copy files to their appropriate locations based on passed in flags
+    if [ "GROUPER_WS" = "true" ]
+       then
+         cp -r $dest/libWs/* $dest/lib/
+    fi
 
-if [ "GROUPER_SCIM" = "true" ]
-   then
-     cp -r $dest/libScim/* $dest/lib/
-fi
+    if [ "GROUPER_SCIM" = "true" ]
+       then
+         cp -r $dest/libScim/* $dest/lib/
+    fi
 
-if [ "GROUPER_UI" = "true" ] || [ "GROUPER_DAEMON" = "true" ]
-   then
-     cp -r $dest/libUiAndDaemon/* $dest/lib/
-fi
-
+    if [ "GROUPER_UI" = "true" ] || [ "GROUPER_DAEMON" = "true" ]
+       then
+         cp -r $dest/libUiAndDaemon/* $dest/lib/
+    fi
+}
