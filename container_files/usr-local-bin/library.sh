@@ -77,15 +77,6 @@ prepDaemon() {
     finishPrep
 }
 
-prepDaemonConf() {
-    linkGrouperSecrets $dest
-
-    if [ -d "/opt/grouper/conf" ]; then
-        cp -r /opt/grouper/conf/* $dest/classes/
-    fi
-   
-}
-
 prepSCIM() {
     export GROUPER_SCIM=true
     export RUN_APACHE=true
@@ -99,15 +90,6 @@ prepSCIM() {
     
     cp /opt/tier-support/grouper.xml /opt/tomee/conf/Catalina/localhost/
     finishPrep
-}
-
-prepSCIMConf() {
-    linkGrouperSecrets $dest/classes
-
-    if [ -d "/opt/grouper/conf" ]; then
-        cp -r /opt/grouper/conf/* $dest/classes/
-    fi
-
 }
 
 prepUI() {
@@ -127,15 +109,6 @@ prepUI() {
     finishPrep
 }
 
-prepUIConf() {
-    linkGrouperSecrets $dest/classes
-
-    if [ -d "/opt/grouper/conf" ]; then
-        cp -r /opt/grouper/conf/* $dest/classes/
-    fi
-
-}
-
 prepWS() {
 
     export GROUPER_WS=true
@@ -151,21 +124,13 @@ prepWS() {
     finishPrep
 }
 
-prepWSConf() {
+
+prepConf() {
     linkGrouperSecrets $dest/classes
     
     if [ -d "/opt/grouper/conf" ]; then
         cp -r /opt/grouper/conf/* $dest/classes/
     fi
-    
-}
-
-
-prepConf() {
-    prepDaemonConf
-    prepSCIMConf
-    prepUIConf
-    prepWSConf
     finishPrep
 }
 
