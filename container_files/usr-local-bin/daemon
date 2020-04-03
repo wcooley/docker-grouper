@@ -6,4 +6,4 @@ prepDaemon
 
 export GSH_JVMARGS="$GSH_JVMARGS -DENV=$ENV -DUSERTOKEN=$USERTOKEN"
 
-exec bin/gsh.sh -loader > /tmp/loggrouper
+exec /usr/bin/supervisord -c /opt/tier-support/supervisord.conf
