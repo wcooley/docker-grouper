@@ -152,9 +152,11 @@ finishPrep() {
       then
         cat /opt/tier-support/supervisord-shibsp.conf >> /opt/tier-support/supervisord-base.conf
     fi
-
-    cat /opt/tier-support/supervisord-base.conf > /opt/tier-support/supervisord.conf
-
+  
+    if [ "$GROUPER_DAEMON" = "true" ]
+      then
+        cat /opt/tier-support/supervisord-loader.conf > /opt/tier-support/supervisord.conf
+    fi
 
     # copy files to their appropriate locations based on passed in flags
     if [ "$GROUPER_WS" = "true" ]
