@@ -139,18 +139,18 @@ finishPrep() {
     # construct the supervisord file based on FLAGS passed in or what was in CMD
     if [ "$RUN_APACHE" = "true" ]
       then
-        cat /opt/tier-support/supervisord-httpd.conf >> /opt/tier-support/supervisord-base.conf
+        cat /opt/tier-support/supervisord-httpd.conf >> /opt/tier-support/supervisord.conf
     fi
 
 
     if [ "$RUN_TOMEE" = "true" ]
       then
-        cat /opt/tier-support/supervisord-tomee.conf >> /opt/tier-support/supervisord-base.conf
+        cat /opt/tier-support/supervisord-tomee.conf >> /opt/tier-support/supervisord.conf
     fi
 
     if [ "$RUN_SHIB_SP" = "true" ]
       then
-        cat /opt/tier-support/supervisord-shibsp.conf >> /opt/tier-support/supervisord-base.conf
+        cat /opt/tier-support/supervisord-shibsp.conf >> /opt/tier-support/supervisord.conf
     fi
 
     # copy files to their appropriate locations based on passed in flags
