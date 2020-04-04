@@ -88,4 +88,4 @@ WORKDIR /opt/grouper/grouperWebapp/WEB-INF/
 EXPOSE 80 443
 HEALTHCHECK NONE
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
-CMD ["bin/gsh.sh", "-loader"]
+# CMD ["bin/gsh.sh", "-loader"]
