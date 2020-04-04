@@ -74,7 +74,7 @@ prepDaemon() {
 
     setupLoggingPipe
     setupGrouperLogPipe
-    cp /opt/tier-support/grouper.xml /opt/tomee/conf/Catalina/localhost/
+    #cp /opt/tier-support/grouper.xml /opt/tomee/conf/Catalina/localhost/
     finishPrep
 }
 
@@ -89,7 +89,7 @@ prepSCIM() {
     setupTomcatLogPipe
 
     
-    cp /opt/tier-support/grouper.xml /opt/tomee/conf/Catalina/localhost/
+    #cp /opt/tier-support/grouper.xml /opt/tomee/conf/Catalina/localhost/
     finishPrep
 }
 
@@ -106,7 +106,7 @@ prepUI() {
     setupTomcatLogPipe
     setupSupervisordLogPipe
 
-    cp /opt/tier-support/grouper.xml /opt/tomee/conf/Catalina/localhost/
+    #cp /opt/tier-support/grouper.xml /opt/tomee/conf/Catalina/localhost/
     finishPrep
 }
 
@@ -121,7 +121,7 @@ prepWS() {
     setupTomcatLogPipe
     setupSupervisordLogPipe
 
-    cp /opt/tier-support/grouper.xml /opt/tomee/conf/Catalina/localhost/
+    #cp /opt/tier-support/grouper.xml /opt/tomee/conf/Catalina/localhost/
     finishPrep
 }
 
