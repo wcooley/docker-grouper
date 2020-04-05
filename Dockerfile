@@ -89,4 +89,3 @@ EXPOSE 80 443
 HEALTHCHECK NONE
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 # CMD ["bin/gsh.sh", "-loader"]
-CMD ["/usr/bin/supervisord", "-c /opt/tier-support/supervisord.conf"]
