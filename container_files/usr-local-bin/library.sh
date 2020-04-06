@@ -169,4 +169,10 @@ finishPrep() {
        then
          cp -r $dest/libUiAndDaemon/* $dest/lib/
     fi
+    
+    if [ "$SELF_SIGNED_CERT" = "true" ]
+       then
+          cp /opt/tier-support/ssl-enabled.conf /etc/httpd/conf.d/
+    fi
+    
 }
