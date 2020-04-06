@@ -77,6 +77,8 @@ RUN groupadd -r tomcat \
     && chown -R tomcat:tomcat /opt/tomee  \
     && ln -s $JAVA_HOME/bin/java /etc/alternatives/java \
     && mkdir -p /opt/tomee/conf/Catalina/localhost/
+    && chown -R tomcat:tomcat /opt/grouper/grouperContainer
+
 
 COPY container_files/tier-support/ /opt/tier-support/
 COPY container_files/usr-local-bin/ /usr/local/bin/
