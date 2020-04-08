@@ -65,7 +65,7 @@ ENV JAVA_HOME=/usr/lib/jvm/java-1.8.0-amazon-corretto \
     GROUPER_CONTAINER_VERSION=$GROUPER_CONTAINER_VERSION
 RUN ln -sf /usr/share/zoneinfo/UTC /etc/localtime
 RUN yum update -y \
-    && yum install -y cron logrotate python-pip rsync \
+    && yum install -y cron logrotate python-pip rsync sudo \
     && pip install --upgrade pip \
     && pip install supervisor \
     && yum clean -y all
