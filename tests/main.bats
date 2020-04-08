@@ -11,6 +11,6 @@ load ../common
 }
 
 
-@test "070 There are no known security vulnerabilities" {
-    ./tests/clairscan.sh ${maintainer}/${imagename}:latest
-}
+#@test "070 There are no known security vulnerabilities" {
+#    ./tests/clairscan.sh ${maintainer}/${imagename}:latest
+#}
