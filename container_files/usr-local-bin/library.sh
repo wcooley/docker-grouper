@@ -132,6 +132,10 @@ prepConf() {
 
 
 finishPrep() {
+
+    # clear out existing supervisord config
+    cat /opt/tier-support/supervisord-base.conf > /opt/tier-support/supervisord.conf
+
     # construct the supervisord file based on FLAGS passed in or what was in CMD
     if [ "$RUN_APACHE" = "true" ]
       then
