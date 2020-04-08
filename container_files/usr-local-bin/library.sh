@@ -171,4 +171,10 @@ finishPrep() {
           cp /opt/tier-support/ssl-enabled.conf /etc/httpd/conf.d/
     fi
     
+    if [ -z "$GROUPER_MAX_MEMORY" ]
+       then
+          export GROUPER_MAX_MEMORY=1500m
+    fi
+    
+    
 }
