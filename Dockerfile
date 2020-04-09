@@ -6,7 +6,7 @@ RUN yum update -y \
 RUN yum install -y wget tar unzip dos2unix
     
 ARG GROUPER_CONTAINER_VERSION
-ENV GROUPER_VERSION=2.5.20 \
+ENV GROUPER_VERSION=2.5.21 \
      GROUPER_CONTAINER_VERSION=$GROUPER_CONTAINER_VERSION
 
 # Install Corretto Java JDK
@@ -32,7 +32,7 @@ RUN echo 'Installing Grouper'; \
     cd /opt/grouper/$GROUPER_VERSION/ \
     && $JAVA_HOME/bin/java -cp :grouperInstaller.jar edu.internet2.middleware.grouperInstaller.GrouperInstaller
 FROM centos:centos7 as cleanup
-ENV GROUPER_VERSION=2.5.20 \
+ENV GROUPER_VERSION=2.5.21 \
     TOMEE_VERSION=7.0.0
 RUN mkdir -p /opt/grouper/grouperWebapp/
 RUN mkdir -p /opt/tomee/
