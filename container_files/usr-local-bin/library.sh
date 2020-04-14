@@ -151,7 +151,7 @@ finishPrep() {
     if [ "$RUN_SHIB_SP" = "true" ]
       then
         cat /opt/tier-support/supervisord-shibsp.conf >> /opt/tier-support/supervisord.conf
-        cat /opt/tier-support/httpd-shib.conf >> /etc/httpd/conf.d/grouper-www.conf
+        cp /opt/tier-support/httpd-shib.conf >> /etc/httpd/conf.d/
     fi
 
     # copy files to their appropriate locations based on passed in flags
