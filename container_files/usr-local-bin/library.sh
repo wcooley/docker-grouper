@@ -147,11 +147,13 @@ finishPrep() {
       then
         cat /opt/tier-support/supervisord-tomee.conf >> /opt/tier-support/supervisord.conf
     fi
-
+    
+    mv /etc/httpd/conf.d/shib.conf /etc/httpd/conf.d/shib.conf.dontuse
     if [ "$RUN_SHIB_SP" = "true" ]
       then
         cat /opt/tier-support/supervisord-shibsp.conf >> /opt/tier-support/supervisord.conf
         cp /opt/tier-support/httpd-shib.conf /etc/httpd/conf.d/
+        mv /etc/httpd/conf.d/shib.conf.dontuse /etc/httpd/conf.d/shib.conf
     fi
 
     # copy files to their appropriate locations based on passed in flags
