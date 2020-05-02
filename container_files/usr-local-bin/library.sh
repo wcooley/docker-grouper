@@ -7,10 +7,6 @@ if [ -d "/opt/grouper/slashRoot" ]; then
     rsync -l -r -v /opt/grouper/slashRoot/ /
 fi
 
-if [ -d "/opt/grouper/lib" ]; then
-    cp -r /opt/grouper/lib/* $dest/libUiAndDaemon/
-fi   
-
 setupPipe() {
     if [ -e $1 ]; then
         rm $1
