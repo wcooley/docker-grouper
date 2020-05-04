@@ -56,9 +56,9 @@ pipeline {
                         baseImg = docker.build("$maintainer/$imagename", "--build-arg GROUPER_CONTAINER_VERSION=$tag --no-cache .")
                       }
                       // test the environment 
-                      sh 'cd test-compose && ./compose.sh'
+                      // sh 'cd test-compose && ./compose.sh'
                       // bring down after testing
-                      sh 'cd test-compose && docker-compose down'
+                      // sh 'cd test-compose && docker-compose down'
                   } catch(error) {
                      def error_details = readFile('./debug');
                       def message = "BUILD ERROR: There was a problem building ${maintainer}/${imagename}:${tag}. \n\n ${error_details}"
