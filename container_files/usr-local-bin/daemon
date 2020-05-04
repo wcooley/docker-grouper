@@ -3,6 +3,7 @@
 . /usr/local/bin/library.sh
 
 prepDaemon
+finishPrep
 
 export GSH_JVMARGS="$GSH_JVMARGS -DENV=$ENV -DUSERTOKEN=$USERTOKEN"
 

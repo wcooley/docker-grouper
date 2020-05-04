@@ -2,7 +2,10 @@
 
 . /usr/local/bin/library.sh
 
+prepQuickstart
+prepUI
 prepWS
+prepDaemon
 finishPrep
 
 exec /usr/bin/supervisord -c /opt/tier-support/supervisord.conf

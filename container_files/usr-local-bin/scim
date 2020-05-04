@@ -3,5 +3,6 @@
 . /usr/local/bin/library.sh
 
 prepSCIM
+finishPrep
 
 exec /usr/bin/supervisord -c /opt/tier-support/supervisord.conf
