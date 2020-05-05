@@ -128,6 +128,31 @@ prepConf() {
     linkGrouperSecrets $dest/classes
 }
 
+tomeeContextGrouperForAll() {
+   # allow all grouper contexts to run
+   rm /opt/tomee/conf/Catalina/localhost/grouper-ws.xml
+   rm /opt/tomee/conf/Catalina/localhost/grouper-ws-scim.xml
+   sed -i "s|__THE_AJP_URL__|ajp://localhost:8009/grouper|g" /etc/httpd/conf.d/grouper-www.conf
+}
+tomeeContextGrouperWsOnly() {
+   # only WS env, optimize the context
+   rm /opt/tomee/conf/Catalina/localhost/grouper-ws-scim.xml
+   rm /opt/tomee/conf/Catalina/localhost/grouper.xml
+   sed -i "s|__THE_AJP_URL__|ajp://localhost:8009/grouper-ws|g" /etc/httpd/conf.d/grouper-www.conf
+}
+tomeeContextGrouperScimOnly() {
+   # only SCIM env, optimize the context
+   rm /opt/tomee/conf/Catalina/localhost/grouper-ws.xml
+   rm /opt/tomee/conf/Catalina/localhost/grouper.xml
+   sed -i "s|__THE_AJP_URL__|ajp://localhost:8009/grouper-ws-scim|g" /etc/httpd/conf.d/grouper-www.conf
+}
+tomeeContextGrouperUiOnly() {
+   # only UI env, optimize the context
+   rm /opt/tomee/conf/Catalina/localhost/grouper-ws.xml
+   rm /opt/tomee/conf/Catalina/localhost/grouper-ws-scim.xml
+   sed -i "s|__THE_AJP_URL__|ajp://localhost:8009/grouper|g" /etc/httpd/conf.d/grouper-www.conf
+}
+
 
 finishPrep() {
 
@@ -147,6 +172,13 @@ finishPrep() {
     if [ -z "$GROUPER_WS_GROUPER_AUTH" ] ; then export GROUPER_WS_GROUPER_AUTH=false; fi
     if [ -z "$GROUPER_SCIM_GROUPER_AUTH" ] ; then export GROUPER_SCIM_GROUPER_AUTH=false; fi
     if [ -z "$GROUPER_CHOWN_DIRS" ] ; then export GROUPER_CHOWN_DIRS=true; fi
+    if [ -z "$GROUPER_UI_CONFIGURATION_EDITOR_SOURCEIPADDRESSES" ]; then export GROUPER_UI_CONFIGURATION_EDITOR_SOURCEIPADDRESSES='127.0.0.1/32'; fi
+    # GROUPER_AUTO_DDL_UPTOVERSION defaults to null
+    # GROUPER_START_DELAY_SECONDS defaults to null
+    if [ -z "$GROUPER_UI" ] ; then export GROUPER_UI=false; fi
+    if [ -z "$GROUPER_SCIM" ] ; then export GROUPER_SCIM=false; fi
+    if [ -z "$GROUPER_WS" ] ; then export GROUPER_WS=false; fi
+    if [ -z "$GROUPER_DAEMON" ] ; then export GROUPER_DAEMON=false; fi
     
     if [ "$GROUPER_LOG_TO_HOST" = "true" ]
       then
@@ -204,23 +236,68 @@ finishPrep() {
     if [ "$GROUPER_WS" = "true" ]
        then
          cp -r $dest/libWs/* $dest/lib/
+         sed -i "s|__GROUPERWS_PROXY_PASS__||g" /etc/httpd/conf.d/grouper-www.conf
+       else
+         sed -i "s|__GROUPERWS_PROXY_PASS__|# |g" /etc/httpd/conf.d/grouper-www.conf
     fi
 
     if [ "$GROUPER_SCIM" = "true" ]
        then
          cp -r $dest/libScim/* $dest/lib/
-    fi
-
-    if [ "$GROUPER_UI" = "true" ]
-      then
-      if [ -z "$GROUPER_UI_CONFIGURATION_EDITOR_SOURCEIPADDRESSES" ]; then export GROUPER_UI_CONFIGURATION_EDITOR_SOURCEIPADDRESSES='127.0.0.1/32'; fi
+         sed -i "s|__GROUPERSCIM_PROXY_PASS__||g" /etc/httpd/conf.d/grouper-www.conf
+       else
+         sed -i "s|__GROUPERSCIM_PROXY_PASS__|# |g" /etc/httpd/conf.d/grouper-www.conf
     fi
 
     if [ "$GROUPER_UI" = "true" ] || [ "$GROUPER_DAEMON" = "true" ]
        then
          cp -r $dest/libUiAndDaemon/* $dest/lib/
     fi
-    
+
+    if [ "$GROUPER_UI" = "true" ]
+       then
+         sed -i "s|__GROUPER_PROXY_PASS__||g" /etc/httpd/conf.d/grouper-www.conf
+       else 
+         sed -i "s|__GROUPER_PROXY_PASS__|# |g" /etc/httpd/conf.d/grouper-www.conf
+     fi
+
+    # we need to arrange the grouper context files for tomee and point from apache
+    # keep it simple and use grouper    
+    if [ "$GROUPER_USE_GROUPER_CONTEXT" = "true" ]
+       then
+         tomeeContextGrouperForAll
+       else
+        if [ "$GROUPER_WS" = "true" ] && [ "$GROUPER_UI" != "true" ] && [ "$GROUPER_SCIM" != "true" ]
+           then
+           
+             # only WS env, optimize the context
+             tomeeContextGrouperWsOnly
+
+           else
+              if [ "$GROUPER_WS" != "true" ] && [ "$GROUPER_UI" != "true" ] && [ "$GROUPER_SCIM" = "true" ]
+                 then
+                 
+                   # only SCIM env, optimize the context
+                   tomeeContextGrouperScimOnly
+                 else
+
+
+                    if [ "$GROUPER_WS" != "true" ] && [ "$GROUPER_UI" = "true" ] && [ "$GROUPER_SCIM" != "true" ]
+                       then
+                       
+                         # only UI env, optimize the context
+                         tomeeContextGrouperUiOnly
+                       else
+                       
+                         # otherwise we are just grouper and everything (similar to above)
+                         tomeeContextGrouperForAll
+                    fi
+                 
+               fi
+         fi
+       
+    fi
+        
     if [ "$SELF_SIGNED_CERT" = "true" ]
        then
           cp /opt/tier-support/ssl-enabled.conf /etc/httpd/conf.d/

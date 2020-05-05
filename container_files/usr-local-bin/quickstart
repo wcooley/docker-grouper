@@ -5,6 +5,7 @@
 prepQuickstart
 prepUI
 prepWS
+prepSCIM
 prepDaemon
 finishPrep
 
