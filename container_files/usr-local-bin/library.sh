@@ -81,12 +81,12 @@ prepQuickstart() {
         if [ "$GROUPER_UI_GROUPER_AUTH" = 'true' ]
           then
             echo '' >> /opt/grouper/grouperWebapp/WEB-INF/classes/grouper.hibernate.base.properties
-            echo 'grouperPasswordConfigOverride_UI_GrouperSystem_pass.elConfig = ${java.lang.System.getenv().get('"'"'GROUPERSYSTEM_QUICKSTART_PASS'"'"')}' >> /opt/grouper/grouperWebapp/WEB-INF/classes/grouper.hibernate.properties
+            echo 'grouperPasswordConfigOverride_UI_GrouperSystem_pass.elConfig = ${elUtils.processEnvVarOrFile('"'"'GROUPERSYSTEM_QUICKSTART_PASS'"'"')}' >> /opt/grouper/grouperWebapp/WEB-INF/classes/grouper.hibernate.properties
         fi
         if [ "$GROUPER_WS_GROUPER_AUTH" = 'true' ]
           then         
             echo '' >> /opt/grouper/grouperWebapp/WEB-INF/classes/grouper.hibernate.base.properties
-            echo 'grouperPasswordConfigOverride_WS_GrouperSystem_pass.elConfig = ${java.lang.System.getenv().get('"'"'GROUPERSYSTEM_QUICKSTART_PASS'"'"')}' >> /opt/grouper/grouperWebapp/WEB-INF/classes/grouper.hibernate.properties
+            echo 'grouperPasswordConfigOverride_WS_GrouperSystem_pass.elConfig = ${elUtils.processEnvVarOrFile('"'"'GROUPERSYSTEM_QUICKSTART_PASS'"'"')}' >> /opt/grouper/grouperWebapp/WEB-INF/classes/grouper.hibernate.properties
         fi
     fi
 
