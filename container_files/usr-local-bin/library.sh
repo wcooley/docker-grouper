@@ -2,11 +2,6 @@
 
 dest=/opt/grouper/grouperWebapp/WEB-INF/
 
-if [ -d "/opt/grouper/slashRoot" ]; then
-    # Copy any files into the root filesystem
-    rsync -l -r -v /opt/grouper/slashRoot/ /
-fi
-
 setupPipe() {
     if [ -e $1 ]; then
         rm $1
@@ -125,10 +120,14 @@ prepWS() {
 
 
 prepConf() {
+    setupLoggingPipe
+    setupSupervisordLogPipe
+    setupGrouperLogPipe
+
     linkGrouperSecrets $dest/classes
 }
 
-tomeeContextGrouperForAll() {
+tomeeContextGrouperForUiOrAll() {
    # allow all grouper contexts to run
    rm /opt/tomee/conf/Catalina/localhost/grouper-ws.xml
    rm /opt/tomee/conf/Catalina/localhost/grouper-ws-scim.xml
@@ -146,19 +145,34 @@ tomeeContextGrouperScimOnly() {
    rm /opt/tomee/conf/Catalina/localhost/grouper.xml
    sed -i "s|__THE_AJP_URL__|ajp://localhost:8009/grouper-ws-scim|g" /etc/httpd/conf.d/grouper-www.conf
 }
-tomeeContextGrouperUiOnly() {
-   # only UI env, optimize the context
-   rm /opt/tomee/conf/Catalina/localhost/grouper-ws.xml
-   rm /opt/tomee/conf/Catalina/localhost/grouper-ws-scim.xml
-   sed -i "s|__THE_AJP_URL__|ajp://localhost:8009/grouper|g" /etc/httpd/conf.d/grouper-www.conf
-}
 
+
+#finishPrep() {
+#
+#  finishPrep2
+#  
+#  mv /opt/tomee/conf/Catalina/localhost/grouper.xml /opt/tomee/conf/Catalina/localhost/grouper2.xml
+#  sed -i 's|path="/grouper"|path="/grouper2"|g' /opt/tomee/conf/Catalina/localhost/grouper2.xml
+#  sed -i 's|ajp://localhost:8009/grouper|ajp://localhost:8009/grouper2|g' /etc/httpd/conf.d/grouper-www.conf
+#  sed -i 's|ProxyPass /grouper |ProxyPass /grouper2 |g' /etc/httpd/conf.d/grouper-www.conf
+#  sed -i 's|/grouper/|/grouper2/|g' /etc/httpd/conf.d/grouper-www.conf
+#  sed -i 's|/grouper/|/grouper2/|g' /etc/httpd/conf.d/ssl-enabled.conf
+#  # do the httpd-shibd.conf too if needed
+#
+#}
+#
+#finishPrep2() {
 
 finishPrep() {
 
-    setupLoggingPipe
-    setupGrouperLogPipe
-    setupSupervisordLogPipe
+    if [ -d "/opt/grouper/slashRoot" ]; then
+        # Copy any files into the root filesystem
+        rsync -l -r -v /opt/grouper/slashRoot/ /
+    fi
+
+    # tomee hsql must match the grouper one, and the version cannot be 2.3.2 since it is query bugs (unit tests fail)
+    rm -v /opt/tomee/lib/hsqldb-*.jar
+    cp -v /opt/grouper/grouperWebapp/WEB-INF/lib/hsqldb-*.jar /opt/tomee/lib/
 
     # clear out existing supervisord config
     cat /opt/tier-support/supervisord-base.conf > /opt/tier-support/supervisord.conf
@@ -265,7 +279,7 @@ finishPrep() {
     # keep it simple and use grouper    
     if [ "$GROUPER_USE_GROUPER_CONTEXT" = "true" ]
        then
-         tomeeContextGrouperForAll
+         tomeeContextGrouperForUiOrAll
        else
         if [ "$GROUPER_WS" = "true" ] && [ "$GROUPER_UI" != "true" ] && [ "$GROUPER_SCIM" != "true" ]
            then
@@ -281,18 +295,10 @@ finishPrep() {
                    tomeeContextGrouperScimOnly
                  else
 
+                   # otherwise we are just grouper and everything (similar to above)
+                   # note things will be available as needed
+                   tomeeContextGrouperForUiOrAll
 
-                    if [ "$GROUPER_WS" != "true" ] && [ "$GROUPER_UI" = "true" ] && [ "$GROUPER_SCIM" != "true" ]
-                       then
-                       
-                         # only UI env, optimize the context
-                         tomeeContextGrouperUiOnly
-                       else
-                       
-                         # otherwise we are just grouper and everything (similar to above)
-                         tomeeContextGrouperForAll
-                    fi
-                 
                fi
          fi
        
