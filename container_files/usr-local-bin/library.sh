@@ -127,6 +127,19 @@ prepConf() {
     linkGrouperSecrets $dest/classes
 }
 
+prepUIonly() {
+   if [ -z "$GROUPER_LOG_PREFIX" ]; then export GROUPER_LOG_PREFIX=grouper-ui; fi
+}
+prepWSonly() {
+   if [ -z "$GROUPER_LOG_PREFIX" ]; then export GROUPER_LOG_PREFIX=grouper-ws; fi
+}
+prepSCIMonly() {
+   if [ -z "$GROUPER_LOG_PREFIX" ]; then export GROUPER_LOG_PREFIX=grouper-scim; fi
+}
+prepDaemonOnly() {
+   if [ -z "$GROUPER_LOG_PREFIX" ]; then export GROUPER_LOG_PREFIX=grouper-daemon; fi
+}
+
 tomeeContextGrouperForUiOrAll() {
    # allow all grouper contexts to run
    rm /opt/tomee/conf/Catalina/localhost/grouper-ws.xml
@@ -204,13 +217,6 @@ finishPrep() {
         cp /opt/grouper/grouperWebapp/WEB-INF/server.wsTomcatAuthn.xml /opt/tomee/conf/server.xml
     fi
 
-    # do this last
-    if [ "$GROUPER_CHOWN_DIRS" = "true" ]
-      then
-        chown -R tomcat:tomcat /opt/grouper/grouperWebapp
-    fi
-
-
     # construct the supervisord file based on FLAGS passed in or what was in CMD
 
     if [ "$RUN_HSQLDB" = "true" ]
@@ -244,6 +250,7 @@ finishPrep() {
         cat /opt/tier-support/supervisord-shibsp.conf >> /opt/tier-support/supervisord.conf
         cp /opt/tier-support/httpd-shib.conf /etc/httpd/conf.d/
         mv /etc/httpd/conf.d/shib.conf.dontuse /etc/httpd/conf.d/shib.conf
+        if [ -z "$GROUPERUI_LOGOUT_REDIRECTTOURL" ]; then export GROUPERUI_LOGOUT_REDIRECTTOURL=/Shibboleth.sso/Logout; fi
     fi
 
     # copy files to their appropriate locations based on passed in flags
@@ -303,6 +310,29 @@ finishPrep() {
          fi
        
     fi
+    
+    if [ "$GROUPER_WS" = "true" ] && [ "$GROUPER_UI" != "true" ] && [ "$GROUPER_SCIM" != "true" ] && [ "$GROUPER_DAEMON" != "true" ]
+       then
+         prepWSonly
+    fi
+
+    if [ "$GROUPER_WS" != "true" ] && [ "$GROUPER_UI" != "true" ] && [ "$GROUPER_SCIM" = "true" ] && [ "$GROUPER_DAEMON" != "true" ]
+       then
+         prepSCIMonly
+    fi
+
+    if [ "$GROUPER_WS" != "true" ] && [ "$GROUPER_UI" = "true" ] && [ "$GROUPER_SCIM" != "true" ] && [ "$GROUPER_DAEMON" != "true" ]
+       then
+         prepUIonly
+    fi
+              
+    if [ "$GROUPER_WS" != "true" ] && [ "$GROUPER_UI" != "true" ] && [ "$GROUPER_SCIM" != "true" ] && [ "$GROUPER_DAEMON" = "true" ]
+      then
+        prepDaemonOnly
+    else 
+                
+    if [ -z "$GROUPER_LOG_PREFIX" ]; then export GROUPER_LOG_PREFIX=grouper; fi
+    sed -i "s|__GROUPER_PROXY_PASS__|$GROUPER_LOG_PREFIX|g" /etc/httpd/conf.d/grouper-www.conf
         
     if [ "$SELF_SIGNED_CERT" = "true" ]
        then
@@ -314,5 +344,11 @@ finishPrep() {
           export GROUPER_MAX_MEMORY=1500m
     fi
     
+    # do this last
+    if [ "$GROUPER_CHOWN_DIRS" = "true" ]
+      then
+        chown -R tomcat:tomcat /opt/grouper/grouperWebapp
+    fi
+
     
 }

@@ -49,7 +49,6 @@ RUN ls /opt/grouper/grouperWebapp/WEB-INF
 RUN cd /opt/tomee/; \
     rm -fr webapps/docs/ webapps/host-manager/ webapps/manager/ logs/* temp/* work/* conf/logging.properties
 COPY container_files/api/* /opt/grouper/grouperWebapp/WEB-INF/classes/
-COPY container_files/ui/ /opt/grouper/grouperWebapp/WEB-INF/classes/
 COPY container_files/tomee/ /opt/tomee/
 
 FROM tier/shibboleth_sp:3.1.0_04172020
