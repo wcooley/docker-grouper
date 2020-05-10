@@ -1,10 +1,7 @@
 #!/bin/bash
 
-. /usr/local/bin/library.sh
+prep_daemon
+prep_finish
+setupFiles
 
-prepDaemon
-finishPrep
-
-export GSH_JVMARGS="$GSH_JVMARGS -DENV=$ENV -DUSERTOKEN=$USERTOKEN"
-
-exec /usr/bin/supervisord -c /opt/tier-support/supervisord.conf
+runCommand

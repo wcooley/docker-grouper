@@ -1,12 +1,11 @@
 #!/bin/bash
 
-. /usr/local/bin/library.sh
+prep_quickstart
+prep_ui
+prep_ws
+prep_scim
+prep_daemon
+prep_finish
+setupFiles
 
-prepQuickstart
-prepUI
-prepWS
-prepSCIM
-prepDaemon
-finishPrep
-
-exec /usr/bin/supervisord -c /opt/tier-support/supervisord.conf
+runCommand

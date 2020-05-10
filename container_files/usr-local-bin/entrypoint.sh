@@ -1,13 +1,14 @@
 #!/bin/sh
 
 . /usr/local/bin/library.sh
-prepConf
+prep_conf
 
 if [ "$#" -eq 0 ]; 
   then
    echo no component set to run
-   finishPrep
-   exec /usr/bin/supervisord -c /opt/tier-support/supervisord.conf
+   prep_finish
+   setupFiles
+   runCommand
 else
   echo executing $@
   exec "$@"
