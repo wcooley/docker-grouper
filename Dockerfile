@@ -77,13 +77,13 @@ RUN groupadd -r tomcat \
     && chown -R tomcat:tomcat /opt/tomee  \
     && ln -s $JAVA_HOME/bin/java /etc/alternatives/java \
     && mkdir -p /opt/tomee/conf/Catalina/localhost/ \
-    && chown -R tomcat:tomcat /opt/grouper/grouperWebapp \
+    && chown -R tomcat:tomcat /opt/grouper \
     && mkdir /opt/hsqldb \
     && chown tomcat:tomcat /opt/hsqldb
 
-
 COPY container_files/tier-support/ /opt/tier-support/
 COPY container_files/usr-local-bin/ /usr/local/bin/
+RUN chmod +x /usr/local/bin/*.sh
 COPY container_files/httpd/* /etc/httpd/conf.d/
 COPY container_files/shibboleth/* /etc/shibboleth/
 RUN cp /dev/null /etc/httpd/conf.d/ssl.conf 

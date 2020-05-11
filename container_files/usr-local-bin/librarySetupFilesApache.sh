@@ -1,14 +1,14 @@
 #!/bin/bash
 
 setupFilesApache_selfSignedCert() {
-    if [ "$GROUPER_SELF_SIGNED_CERT" = "true" ] && [ "$GROUPER_USE_SSL" = "true" ]
+    if [ "$GROUPER_RUN_APACHE" = "true" ] && [ "$GROUPER_SELF_SIGNED_CERT" = "true" ] && [ "$GROUPER_USE_SSL" = "true" ]
        then
          cp /opt/tier-support/ssl-enabled.conf /etc/httpd/conf.d/
     fi
 }
 
 setupFilesApache_ssl() {
-    if [ "$GROUPER_USE_SSL" != "true" ]
+    if [ "$GROUPER_RUN_APACHE" = "true" ] && [ "$GROUPER_USE_SSL" != "true" ]
        then
        if [ -f /etc/httpd/conf.d/ssl.conf ]
          then
@@ -41,12 +41,12 @@ setupFilesApache_ports() {
 
   # filter the ssl config for ssl port
   
-  if [ -f /etc/httpd/conf.d/ssl-enabled.conf ]
+  if [ "$GROUPER_RUN_APACHE" = "true" ] && [ -f /etc/httpd/conf.d/ssl-enabled.conf ]
     then
       sed -i "s|__GROUPER_APACHE_SSL_PORT__|$GROUPER_APACHE_SSL_PORT|g" /etc/httpd/conf.d/ssl-enabled.conf
   fi
   
-  if [ "$GROUPER_APACHE_NONSSL_PORT" != "80" ]
+  if [ "$GROUPER_RUN_APACHE" = "true" ] && [ "$GROUPER_APACHE_NONSSL_PORT" != "80" ]
     then
       sed -i "s|Listen 80|Listen $GROUPER_APACHE_NONSSL_PORT|g" /etc/httpd/conf/httpd.conf
   fi

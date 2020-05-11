@@ -31,7 +31,7 @@ setupFilesTomcat_context() {
   fi
 
   # setup the apache linkage to tomcat  
-  if [ -f /etc/httpd/conf.d/grouper-www.conf ]
+  if [ -f /etc/httpd/conf.d/grouper-www.conf ] && [ "$GROUPER_RUN_TOMCAT_NOT_SUPERVISOR" != "true" ]
     then
       sed -i "s|__GROUPER_APACHE_AJP_TIMEOUT_SECONDS__|$GROUPER_APACHE_AJP_TIMEOUT_SECONDS|g" /etc/httpd/conf.d/grouper-www.conf
       sed -i "s|__GROUPER_TOMCAT_CONTEXT__|$GROUPER_TOMCAT_CONTEXT|g" /etc/httpd/conf.d/grouper-www.conf
@@ -58,7 +58,7 @@ setupFilesTomcat_authn() {
 
 setupFilesTomcat_logging() {
 
-  if [ "$GROUPER_RUN_TOMEE" = "true" ]
+  if [ "$GROUPER_RUN_TOMEE" = "true" ] && [ "$GROUPER_LOG_TO_HOST" != "true" ]
     then
       setupPipe_tomcatLog
   fi
@@ -67,7 +67,7 @@ setupFilesTomcat_logging() {
 
 setupFilesTomcat_supervisor() {
 
-  if [ "$GROUPER_RUN_TOMEE" = "true" ]
+  if [ "$GROUPER_RUN_TOMEE" = "true" ] && [ "$GROUPER_RUN_TOMCAT_NOT_SUPERVISOR" != "true" ]
     then
       cat /opt/tier-support/supervisord-tomee.conf >> /opt/tier-support/supervisord.conf
   fi

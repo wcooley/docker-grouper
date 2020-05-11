@@ -11,6 +11,19 @@ dockerRemoveContainer() {
   fi
 }
 
+dockerRemoveSubimage() {
+  if [ "$#" -ne 0 ]; then
+    echo "You must enter exactly 0 arguments"
+    exit 1
+  fi
+  subimageId="my_$containerName"
+  subimageName="$subimageId:latest"
+  if [ "$(docker images | grep $subimageId)" ]
+    then
+      docker rmi -f $subimageName
+  fi
+}
+
 # pass in string description, expected value, actual value
 assertEquals() {
   if [ "$#" -ne 3 ]; then
@@ -230,6 +243,7 @@ grouperContainerUnitTestLibrary_unsetAll() {
   unset -f assertNumberOfShibProcesses
   unset -f assertNumberOfTomcatProcesses
   unset -f dockerRemoveContainer
+  unset -f dockerRemoveSubimage
   unset -f grouperContainerUnitTestLibrary_unsetAll
   unset -f runCommand
 }
@@ -250,6 +264,7 @@ grouperContainerUnitTestLibrary_exportAll() {
   export -f assertNumberOfShibProcesses
   export -f assertNumberOfTomcatProcesses
   export -f dockerRemoveContainer
+  export -f dockerRemoveSubimage
   export -f grouperContainerUnitTestLibrary_unsetAll
   export -f runCommand
 }

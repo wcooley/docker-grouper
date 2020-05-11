@@ -2,20 +2,22 @@
 
 prep_quickstart() {
     
-    if [ -z "$GROUPER_RUN_HSQLDB" ]; then export GROUPER_RUN_HSQLDB=true; fi
+    
+    
+    if [ "$GROUPER_RUN_TOMCAT_NOT_SUPERVISOR" != "true" ]; then
+      if [ -z "$GROUPER_RUN_HSQLDB" ]; then export GROUPER_RUN_HSQLDB=true; fi
+      if [ -z "$GROUPER_SELF_SIGNED_CERT" ]; then export GROUPER_SELF_SIGNED_CERT=true; fi
+      if [ -z "$GROUPER_START_DELAY_SECONDS" ]; then export GROUPER_START_DELAY_SECONDS='10'; fi
+      if [ -z "$GROUPER_DATABASE_URL_FILE" ] && [ -z "$GROUPER_DATABASE_URL" ]; then export GROUPER_DATABASE_URL=jdbc:hsqldb:hsql://localhost:9001/grouper; fi
+      if [ -z "$GROUPER_DATABASE_USERNAME_FILE" ] && [ -z "$GROUPER_DATABASE_USERNAME" ]; then export GROUPER_DATABASE_USERNAME=sa; fi
+    fi
     if [ -z "$GROUPER_RUN_SHIB_SP" ]; then export GROUPER_RUN_SHIB_SP=false; fi
-    if [ -z "$GROUPER_SELF_SIGNED_CERT" ]; then export GROUPER_SELF_SIGNED_CERT=true; fi
     if [ -z "$GROUPER_AUTO_DDL_UPTOVERSION" ]; then export GROUPER_AUTO_DDL_UPTOVERSION='v2.5.*'; fi
     if [ -z "$GROUPER_UI_CONFIGURATION_EDITOR_SOURCEIPADDRESSES" ]; then export GROUPER_UI_CONFIGURATION_EDITOR_SOURCEIPADDRESSES='0.0.0.0/0'; fi
     # wait for database to start
-    if [ -z "$GROUPER_START_DELAY_SECONDS" ]; then export GROUPER_START_DELAY_SECONDS='10'; fi
     if [ -z "$GROUPER_UI_GROUPER_AUTH" ]; then export GROUPER_UI_GROUPER_AUTH='true'; fi
     if [ -z "$GROUPER_WS_GROUPER_AUTH" ]; then export GROUPER_WS_GROUPER_AUTH='true'; fi
     if [ -z "$GROUPER_SCIM_GROUPER_AUTH" ] ; then export GROUPER_SCIM_GROUPER_AUTH=true; fi
-
-    if [ -z "$GROUPER_DATABASE_URL_FILE" ] && [ -z "$GROUPER_DATABASE_URL" ] ; then export GROUPER_DATABASE_URL=jdbc:hsqldb:hsql://localhost:9001/grouper; fi
-    if [ -z "$GROUPER_DATABASE_USERNAME_FILE" ] && [ -z "$GROUPER_DATABASE_USERNAME" ] ; then export GROUPER_DATABASE_USERNAME=sa; fi
-
     if [ -z "$GROUPER_QUICKSTART" ]; then export GROUPER_QUICKSTART=true; fi
 
 }
@@ -28,14 +30,14 @@ prep_daemon() {
 
 prep_scim() {
     if [ -z "$GROUPER_SCIM" ]; then export GROUPER_SCIM=true; fi
-    if [ -z "$GROUPER_RUN_APACHE" ]; then export GROUPER_RUN_APACHE=true; fi
+    if [ -z "$GROUPER_RUN_APACHE" ] && [ "$GROUPER_RUN_TOMCAT_NOT_SUPERVISOR" != "true" ]; then export GROUPER_RUN_APACHE=true; fi
     if [ -z "$GROUPER_RUN_TOMEE" ]; then export GROUPER_RUN_TOMEE=true; fi
 }
 
 prep_ui() {
     if [ -z "$GROUPER_UI" ]; then export GROUPER_UI=true; fi
-    if [ -z "$GROUPER_RUN_APACHE" ]; then export GROUPER_RUN_APACHE=true; fi
-    if [ -z "$GROUPER_RUN_SHIB_SP" ]; then export GROUPER_RUN_SHIB_SP=true; fi
+    if [ -z "$GROUPER_RUN_APACHE" ] && [ "$GROUPER_RUN_TOMCAT_NOT_SUPERVISOR" != "true" ]; then export GROUPER_RUN_APACHE=true; fi
+    if [ -z "$GROUPER_RUN_SHIB_SP" ] && [ "$GROUPER_RUN_TOMCAT_NOT_SUPERVISOR" != "true" ]; then export GROUPER_RUN_SHIB_SP=true; fi
     if [ -z "$GROUPER_RUN_TOMEE" ]; then export GROUPER_RUN_TOMEE=true; fi
 }
 
@@ -80,7 +82,7 @@ prep_runScim() {
 prep_ws() {
 
     if [ -z "$GROUPER_WS" ]; then export GROUPER_WS=true; fi
-    if [ -z "$GROUPER_RUN_APACHE" ]; then export GROUPER_RUN_APACHE=true; fi
+    if [ -z "$GROUPER_RUN_APACHE" ] && [ "$GROUPER_RUN_TOMCAT_NOT_SUPERVISOR" != "true" ]; then export GROUPER_RUN_APACHE=true; fi
     if [ -z "$GROUPER_RUN_TOMEE" ]; then export GROUPER_RUN_TOMEE=true; fi
 }
 
@@ -153,6 +155,8 @@ prep_finishBegin() {
     
     if [ -z "$GROUPER_GSH_CHECK_USER" ] ; then export GROUPER_GSH_CHECK_USER=true; fi
     if [ -z "$GROUPER_GSH_USER" ] ; then export GROUPER_GSH_USER=tomcat; fi
+    
+     if [ -z "$GROUPER_RUN_TOMCAT_NOT_SUPERVISOR" ]; then export GROUPER_RUN_TOMCAT_NOT_SUPERVISOR=false; fi
     
 }
 

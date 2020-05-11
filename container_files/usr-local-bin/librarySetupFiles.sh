@@ -48,13 +48,13 @@ setupFiles_chownDirs() {
 
 setupFiles_storeEnvVars() {
 
-  echo "#!/bin/sh" > /usr/local/bin/grouperEnv.sh
-  echo "" >> /usr/local/bin/grouperEnv.sh
+  echo "#!/bin/sh" > /opt/grouper/grouperEnv.sh
+  echo "" >> /opt/grouper/grouperEnv.sh
 
   # go through env vars, should start with GROUPER and have an equals sign in there
-  env | grep "^GROUPER" | grep "=" >> /usr/local/bin/grouperEnv.sh
+  env | grep "^GROUPER" | grep "=" >> /opt/grouper/grouperEnv.sh
 
-  sed -i "s|^GROUPER|export GROUPER|g" /usr/local/bin/grouperEnv.sh
+  sed -i "s|^GROUPER|export GROUPER|g" /opt/grouper/grouperEnv.sh
 
   if [ ! -f /home/tomcat/.bashrc ]
     then
@@ -64,26 +64,27 @@ setupFiles_storeEnvVars() {
   if ! grep -q grouperEnv /home/tomcat/.bashrc
     then
       echo "" >> /home/tomcat/.bashrc  
-      echo ". /usr/local/bin/grouperEnv.sh" >> /home/tomcat/.bashrc
+      echo ". /opt/grouper/grouperEnv.sh" >> /home/tomcat/.bashrc
       echo "" >> /home/tomcat/.bashrc  
   fi
-  
 
-  # we need these global  
-  if [ ! -f /etc/bashrc ]
-    then
-      echo "Why doesnt /etc/bashrc exist????"
-      exit 1
-  fi  
-  if ! grep -q GROUPER_GSH_CHECK_USER /etc/bashrc
-    then 
-      echo "" >> /etc/bashrc  
-      echo "export GROUPER_GSH_CHECK_USER=$GROUPER_GSH_CHECK_USER" >> /etc/bashrc  
-      echo "export GROUPER_GSH_USER=$GROUPER_GSH_USER" >> /etc/bashrc  
-      echo "export JAVA_HOME=$JAVA_HOME" >> /etc/bashrc  
-      echo "export PATH=$JAVA_HOME/bin:\$PATH" >> /etc/bashrc  
-      echo "" >> /etc/bashrc  
-      
+  # if we own this file (i.e. running as root)  
+  if [[ -O "/etc/bashrc" ]]; then
+    # we need these global  
+    if [ ! -f /etc/bashrc ]
+      then
+        echo "Why doesnt /etc/bashrc exist????"
+        exit 1
+    fi  
+    if ! grep -q GROUPER_GSH_CHECK_USER /etc/bashrc
+       then 
+        echo "" >> /etc/bashrc  
+        echo "export GROUPER_GSH_CHECK_USER=$GROUPER_GSH_CHECK_USER" >> /etc/bashrc  
+        echo "export GROUPER_GSH_USER=$GROUPER_GSH_USER" >> /etc/bashrc  
+        echo "export JAVA_HOME=$JAVA_HOME" >> /etc/bashrc  
+        echo "export PATH=$JAVA_HOME/bin:\$PATH" >> /etc/bashrc  
+        echo "" >> /etc/bashrc  
+    fi    
   fi 
 }
 

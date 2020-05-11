@@ -5,7 +5,7 @@ if [ "$#" -ne 3 ]; then
   exit 1
 fi
 
-expectedSuccesses=412
+expectedSuccesses=521
 
 export containerName=$1
 export imageName=$2
@@ -27,6 +27,8 @@ export failureCount=0
 . ./grouperContainerUnitTestScim.sh
 . ./grouperContainerUnitTestWs.sh
 . ./grouperContainerUnitTestQuickstart.sh
+. ./grouperContainerUnitTestUiSubimage.sh
+. ./grouperContainerUnitTestUiSubimageNonroot.sh
 
 
 testContainerUi
@@ -38,8 +40,12 @@ testContainerScim
 testContainerWs
 testContainerQuickstart
 testContainerDaemon
+testContainerUiSubimage
+testContainerUiSubimageNonroot
 
 dockerRemoveContainer
+dockerRemoveSubimage
+
 echo ""
 echo "$successCount successes, $failureCount failures"
 if [ "$successCount" = "$expectedSuccesses" ] && [ "$failureCount" = "0" ]  ; then
@@ -57,6 +63,8 @@ unset -f globalSleepSecondsAfterRun
 unset -f testContainerQuickstart
 unset -f testContainerDaemon
 unset -f testContainerUi
+unset -f testContainerUiSubimage
+unset -f testContainerUiSubimageNonroot
 unset -f testContainerUiNoSsl
 unset -f testContainerUiDifferentPorts
 unset -f testContainerSlashRoot
