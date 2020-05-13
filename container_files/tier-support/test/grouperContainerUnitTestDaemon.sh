@@ -23,12 +23,9 @@ testContainerDaemon() {
   assertFileNotExists /opt/grouper/grouperWebapp/WEB-INF/lib/axis2-kernel-1.6.4.jar
   assertFileExists /opt/grouper/grouperWebapp/WEB-INF/libScim/stax-api-1.0-2.jar
   assertFileNotExists /opt/grouper/grouperWebapp/WEB-INF/lib/stax-api-1.0-2.jar
-  assertFileExists /opt/grouper/grouperWebapp/WEB-INF/lib/grouper-messaging-activemq-2.5.27.jar
-  assertFileExists /opt/grouper/grouperWebapp/WEB-INF/libUiAndDaemon/grouper-messaging-activemq-2.5.27.jar
+  assertFileExists "/opt/grouper/grouperWebapp/WEB-INF/lib/grouper-messaging-activemq-$grouperVersion.jar"
+  assertFileExists "/opt/grouper/grouperWebapp/WEB-INF/libUiAndDaemon/grouper-messaging-activemq-$grouperVersion.jar"
 
-  assertFileContains /etc/httpd/conf.d/ssl-enabled.conf "Listen 443 https"
-  assertFileNotContains /etc/httpd/conf.d/ssl-enabled.conf "__"
-  assertFileContains /etc/httpd/conf/httpd.conf "Listen 80"
   assertFileNotContains /opt/tier-support/supervisord.conf "program:shibbolethsp"
   assertFileContains /opt/tier-support/supervisord.conf "program:tomee"
   assertFileNotContains /opt/tier-support/supervisord.conf "program:httpd"

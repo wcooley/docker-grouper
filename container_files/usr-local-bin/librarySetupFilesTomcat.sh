@@ -5,6 +5,22 @@ setupFilesTomcat() {
   setupFilesTomcat_supervisor
   setupFilesTomcat_authn
   setupFilesTomcat_context
+  setupFilesTomcat_ports
+}
+
+setupFilesTomcat_ports() {
+
+    if [ "$GROUPER_TOMCAT_HTTP_PORT" != "8080" ]; then 
+      sed -i "s|8080|$GROUPER_TOMCAT_HTTP_PORT|g" /opt/tomee/conf/server.xml
+    fi
+    
+    if [ "$GROUPER_TOMCAT_AJP_PORT" != "8009" ]; then 
+      sed -i "s|8009|$GROUPER_TOMCAT_AJP_PORT|g" /opt/tomee/conf/server.xml
+    fi
+
+    if [ "$GROUPER_TOMCAT_SHUTDOWN_PORT" != "8005" ]; then 
+      sed -i "s|8005|$GROUPER_TOMCAT_SHUTDOWN_PORT|g" /opt/tomee/conf/server.xml
+    fi
 }
 
 setupFilesTomcat_context() {
@@ -14,7 +30,7 @@ setupFilesTomcat_context() {
       # ws only and scim only dont have cookies
       if [ "$GROUPER_CONTEXT_COOKIES" = "false" ]
         then
-           sed -i "s|__GROUPER_CONTEXT_COOKIES__|cookies="false"|g" /opt/tomee/conf/Catalina/localhost/grouper.xml
+           sed -i "s|__GROUPER_CONTEXT_COOKIES__|$GROUPER_CONTEXT_COOKIES|g" /opt/tomee/conf/Catalina/localhost/grouper.xml
         else
            sed -i "s|__GROUPER_CONTEXT_COOKIES__||g" /opt/tomee/conf/Catalina/localhost/grouper.xml
       fi
@@ -42,6 +58,10 @@ setupFilesTomcat_context() {
       sed -i "s|__GROUPER_PROXY_PASS__|$GROUPER_PROXY_PASS|g" /etc/httpd/conf.d/ssl-enabled.conf
       sed -i "s|__GROUPERSCIM_PROXY_PASS__|$GROUPERSCIM_PROXY_PASS|g" /etc/httpd/conf.d/grouper-www.conf
       sed -i "s|__GROUPERWS_PROXY_PASS__|$GROUPERWS_PROXY_PASS|g" /etc/httpd/conf.d/grouper-www.conf
+      if [ "$GROUPER_TOMCAT_AJP_PORT" != "8009" ]; then 
+        sed -i "s|:8009/|:$GROUPER_TOMCAT_AJP_PORT/|g" /etc/httpd/conf.d/grouper-www.conf
+      fi
+      
   fi
 
 }
@@ -81,6 +101,7 @@ setupFilesTomcat_unsetAll() {
   unset -f setupFilesTomcat_authn
   unset -f setupFilesTomcat_context
   unset -f setupFilesTomcat_logging
+  unset -f setupFilesTomcat_ports
   unset -f setupFilesTomcat_supervisor
   unset -f setupFilesTomcat_unsetAll
 
@@ -92,6 +113,7 @@ setupFilesTomcat_exportAll() {
   export -f setupFilesTomcat_authn
   export -f setupFilesTomcat_context
   export -f setupFilesTomcat_logging
+  export -f setupFilesTomcat_ports
   export -f setupFilesTomcat_supervisor
   export -f setupFilesTomcat_unsetAll
 

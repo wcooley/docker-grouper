@@ -23,8 +23,8 @@ testContainerUi() {
   assertFileNotExists /opt/grouper/grouperWebapp/WEB-INF/lib/axis2-kernel-1.6.4.jar
   assertFileExists /opt/grouper/grouperWebapp/WEB-INF/libScim/stax-api-1.0-2.jar
   assertFileNotExists /opt/grouper/grouperWebapp/WEB-INF/lib/stax-api-1.0-2.jar
-  assertFileExists /opt/grouper/grouperWebapp/WEB-INF/lib/grouper-messaging-activemq-2.5.27.jar
-  assertFileExists /opt/grouper/grouperWebapp/WEB-INF/libUiAndDaemon/grouper-messaging-activemq-2.5.27.jar
+  assertFileExists "/opt/grouper/grouperWebapp/WEB-INF/lib/grouper-messaging-activemq-$grouperVersion.jar"
+  assertFileExists "/opt/grouper/grouperWebapp/WEB-INF/libUiAndDaemon/grouper-messaging-activemq-$grouperVersion.jar"
 
   assertFileContains /etc/httpd/conf.d/ssl-enabled.conf "Listen 443 https"
   assertFileNotContains /etc/httpd/conf.d/ssl-enabled.conf "__"
@@ -37,6 +37,8 @@ testContainerUi() {
   assertFileNotContains /opt/tier-support/supervisord.conf "__"
   assertFileContains /etc/httpd/conf.d/ssl-enabled.conf cachain.pem
   assertFileNotContains /etc/httpd/conf.d/ssl-enabled.conf /etc/pki/tls/certs/localhost.crt
+
+  assertFileContains /opt/tomee/conf/Catalina/localhost/grouper.xml 'cookies="true"'
 
   assertFileContains /opt/grouper/grouperWebapp/WEB-INF/classes/log4j.properties "/tmp/logpipe"
   assertFileContains /opt/grouper/grouperWebapp/WEB-INF/classes/log4j.properties "grouper-ui;"
@@ -88,6 +90,8 @@ testContainerUi() {
   assertNotListeningOnPort 80
   assertListeningOnPort 8009
   assertNotListeningOnPort 9001
+  assertListeningOnPort 8080
+  #assertListeningOnPort 8005
 
 
 }

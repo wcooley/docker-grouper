@@ -12,17 +12,20 @@ testContainerUiDifferentPorts() {
   echo
   echo '################'
   echo Running container as ui with self signed cert with different ports
-  echo "docker run --detach --name $containerName --publish 443:443 -e GROUPER_APACHE_AJP_TIMEOUT_SECONDS=2999 -e GROUPER_SELF_SIGNED_CERT=true -e GROUPER_APACHE_SSL_PORT=444 -e GROUPER_APACHE_NONSSL_PORT=81 $imageName ui"
+  echo "docker run --detach --name $containerName --publish 443:443 -e GROUPER_APACHE_AJP_TIMEOUT_SECONDS=2999 -e GROUPER_SELF_SIGNED_CERT=true -e GROUPER_APACHE_SSL_PORT=444 -e GROUPER_APACHE_NONSSL_PORT=81 -e GROUPER_TOMCAT_HTTP_PORT=8600 -e GROUPER_TOMCAT_AJP_PORT=8601 -e GROUPER_TOMCAT_SHUTDOWN_PORT=8602 $imageName ui"
   echo '################'
   echo
 
-  docker run --detach --name $containerName --publish 443:443 -e GROUPER_APACHE_AJP_TIMEOUT_SECONDS=2999 -e GROUPER_SELF_SIGNED_CERT=true -e GROUPER_APACHE_SSL_PORT=444 -e GROUPER_APACHE_NONSSL_PORT=81 $imageName ui
+  docker run --detach --name $containerName --publish 443:443 -e GROUPER_APACHE_AJP_TIMEOUT_SECONDS=2999 -e GROUPER_SELF_SIGNED_CERT=true -e GROUPER_APACHE_SSL_PORT=444 -e GROUPER_APACHE_NONSSL_PORT=81 -e GROUPER_TOMCAT_HTTP_PORT=8600 -e GROUPER_TOMCAT_AJP_PORT=8601 -e GROUPER_TOMCAT_SHUTDOWN_PORT=8602 $imageName ui
   sleep $globalSleepSecondsAfterRun
 
   assertEnvVar GROUPER_APACHE_NONSSL_PORT "81"
   assertEnvVar GROUPER_APACHE_SSL_PORT "444"
   assertEnvVar GROUPER_APACHE_AJP_TIMEOUT_SECONDS "2999"
 
+  assertEnvVar GROUPER_TOMCAT_HTTP_PORT "8600"
+  assertEnvVar GROUPER_TOMCAT_AJP_PORT "8601"
+  assertEnvVar GROUPER_TOMCAT_SHUTDOWN_PORT "8602"
 
   assertFileContains /etc/httpd/conf.d/grouper-www.conf "2999"
   assertFileNotContains /etc/httpd/conf.d/grouper-www.conf "3600"
@@ -43,7 +46,9 @@ testContainerUiDifferentPorts() {
   assertListeningOnPort 81
   assertNotListeningOnPort 443
   assertNotListeningOnPort 80
-  assertListeningOnPort 8009
+  assertListeningOnPort 8600
+  assertListeningOnPort 8601
+  #assertListeningOnPort 8602
   assertNotListeningOnPort 9001
 
 

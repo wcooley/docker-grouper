@@ -1,15 +1,16 @@
 #!/bin/bash
 
-if [ "$#" -ne 3 ]; then
-  echo "You must enter exactly 3 command line arguments: container-name, image-name and container version, e.g. grouper-test my-grouper-2.5.27:latest 2.5.27"
+if [ "$#" -ne 4 ]; then
+  echo "You must enter exactly 4 command line arguments: container-name, image-name, container version, and grouper version, e.g. grouper-test my-grouper-2.5.27:latest 2.5.27 2.5.27"
   exit 1
 fi
 
-expectedSuccesses=521
+expectedSuccesses=528
 
 export containerName=$1
 export imageName=$2
 export containerVersion=$3
+export grouperVersion=$4
 export globalSleepSecondsAfterRun=5
 export globalExitOnError=false
 

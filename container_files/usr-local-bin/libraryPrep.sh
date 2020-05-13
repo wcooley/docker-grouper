@@ -156,7 +156,11 @@ prep_finishBegin() {
     if [ -z "$GROUPER_GSH_CHECK_USER" ] ; then export GROUPER_GSH_CHECK_USER=true; fi
     if [ -z "$GROUPER_GSH_USER" ] ; then export GROUPER_GSH_USER=tomcat; fi
     
-     if [ -z "$GROUPER_RUN_TOMCAT_NOT_SUPERVISOR" ]; then export GROUPER_RUN_TOMCAT_NOT_SUPERVISOR=false; fi
+    if [ -z "$GROUPER_RUN_TOMCAT_NOT_SUPERVISOR" ]; then export GROUPER_RUN_TOMCAT_NOT_SUPERVISOR=false; fi
+
+    if [ -z "$GROUPER_TOMCAT_HTTP_PORT" ]; then export GROUPER_TOMCAT_HTTP_PORT=8080; fi
+    if [ -z "$GROUPER_TOMCAT_AJP_PORT" ]; then export GROUPER_TOMCAT_AJP_PORT=8009; fi
+    if [ -z "$GROUPER_TOMCAT_SHUTDOWN_PORT" ]; then export GROUPER_TOMCAT_SHUTDOWN_PORT=8005; fi
     
 }
 
@@ -166,6 +170,7 @@ prep_finishEnd() {
     if [ -z "$GROUPER_TOMCAT_CONTEXT" ] ; then export GROUPER_TOMCAT_CONTEXT=grouper; fi
     if [ -z "$GROUPER_LOG_PREFIX" ]; then export GROUPER_LOG_PREFIX=grouper; fi
     if [ -z "$GROUPER_MAX_MEMORY" ]; then export GROUPER_MAX_MEMORY=1500m; fi
+    if [ -z "$GROUPER_CONTEXT_COOKIES" ]; then export GROUPER_CONTEXT_COOKIES=true; fi
 
 }
 
