@@ -21,6 +21,20 @@ setupFilesApache_ssl() {
     fi
 }
 
+
+
+setupFilesApache_serverName() {
+  if [ "$GROUPER_RUN_APACHE" = "true" ] && [ ! -z "$GROUPER_APACHE_SERVER_NAME" ] && [ "$GROUPER_APACHE_SERVER_NAME" != "" ] && [ -f /etc/httpd/conf.d/grouper-www.conf ]
+    then
+      echo >> /etc/httpd/conf.d/grouper-www.conf
+      echo "ServerName $GROUPER_APACHE_SERVER_NAME" >> /etc/httpd/conf.d/grouper-www.conf
+      echo "UseCanonicalName On" >> /etc/httpd/conf.d/grouper-www.conf
+      echo >> /etc/httpd/conf.d/grouper-www.conf
+  fi
+
+}
+
+
 setupFilesApache_logging() {
   if [ "$GROUPER_RUN_APACHE" = "true" ]
     then
@@ -59,6 +73,7 @@ setupFilesApache() {
   setupFilesApache_selfSignedCert
   setupFilesApache_ports
   setupFilesApache_ssl
+  setupFilesApache_serverName
 }
 
 setupFilesApache_unsetAll() {
@@ -69,6 +84,7 @@ setupFilesApache_unsetAll() {
   unset -f setupFilesApache_ssl
   unset -f setupFilesApache_supervisor
   unset -f setupFilesApache_unsetAll
+  unset -f setupFilesApache_serverName
 }
 
 setupFilesApache_exportAll() {
@@ -79,6 +95,7 @@ setupFilesApache_exportAll() {
   export -f setupFilesApache_ssl
   export -f setupFilesApache_supervisor
   export -f setupFilesApache_unsetAll
+  export -f setupFilesApache_serverName
 }
 
 # export everything

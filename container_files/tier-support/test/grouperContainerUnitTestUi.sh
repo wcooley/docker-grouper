@@ -48,7 +48,11 @@ testContainerUi() {
 
   assertFileContains /etc/httpd/conf.d/grouper-www.conf "3600"
   assertFileNotContains /etc/httpd/conf.d/grouper-www.conf "__"
+  
+  assertFileNotContains /etc/httpd/conf.d/grouper-www.conf "ServerName"
+  assertFileNotContains /etc/httpd/conf.d/grouper-www.conf "UseCanonicalName On"
 
+  assertEnvVarNot GROUPER_APACHE_SERVER_NAME https://a.b.c:443
   assertEnvVar GROUPERSCIM_PROXY_PASS "#"
   assertEnvVar GROUPERSCIM_URL_CONTEXT "grouper-ws-scim"
   assertEnvVar GROUPERWS_PROXY_PASS "#"

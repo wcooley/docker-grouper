@@ -28,12 +28,7 @@ setupFilesTomcat_context() {
   if [ -f /opt/tomee/conf/Catalina/localhost/grouper.xml ]
     then
       # ws only and scim only dont have cookies
-      if [ "$GROUPER_CONTEXT_COOKIES" = "false" ]
-        then
-           sed -i "s|__GROUPER_CONTEXT_COOKIES__|$GROUPER_CONTEXT_COOKIES|g" /opt/tomee/conf/Catalina/localhost/grouper.xml
-        else
-           sed -i "s|__GROUPER_CONTEXT_COOKIES__||g" /opt/tomee/conf/Catalina/localhost/grouper.xml
-      fi
+      sed -i "s|__GROUPER_CONTEXT_COOKIES__|$GROUPER_CONTEXT_COOKIES|g" /opt/tomee/conf/Catalina/localhost/grouper.xml
       
       # setup context
       sed -i "s|__GROUPER_TOMCAT_CONTEXT__|$GROUPER_TOMCAT_CONTEXT|g" /opt/tomee/conf/Catalina/localhost/grouper.xml

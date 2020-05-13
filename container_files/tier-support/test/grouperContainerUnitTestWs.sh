@@ -12,11 +12,11 @@ testContainerWs() {
   echo
   echo '################'
   echo Running container as ws
-  echo "docker run --detach --name $containerName --publish 443:443 -e GROUPER_SELF_SIGNED_CERT=true $imageName ws"
+  echo "docker run --detach --name $containerName --publish 443:443 -e GROUPER_SELF_SIGNED_CERT=true -e GROUPER_APACHE_SERVER_NAME=https://a.b.c:443 $imageName ws"
   echo '################'
   echo
 
-  docker run --detach --name $containerName --publish 443:443 -e GROUPER_SELF_SIGNED_CERT=true $imageName ws
+  docker run --detach --name $containerName --publish 443:443 -e GROUPER_SELF_SIGNED_CERT=true -e GROUPER_APACHE_SERVER_NAME=https://a.b.c:443 $imageName ws
   sleep $globalSleepSecondsAfterRun
 
   assertFileExists /opt/grouper/grouperWebapp/WEB-INF/libWs/axis2-kernel-1.6.4.jar
@@ -44,6 +44,10 @@ testContainerWs() {
   assertFileContains /etc/httpd/conf.d/grouper-www.conf "3600"
   assertFileNotContains /etc/httpd/conf.d/grouper-www.conf "__"
 
+  assertFileContains /etc/httpd/conf.d/grouper-www.conf "ServerName https://a.b.c:443"
+  assertFileContains /etc/httpd/conf.d/grouper-www.conf "UseCanonicalName On"
+
+  assertEnvVar GROUPER_APACHE_SERVER_NAME https://a.b.c:443
   assertEnvVar GROUPERSCIM_PROXY_PASS "#"
   assertEnvVar GROUPERSCIM_URL_CONTEXT "grouper-ws-scim"
   assertEnvVar GROUPERWS_PROXY_PASS ""
