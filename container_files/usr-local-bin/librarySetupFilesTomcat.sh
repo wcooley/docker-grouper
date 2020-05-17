@@ -2,6 +2,7 @@
 
 setupFilesTomcat() {
   setupFilesTomcat_logging
+  setupFilesTomcat_loggingSlf4j
   setupFilesTomcat_supervisor
   setupFilesTomcat_authn
   setupFilesTomcat_context
@@ -90,6 +91,16 @@ setupFilesTomcat_logging() {
 
 }
 
+setupFilesTomcat_loggingSlf4j() {
+
+  rm -v /opt/tomee/lib/slf4j-api*.jar
+  rm -v /opt/tomee/lib/slf4j-jdk*.jar
+  rm -v /opt/grouper/grouperWebapp/WEB-INF/lib/slf4j-jdk*.jar
+  cp -v /opt/grouper/grouperWebapp/WEB-INF/lib/slf4j-api-*.jar /opt/tomee/lib
+  cp -v /opt/grouper/grouperWebapp/WEB-INF/lib/slf4j-log4j*.jar /opt/tomee/lib
+
+}
+
 setupFilesTomcat_supervisor() {
 
   if [ "$GROUPER_RUN_TOMEE" = "true" ] && [ "$GROUPER_RUN_TOMCAT_NOT_SUPERVISOR" != "true" ]
@@ -110,6 +121,7 @@ setupFilesTomcat_unsetAll() {
   unset -f setupFilesTomcat_supervisor
   unset -f setupFilesTomcat_unsetAll
   unset -f setupFilesTomcat_accessLogs
+  unset -f setupFilesTomcat_loggingSlf4j
 
 }
 
@@ -123,7 +135,7 @@ setupFilesTomcat_exportAll() {
   export -f setupFilesTomcat_supervisor
   export -f setupFilesTomcat_unsetAll
   export -f setupFilesTomcat_accessLogs
-
+  export -f setupFilesTomcat_loggingSlf4j
 }
 
 # export everything
