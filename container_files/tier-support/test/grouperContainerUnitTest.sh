@@ -34,7 +34,6 @@ export failureCount=0
 
 testContainerUi
 testContainerUiNoSsl
-exit 0
 testContainerSlashRoot
 testContainerSelfSigned
 testContainerUiDifferentPorts
