@@ -3,7 +3,7 @@ RUN yum update -y \
     && yum install -y wget tar unzip dos2unix \
     && yum clean all
     
-RUN yum install -y wget tar unzip dos2unix
+RUN yum install -y wget tar unzip dos2unix patch
     
 ARG GROUPER_CONTAINER_VERSION
 ENV GROUPER_VERSION=2.5.28 \

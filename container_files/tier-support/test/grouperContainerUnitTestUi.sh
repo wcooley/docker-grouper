@@ -52,7 +52,10 @@ testContainerUi() {
   assertFileNotContains /etc/httpd/conf.d/grouper-www.conf "ServerName"
   assertFileNotContains /etc/httpd/conf.d/grouper-www.conf "UseCanonicalName On"
 
+  assertFileNotContains /opt/tomee/conf/server.xml "AccessLogValve"
+
   assertEnvVarNot GROUPER_APACHE_SERVER_NAME https://a.b.c:443
+  assertEnvVar GROUPER_TOMCAT_LOG_ACCESS "false"
   assertEnvVar GROUPERSCIM_PROXY_PASS "#"
   assertEnvVar GROUPERSCIM_URL_CONTEXT "grouper-ws-scim"
   assertEnvVar GROUPERWS_PROXY_PASS "#"

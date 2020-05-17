@@ -6,6 +6,16 @@ setupFilesTomcat() {
   setupFilesTomcat_authn
   setupFilesTomcat_context
   setupFilesTomcat_ports
+  setupFilesTomcat_accessLogs
+}
+
+setupFilesTomcat_accessLogs() {
+
+  if [ "$GROUPER_TOMCAT_LOG_ACCESS" != "true" ]; then
+  
+    patch /opt/tomee/conf/server.xml /opt/tomee/conf/server.xml.nologging.patch
+  
+  fi
 }
 
 setupFilesTomcat_ports() {
@@ -99,6 +109,7 @@ setupFilesTomcat_unsetAll() {
   unset -f setupFilesTomcat_ports
   unset -f setupFilesTomcat_supervisor
   unset -f setupFilesTomcat_unsetAll
+  unset -f setupFilesTomcat_accessLogs
 
 }
 
@@ -111,6 +122,7 @@ setupFilesTomcat_exportAll() {
   export -f setupFilesTomcat_ports
   export -f setupFilesTomcat_supervisor
   export -f setupFilesTomcat_unsetAll
+  export -f setupFilesTomcat_accessLogs
 
 }
 

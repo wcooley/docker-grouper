@@ -171,6 +171,7 @@ prep_finishEnd() {
     if [ -z "$GROUPER_LOG_PREFIX" ]; then export GROUPER_LOG_PREFIX=grouper; fi
     if [ -z "$GROUPER_MAX_MEMORY" ]; then export GROUPER_MAX_MEMORY=1500m; fi
     if [ -z "$GROUPER_CONTEXT_COOKIES" ]; then export GROUPER_CONTEXT_COOKIES=true; fi
+    if [ -z "$GROUPER_TOMCAT_LOG_ACCESS" ]; then export GROUPER_TOMCAT_LOG_ACCESS=false; fi
 
 }
 

@@ -12,11 +12,11 @@ testContainerUiNoSsl() {
   echo
   echo '################'
   echo Running container as ui without SSL
-  echo "docker run --detach --name $containerName --publish 443:443 -e GROUPER_USE_SSL=false $imageName ui"
+  echo "docker run --detach --name $containerName --publish 443:443 -e GROUPER_USE_SSL=false -e GROUPER_TOMCAT_LOG_ACCESS=true $imageName ui"
   echo '################'
   echo
 
-  docker run --detach --name $containerName --publish 443:443 -e GROUPER_USE_SSL=false $imageName ui
+  docker run --detach --name $containerName --publish 443:443 -e GROUPER_USE_SSL=false -e GROUPER_TOMCAT_LOG_ACCESS=true $imageName ui
   sleep $globalSleepSecondsAfterRun
 
   assertFileExists /etc/httpd/conf.d/ssl-enabled.conf.dontuse
@@ -30,7 +30,9 @@ testContainerUiNoSsl() {
   assertFileContains /opt/tier-support/supervisord.conf "program:httpd"
   assertFileContains /opt/tier-support/supervisord.conf "user=shibd"
   assertFileNotContains /opt/tier-support/supervisord.conf "__"
+  assertFileContains /opt/tomee/conf/server.xml "AccessLogValve"
 
+  assertEnvVar GROUPER_TOMCAT_LOG_ACCESS "true"
   assertEnvVar GROUPERSCIM_PROXY_PASS "#"
   assertEnvVar GROUPERSCIM_URL_CONTEXT "grouper-ws-scim"
   assertEnvVar GROUPERWS_PROXY_PASS "#"
