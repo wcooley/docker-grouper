@@ -11,11 +11,15 @@ setupFilesTomcat() {
 }
 
 setupFilesTomcat_accessLogs() {
-
-  if [ "$GROUPER_TOMCAT_LOG_ACCESS" != "true" ]; then
   
-    patch /opt/tomee/conf/server.xml /opt/tomee/conf/server.xml.nologging.patch
+  # first remove existing access logger
+  patch /opt/tomee/conf/server.xml /opt/tomee/conf/server.xml.nologging.patch
+  if [ "$GROUPER_TOMCAT_LOG_ACCESS" = "true" ]; then
   
+    setupPipe_tomcatAccessLog
+    
+    # this patch happens after the last patch
+    patch /opt/tomee/conf/server.xml /opt/tomee/conf/server.xml.loggingpipe.patch
   fi
 }
 
@@ -95,9 +99,11 @@ setupFilesTomcat_loggingSlf4j() {
 
   rm -v /opt/tomee/lib/slf4j-api*.jar
   rm -v /opt/tomee/lib/slf4j-jdk*.jar
-  rm -v /opt/grouper/grouperWebapp/WEB-INF/lib/slf4j-jdk*.jar
   cp -v /opt/grouper/grouperWebapp/WEB-INF/lib/slf4j-api-*.jar /opt/tomee/lib
-  cp -v /opt/grouper/grouperWebapp/WEB-INF/lib/slf4j-log4j*.jar /opt/tomee/lib
+  # tomee uses the jdk one
+  cp -v /opt/grouper/grouperWebapp/WEB-INF/lib/slf4j-jdk*.jar /opt/tomee/lib
+  # grouper uses the log4j one
+  rm -v /opt/grouper/grouperWebapp/WEB-INF/lib/slf4j-jdk*.jar
 
 }
 

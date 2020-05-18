@@ -34,6 +34,11 @@ setupPipe_tomcatLog() {
     (cat <> /tmp/logtomcat | awk -v ENV="$ENV" -v UT="$USERTOKEN" '{printf "tomee;console;%s;%s;%s\n", ENV, UT, $0; fflush()}' &>/tmp/logpipe) &
 }
 
+setupPipe_tomcatAccessLog() {
+    setupPipe /tmp/tomcat_access_log
+    (cat <> /tmp/tomcat_access_log | awk -v ENV="$ENV" -v UT="$USERTOKEN" '{printf "tomcat-access;console;%s;%s;%s\n", ENV, UT, $0; fflush()}' 1>/tmp/logpipe) &
+}
+
 setupPipe_hsqldbLog() {
     setupPipe /tmp/loghsqldb
     (cat <> /tmp/loghsqldb | awk -v ENV="$ENV" -v UT="$USERTOKEN" '{printf "hsqldb;console;%s;%s;%s\n", ENV, UT, $0; fflush()}' &>/tmp/logpipe) &
@@ -54,6 +59,7 @@ setupPipe_unsetAll() {
   unset -f setupPipe_shibdLog
   unset -f setupPipe_supervisordLog
   unset -f setupPipe_tomcatLog
+  unset -f setupPipe_tomcatAccessLog
   unset -f setupPipe_unsetAll
 
 }
@@ -68,6 +74,7 @@ setupPipe_exportAll() {
   export -f setupPipe_shibdLog
   export -f setupPipe_supervisordLog
   export -f setupPipe_tomcatLog
+  export -f setupPipe_tomcatAccessLog
   export -f setupPipe_unsetAll
 
 }
