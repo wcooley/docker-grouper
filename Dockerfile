@@ -1,6 +1,6 @@
 FROM centos:centos7 as installing
 RUN yum update -y \
-    && yum install -y wget tar unzip dos2unix \
+    && yum install -y wget tar unzip dos2unix patch \
     && yum clean all
     
 RUN yum install -y wget tar unzip dos2unix patch
@@ -65,7 +65,7 @@ ENV PATH=$PATH:$JAVA_HOME/bin \
     GROUPER_CONTAINER_VERSION=$GROUPER_CONTAINER_VERSION
 RUN ln -sf /usr/share/zoneinfo/UTC /etc/localtime
 RUN yum update -y \
-    && yum install -y cron logrotate python-pip rsync sudo \
+    && yum install -y cron logrotate python-pip rsync sudo patch \
     && pip install --upgrade pip \
     && pip install supervisor \
     && yum clean -y all
