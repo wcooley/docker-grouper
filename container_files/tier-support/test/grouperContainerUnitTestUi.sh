@@ -40,6 +40,8 @@ testContainerUi() {
 
   assertFileContains /opt/tomee/conf/Catalina/localhost/grouper.xml 'cookies="true"'
 
+  assertFileNotContains /etc/httpd/conf/httpd.conf "Options Indexes"
+
   assertFileContains /opt/grouper/grouperWebapp/WEB-INF/classes/log4j.properties "/tmp/logpipe"
   assertFileContains /opt/grouper/grouperWebapp/WEB-INF/classes/log4j.properties "grouper-ui;"
 

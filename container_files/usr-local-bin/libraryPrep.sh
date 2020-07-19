@@ -152,6 +152,7 @@ prep_finishBegin() {
     
     if [ -z "$GROUPER_APACHE_SSL_PORT" ] ; then export GROUPER_APACHE_SSL_PORT=443; fi
     if [ -z "$GROUPER_APACHE_NONSSL_PORT" ] ; then export GROUPER_APACHE_NONSSL_PORT=80; fi
+    if [ -z "$GROUPER_APACHE_DIRECTORY_INDEXES" ] ; then export GROUPER_APACHE_DIRECTORY_INDEXES=false; fi
     
     if [ -z "$GROUPER_GSH_CHECK_USER" ] ; then export GROUPER_GSH_CHECK_USER=true; fi
     if [ -z "$GROUPER_GSH_USER" ] ; then export GROUPER_GSH_USER=tomcat; fi

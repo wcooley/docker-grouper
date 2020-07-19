@@ -12,7 +12,7 @@ testContainerUiNoSsl() {
   echo
   echo '################'
   echo Running container as ui without SSL
-  echo "docker run --detach --name $containerName --publish 443:443 -e GROUPER_USE_SSL=false -e GROUPER_TOMCAT_LOG_ACCESS=true $imageName ui"
+  echo "docker run --detach --name $containerName --publish 443:443 -e GROUPER_USE_SSL=false -e GROUPER_TOMCAT_LOG_ACCESS=true -e GROUPER_APACHE_DIRECTORY_INDEXES=true $imageName ui"
   echo '################'
   echo
 
@@ -23,6 +23,8 @@ testContainerUiNoSsl() {
   assertFileExists /etc/httpd/conf.d/ssl.conf.dontuse
   assertFileNotExists /etc/httpd/conf.d/ssl-enabled.conf
   assertFileNotExists /etc/httpd/conf.d/ssl.conf
+
+  assertFileContains /etc/httpd/conf/httpd.conf "Options Indexes"
 
   assertFileContains /etc/httpd/conf/httpd.conf "Listen 80"
   assertFileContains /opt/tier-support/supervisord.conf "program:shibbolethsp"

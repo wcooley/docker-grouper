@@ -1,5 +1,14 @@
 #!/bin/bash
 
+setupFilesApache_indexes() {
+    if [ "$GROUPER_APACHE_DIRECTORY_INDEXES" = "false" ]
+      then
+        # take out the directory indexes from the docroot
+        cp /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf.pre_noindexes
+        patch /etc/httpd/conf/httpd.conf /etc/httpd/conf.d/httpd.conf.noindexes.patch
+    fi
+}
+
 setupFilesApache_selfSignedCert() {
     if [ "$GROUPER_RUN_APACHE" = "true" ] && [ "$GROUPER_SELF_SIGNED_CERT" = "true" ] && [ "$GROUPER_USE_SSL" = "true" ]
        then
@@ -74,10 +83,12 @@ setupFilesApache() {
   setupFilesApache_ports
   setupFilesApache_ssl
   setupFilesApache_serverName
+  setupFilesApache_indexes
 }
 
 setupFilesApache_unsetAll() {
   unset -f setupFilesApache
+  unset -f setupFilesApache_indexes
   unset -f setupFilesApache_logging
   unset -f setupFilesApache_ports
   unset -f setupFilesApache_selfSignedCert
@@ -89,6 +100,7 @@ setupFilesApache_unsetAll() {
 
 setupFilesApache_exportAll() {
   export -f setupFilesApache
+  export -f setupFilesApache_indexes
   export -f setupFilesApache_logging
   export -f setupFilesApache_ports
   export -f setupFilesApache_selfSignedCert
