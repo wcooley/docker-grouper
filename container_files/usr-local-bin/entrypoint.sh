@@ -10,6 +10,14 @@ if [ "$#" -eq 0 ];
    setupFiles
    runCommand
 else
-  echo executing $@
-  exec "$@"
+
+  if [ "$@" = "/opt/grouper/grouperWebapp/WEB-INF/bin/gsh.sh" ]
+    then 
+      GROUPER_ENTRYPOINT_COMMAND=gsh
+    else
+      GROUPER_ENTRYPOINT_COMMAND="$@"
+  fi
+
+  echo executing GROUPER_ENTRYPOINT_COMMAND
+  exec "$GROUPER_ENTRYPOINT_COMMAND"
 fi
