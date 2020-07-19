@@ -92,6 +92,8 @@ setupFiles() {
 
   if [ "$GROUPER_SETUP_FILES_COMPLETE" = "true" ]
     then
+      echo "GROUPER_SETUP_FILES_COMPLETE=true, skipping setting up files"
+      setupFiles_unsetAllAndFromFiles
       return
   fi
 
@@ -128,7 +130,12 @@ setupFiles() {
   grouperScriptHooks_setupFilesPostChown
 
   export GROUPER_SETUP_FILES_COMPLETE=true
+  echo 'export GROUPER_SETUP_FILES_COMPLETE=true' >> /opt/grouper/grouperEnv.sh
   
+  setupFiles_unsetAllAndFromFiles
+}
+
+setupFiles_unsetAllAndFromFiles() {
   setupFiles_unsetAll
   setupFilesApache_unsetAll
   setupFilesForComponent_unsetAll
@@ -136,8 +143,9 @@ setupFiles() {
   setupFilesTomcat_unsetAll
   setupPipe_unsetAll
   grouperScriptHooks_unsetAll
-  
+
 }
+
 
 setupFiles_unsetAll() {
   unset -f setupFiles
@@ -148,6 +156,7 @@ setupFiles_unsetAll() {
   unset -f setupFiles_rsyncSlashRoot
   unset -f setupFiles_storeEnvVars
   unset -f setupFiles_unsetAll
+  unset -f setupFiles_unsetAllAndFromFiles
 }
 
 setupFiles_exportAll() {
@@ -159,6 +168,7 @@ setupFiles_exportAll() {
   export -f setupFiles_rsyncSlashRoot
   export -f setupFiles_storeEnvVars
   export -f setupFiles_unsetAll
+  export -f setupFiles_unsetAllAndFromFiles
 }
 
 # export everything

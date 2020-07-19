@@ -18,6 +18,6 @@ else
       GROUPER_ENTRYPOINT_COMMAND="$@"
   fi
 
-  echo executing GROUPER_ENTRYPOINT_COMMAND
+  echo executing "$GROUPER_ENTRYPOINT_COMMAND"
   exec "$GROUPER_ENTRYPOINT_COMMAND"
 fi

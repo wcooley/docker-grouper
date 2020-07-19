@@ -88,6 +88,14 @@ prep_ws() {
 
 prep_conf() {
     
+    # if we are stopping and starting, we just read the env vars and we done
+    if [ -f /opt/grouper/grouperEnv.sh ]
+      then
+        echo "Loading env vars from /opt/grouper/grouperEnv.sh"
+        . /opt/grouper/grouperEnv.sh
+        return
+    fi
+    
     prep_initDeprecatedEnvVars
     setupPipe_logging
     setupPipe_supervisordLog
@@ -181,6 +189,14 @@ prep_finishEnd() {
 
 prep_finish() {
 
+    if [ "$GROUPER_SETUP_FILES_COMPLETE" = "true" ]
+      then
+        echo "GROUPER_SETUP_FILES_COMPLETE=true, skipping startup prep"
+        prep_unsetAllAndFromFiles
+        
+        return
+    fi
+
     grouperScriptHooks_prepComponentPost
 
     prep_finishBegin
@@ -195,6 +211,10 @@ prep_finish() {
     
     grouperScriptHooks_finishPrepPost
         
+    prep_unsetAllAndFromFiles
+}
+
+prep_unsetAllAndFromFiles() {
     prep_unsetAll
     prepOnly_unsetAll
 }
@@ -212,6 +232,7 @@ prep_unsetAll() {
   unset -f prep_runWs
   unset -f prep_scim
   unset -f prep_unsetAll
+  unset -f prep_unsetAllAndFromFiles
   unset -f prep_ui
   unset -f prep_ws
   
@@ -230,6 +251,7 @@ prep_exportAll() {
   export -f prep_runWs
   export -f prep_scim
   export -f prep_unsetAll
+  export -f prep_unsetAllAndFromFiles
   export -f prep_ui
   export -f prep_ws
 }
