@@ -3,7 +3,7 @@
 setupFilesApache_selfSignedCert() {
     if [ "$GROUPER_RUN_APACHE" = "true" ] && [ "$GROUPER_SELF_SIGNED_CERT" = "true" ] && [ "$GROUPER_USE_SSL" = "true" ]
        then
-         cp /opt/tier-support/ssl-enabled.conf /etc/httpd/conf.d/
+         cp -v /opt/tier-support/ssl-enabled.conf /etc/httpd/conf.d/
     fi
 }
 
@@ -12,11 +12,11 @@ setupFilesApache_ssl() {
        then
        if [ -f /etc/httpd/conf.d/ssl.conf ]
          then
-           mv /etc/httpd/conf.d/ssl.conf /etc/httpd/conf.d/ssl.conf.dontuse
+           mv -v /etc/httpd/conf.d/ssl.conf /etc/httpd/conf.d/ssl.conf.dontuse
        fi
        if [ -f /etc/httpd/conf.d/ssl-enabled.conf ]
          then
-           mv /etc/httpd/conf.d/ssl-enabled.conf /etc/httpd/conf.d/ssl-enabled.conf.dontuse
+           mv -v /etc/httpd/conf.d/ssl-enabled.conf /etc/httpd/conf.d/ssl-enabled.conf.dontuse
        fi
     fi
 }

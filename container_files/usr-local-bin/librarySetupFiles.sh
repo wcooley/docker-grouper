@@ -28,7 +28,7 @@ setupFiles_rsyncSlashRoot() {
 setupFiles_localLogging() {
     if [ "$GROUPER_LOG_TO_HOST" = "true" ]
       then
-        cp /opt/grouper/grouperWebapp/WEB-INF/classes/log4j.grouperContainerHost.properties /opt/grouper/grouperWebapp/WEB-INF/classes/log4j.properties
+        cp -v /opt/grouper/grouperWebapp/WEB-INF/classes/log4j.grouperContainerHost.properties /opt/grouper/grouperWebapp/WEB-INF/classes/log4j.properties
     fi
 
 }

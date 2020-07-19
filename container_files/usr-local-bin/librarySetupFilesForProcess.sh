@@ -56,7 +56,7 @@ setupFilesForProcess_shib() {
   if [ "$GROUPER_RUN_TOMCAT_NOT_SUPERVISOR" != "true" ]; then
     if [ -f /etc/httpd/conf.d/shib.conf ]
       then
-        mv /etc/httpd/conf.d/shib.conf /etc/httpd/conf.d/shib.conf.dontuse
+        mv -v /etc/httpd/conf.d/shib.conf /etc/httpd/conf.d/shib.conf.dontuse
     fi
     
     if [ "$GROUPER_RUN_SHIB_SP" = "true" ]
@@ -64,9 +64,8 @@ setupFilesForProcess_shib() {
         setupPipe_shibdLog
         export LD_LIBRARY_PATH=/opt/shibboleth/lib64:$LD_LIBRARY_PATH
         cat /opt/tier-support/supervisord-shibsp.conf >> /opt/tier-support/supervisord.conf
-        cp /opt/tier-support/httpd-shib.conf /etc/httpd/conf.d/
-        mv /etc/httpd/conf.d/shib.conf.dontuse /etc/httpd/conf.d/shib.conf
-        if [ -z "$GROUPERUI_LOGOUT_REDIRECTTOURL" ]; then export GROUPERUI_LOGOUT_REDIRECTTOURL=/Shibboleth.sso/Logout; fi
+        cp -v /opt/tier-support/httpd-shib.conf /etc/httpd/conf.d/
+        mv -v /etc/httpd/conf.d/shib.conf.dontuse /etc/httpd/conf.d/shib.conf
     fi
   fi
 
