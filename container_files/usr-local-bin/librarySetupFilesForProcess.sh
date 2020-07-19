@@ -61,7 +61,10 @@ setupFilesForProcess_shib() {
     
     if [ "$GROUPER_RUN_SHIB_SP" = "true" ]
       then
-        setupPipe_shibdLog
+        if [ "$GROUPER_SHIB_LOG_USE_PIPE" = "true" ]
+          then
+            setupPipe_shibdLog
+        fi
         export LD_LIBRARY_PATH=/opt/shibboleth/lib64:$LD_LIBRARY_PATH
         cat /opt/tier-support/supervisord-shibsp.conf >> /opt/tier-support/supervisord.conf
         cp -v /opt/tier-support/httpd-shib.conf /etc/httpd/conf.d/

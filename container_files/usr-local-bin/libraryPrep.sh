@@ -163,6 +163,8 @@ prep_finishBegin() {
     if [ -z "$GROUPER_TOMCAT_AJP_PORT" ]; then export GROUPER_TOMCAT_AJP_PORT=8009; fi
     if [ -z "$GROUPER_TOMCAT_SHUTDOWN_PORT" ]; then export GROUPER_TOMCAT_SHUTDOWN_PORT=8005; fi
     
+    if [ -z "$GROUPER_SHIB_LOG_USE_PIPE" ]; then export GROUPER_SHIB_LOG_USE_PIPE=true; fi
+    
 }
 
 prep_finishEnd() {
