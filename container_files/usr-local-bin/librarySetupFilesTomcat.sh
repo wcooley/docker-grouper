@@ -3,11 +3,22 @@
 setupFilesTomcat() {
   setupFilesTomcat_logging
   setupFilesTomcat_loggingSlf4j
+  setupFilesTomcat_turnOnAjp
   setupFilesTomcat_supervisor
   setupFilesTomcat_authn
   setupFilesTomcat_context
   setupFilesTomcat_ports
   setupFilesTomcat_accessLogs
+}
+
+
+
+setupFilesTomcat_turnOnAjp() {
+
+  if [ "$GROUPER_RUN_TOMEE" = "true" ]
+    then
+      patch /opt/tomee/conf/server.xml /opt/tomee/conf/server.xml.turnOnAjp.patch
+  fi
 }
 
 setupFilesTomcat_accessLogs() {
@@ -128,6 +139,7 @@ setupFilesTomcat_unsetAll() {
   unset -f setupFilesTomcat_unsetAll
   unset -f setupFilesTomcat_accessLogs
   unset -f setupFilesTomcat_loggingSlf4j
+  unset -f setupFilesTomcat_turnOnAjp
 
 }
 
@@ -142,6 +154,7 @@ setupFilesTomcat_exportAll() {
   export -f setupFilesTomcat_unsetAll
   export -f setupFilesTomcat_accessLogs
   export -f setupFilesTomcat_loggingSlf4j
+  export -f setupFilesTomcat_turnOnAjp
 }
 
 # export everything
