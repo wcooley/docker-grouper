@@ -16,7 +16,7 @@ testContainerUiNoSsl() {
   echo '################'
   echo
 
-  docker run --detach --name $containerName --publish 443:443 -e GROUPER_USE_SSL=false -e GROUPER_TOMCAT_LOG_ACCESS=true $imageName ui
+  docker run --detach --name $containerName --publish 443:443 -e GROUPER_USE_SSL=false -e GROUPER_TOMCAT_LOG_ACCESS=true -e GROUPER_APACHE_DIRECTORY_INDEXES=true $imageName ui
   sleep $globalSleepSecondsAfterRun
 
   assertFileExists /etc/httpd/conf.d/ssl-enabled.conf.dontuse
