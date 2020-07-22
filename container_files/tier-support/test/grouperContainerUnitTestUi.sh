@@ -56,6 +56,8 @@ testContainerUi() {
 
   assertFileNotContains /opt/tomee/conf/server.xml "AccessLogValve"
 
+  assertFileContains /opt/tomee/conf/server.xml "tomcatAuthentication"
+
   assertEnvVarNot GROUPER_APACHE_SERVER_NAME https://a.b.c:443
   assertEnvVar GROUPER_TOMCAT_LOG_ACCESS "false"
   assertEnvVar GROUPERSCIM_PROXY_PASS "#"

@@ -15,38 +15,38 @@ setupFilesTomcat() {
 
 setupFilesTomcat_turnOnAjp() {
 
-  if [ "$GROUPER_RUN_TOMEE" = "true" ]
-    then
-      patch /opt/tomee/conf/server.xml /opt/tomee/conf/server.xml.turnOnAjp.patch
-  fi
+  patch /opt/tomee/conf/server.xml /opt/tomee/conf/server.xml.turnOnAjp.patch
 }
 
 setupFilesTomcat_accessLogs() {
   
-  # first remove existing access logger
-  patch /opt/tomee/conf/server.xml /opt/tomee/conf/server.xml.nologging.patch
   if [ "$GROUPER_TOMCAT_LOG_ACCESS" = "true" ]; then
   
     setupPipe_tomcatAccessLog
     
     # this patch happens after the last patch
     patch /opt/tomee/conf/server.xml /opt/tomee/conf/server.xml.loggingpipe.patch
+    
+  else  
+
+    patch /opt/tomee/conf/server.xml /opt/tomee/conf/server.xml.nologging.patch
+    
   fi
 }
 
 setupFilesTomcat_ports() {
 
-    if [ "$GROUPER_TOMCAT_HTTP_PORT" != "8080" ]; then 
-      sed -i "s|8080|$GROUPER_TOMCAT_HTTP_PORT|g" /opt/tomee/conf/server.xml
-    fi
-    
-    if [ "$GROUPER_TOMCAT_AJP_PORT" != "8009" ]; then 
-      sed -i "s|8009|$GROUPER_TOMCAT_AJP_PORT|g" /opt/tomee/conf/server.xml
-    fi
-
-    if [ "$GROUPER_TOMCAT_SHUTDOWN_PORT" != "8005" ]; then 
-      sed -i "s|8005|$GROUPER_TOMCAT_SHUTDOWN_PORT|g" /opt/tomee/conf/server.xml
-    fi
+      if [ "$GROUPER_TOMCAT_HTTP_PORT" != "8080" ]; then 
+        sed -i "s|8080|$GROUPER_TOMCAT_HTTP_PORT|g" /opt/tomee/conf/server.xml
+      fi
+      
+      if [ "$GROUPER_TOMCAT_AJP_PORT" != "8009" ]; then 
+        sed -i "s|8009|$GROUPER_TOMCAT_AJP_PORT|g" /opt/tomee/conf/server.xml
+      fi
+  
+      if [ "$GROUPER_TOMCAT_SHUTDOWN_PORT" != "8005" ]; then 
+        sed -i "s|8005|$GROUPER_TOMCAT_SHUTDOWN_PORT|g" /opt/tomee/conf/server.xml
+      fi
 }
 
 setupFilesTomcat_context() {
@@ -92,7 +92,7 @@ setupFilesTomcat_authn() {
     if [ "$GROUPER_WS_TOMCAT_AUTHN" = "true" ]
       then
         cp /opt/grouper/grouperWebapp/WEB-INF/web.wsTomcatAuthn.xml /opt/grouper/grouperWebapp/WEB-INF/web.xml
-        cp /opt/grouper/grouperWebapp/WEB-INF/server.wsTomcatAuthn.xml /opt/tomee/conf/server.xml
+        patch /opt/tomee/conf/server.xml /opt/tomee/conf/server.xml.tomcatAuthn.patch
     fi
 
 }

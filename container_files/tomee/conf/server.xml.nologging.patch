@@ -1,13 +1,15 @@
---- server.xml	2020-05-13 19:09:12.000000000 +0000
-+++ server.xml.nologging	2020-05-17 15:36:47.361138000 +0000
-@@ -159,10 +159,6 @@
+--- server.xml.turnOnAjp	2020-07-21 22:01:04.000000000 -0400
++++ server.xml.nologging	2020-07-21 21:59:26.000000000 -0400
+@@ -159,9 +159,9 @@
          <!-- Access log processes all example.
               Documentation at: /docs/config/valve.html
               Note: The pattern used is equivalent to using pattern="common" -->
 -        <Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs"
 -               prefix="localhost_access_log" suffix=".txt"
 -               pattern="%h %l %u %t &quot;%r&quot; %s %b" />
--
++
++
++
+ 
        </Host>
      </Engine>
-   </Service>
