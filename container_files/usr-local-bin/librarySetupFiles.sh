@@ -28,13 +28,15 @@ setupFiles_rsyncSlashRoot() {
 setupFiles_localLogging() {
     if [ "$GROUPER_LOG_TO_HOST" = "true" ]
       then
-        cp -v /opt/grouper/grouperWebapp/WEB-INF/classes/log4j.grouperContainerHost.properties /opt/grouper/grouperWebapp/WEB-INF/classes/log4j.properties
+        cp /opt/grouper/grouperWebapp/WEB-INF/classes/log4j.grouperContainerHost.properties /opt/grouper/grouperWebapp/WEB-INF/classes/log4j.properties
+        echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_localLogging) cp /opt/grouper/grouperWebapp/WEB-INF/classes/log4j.grouperContainerHost.properties /opt/grouper/grouperWebapp/WEB-INF/classes/log4j.properties, result: $?"
     fi
 
 }
 
 setupFiles_loggingPrefix() {
     sed -i "s|__GROUPER_LOG_PREFIX__|$GROUPER_LOG_PREFIX|g" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j.properties
+    echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_loggingPrefix) Changing log prefix to $GROUPER_LOG_PREFIX in log4j.properties, result: $?"
 }
 
 setupFiles_chownDirs() {
@@ -42,11 +44,15 @@ setupFiles_chownDirs() {
     if [ "$GROUPER_CHOWN_DIRS" = "true" ]
       then
         chown -R tomcat:tomcat /opt/grouper/grouperWebapp
+        echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_chownDirs) chown -R tomcat:tomcat /opt/grouper/grouperWebapp, result: $?"
         chown -R tomcat:tomcat /opt/tomee
+        echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_chownDirs) chown -R tomcat:tomcat /opt/tomee, result: $?"
     fi
 }
 
 setupFiles_storeEnvVars() {
+
+  echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_storeEnvVars) Start store env vars in /opt/grouper/grouperEnv.sh"
 
   echo "#!/bin/sh" > /opt/grouper/grouperEnv.sh
   echo "" >> /opt/grouper/grouperEnv.sh
@@ -58,7 +64,7 @@ setupFiles_storeEnvVars() {
 
   if [ ! -f /home/tomcat/.bashrc ]
     then
-      echo "Why doesnt /home/tomcat/.bashrc exist????"
+      echo "grouperContainer; ERROR: (librarySetupFiles.sh-setupFiles_storeEnvVars) Why doesnt /home/tomcat/.bashrc exist????"
       exit 1
   fi  
   if ! grep -q grouperEnv /home/tomcat/.bashrc
@@ -73,7 +79,7 @@ setupFiles_storeEnvVars() {
     # we need these global  
     if [ ! -f /etc/bashrc ]
       then
-        echo "Why doesnt /etc/bashrc exist????"
+        echo "grouperContainer; ERROR: (librarySetupFiles.sh-setupFiles_storeEnvVars) Why doesnt /etc/bashrc exist????"
         exit 1
     fi  
     if ! grep -q GROUPER_GSH_CHECK_USER /etc/bashrc
@@ -86,13 +92,14 @@ setupFiles_storeEnvVars() {
         echo "" >> /etc/bashrc  
     fi    
   fi 
+  echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_storeEnvVars) End store env vars in /opt/grouper/grouperEnv.sh"
 }
 
 setupFiles() {
 
   if [ "$GROUPER_SETUP_FILES_COMPLETE" = "true" ]
     then
-      echo "GROUPER_SETUP_FILES_COMPLETE=true, skipping setting up files"
+      echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles) GROUPER_SETUP_FILES_COMPLETE=true, skipping setting up files"
       setupFiles_unsetAllAndFromFiles
       return
   fi
@@ -141,7 +148,6 @@ setupFiles_unsetAllAndFromFiles() {
   setupFilesForComponent_unsetAll
   setupFilesForProcess_unsetAll
   setupFilesTomcat_unsetAll
-  setupPipe_unsetAll
   grouperScriptHooks_unsetAll
 
 }

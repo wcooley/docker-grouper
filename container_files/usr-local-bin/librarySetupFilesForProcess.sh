@@ -5,7 +5,7 @@ setupFilesForProcess_hsqldb() {
 
   if [ "$GROUPER_RUN_HSQLDB" = "true" ]
     then
-      setupPipe_hsqldbLog
+      echo "grouperContainer; INFO: (librarySetupFilesForProcess.sh-setupFilesForProcess_hsqldb) Appending supervisord-hsqldb.conf to supervisord.conf"
       cat /opt/tier-support/supervisord-hsqldb.conf >> /opt/tier-support/supervisord.conf
   fi
 
@@ -14,8 +14,10 @@ setupFilesForProcess_hsqldb() {
 setupFilesForProcess_hsqldbVersions() {
 
     # tomee hsql must match the grouper one, and the version cannot be 2.3.2 since it is query bugs (unit tests fail)
-    rm -v /opt/tomee/lib/hsqldb-*.jar
-    cp -v /opt/grouper/grouperWebapp/WEB-INF/lib/hsqldb-*.jar /opt/tomee/lib/
+    rm /opt/tomee/lib/hsqldb-*.jar
+    echo "grouperContainer; INFO: (librarySetupFilesForProcess.sh-setupFilesForProcess_hsqldbVersions) rm /opt/tomee/lib/hsqldb-*.jar , result: $?"
+    cp /opt/grouper/grouperWebapp/WEB-INF/lib/hsqldb-*.jar /opt/tomee/lib/
+    echo "grouperContainer; INFO: (librarySetupFilesForProcess.sh-setupFilesForProcess_hsqldbVersions) cp /opt/grouper/grouperWebapp/WEB-INF/lib/hsqldb-*.jar /opt/tomee/lib/ , result: $?"
 
 }
 
@@ -23,6 +25,7 @@ setupFilesForProcess_supervisor() {
 
   if [ "$GROUPER_RUN_TOMCAT_NOT_SUPERVISOR" != "true" ]; then
     # clear out existing supervisord config
+    echo "grouperContainer; INFO: (librarySetupFilesForProcess.sh-setupFilesForProcess_supervisor) Clear out supervisor.conf"
     cat /opt/tier-support/supervisord-base.conf > /opt/tier-support/supervisord.conf
   fi
 }
@@ -44,9 +47,11 @@ setupFilesForProcess_supervisorFinal() {
       then
         # let these lines live
         sed -i "s|__GROUPER_RUN_PROCESSES_AS_USERS__||g" /opt/tier-support/supervisord.conf
+        echo "grouperContainer; INFO: (librarySetupFilesForProcess.sh-setupFilesForProcess_supervisorFinal) Running processes as users in supervisord.conf, result: $?"
       else
         # comment out these lines
         sed -i "s|__GROUPER_RUN_PROCESSES_AS_USERS__|;|g" /opt/tier-support/supervisord.conf
+        echo "grouperContainer; INFO: (librarySetupFilesForProcess.sh-setupFilesForProcess_supervisorFinal) Commenting out running processes as users in supervisord.conf, result: $?"
     fi
   fi
 }
@@ -56,19 +61,20 @@ setupFilesForProcess_shib() {
   if [ "$GROUPER_RUN_TOMCAT_NOT_SUPERVISOR" != "true" ]; then
     if [ -f /etc/httpd/conf.d/shib.conf ]
       then
-        mv -v /etc/httpd/conf.d/shib.conf /etc/httpd/conf.d/shib.conf.dontuse
+        mv /etc/httpd/conf.d/shib.conf /etc/httpd/conf.d/shib.conf.dontuse
+        echo "grouperContainer; INFO: (librarySetupFilesForProcess.sh-setupFilesForProcess_shib) mv /etc/httpd/conf.d/shib.conf /etc/httpd/conf.d/shib.conf.dontuse , result: $?"
+        
     fi
     
     if [ "$GROUPER_RUN_SHIB_SP" = "true" ]
       then
-        if [ "$GROUPER_SHIB_LOG_USE_PIPE" = "true" ]
-          then
-            setupPipe_shibdLog
-        fi
         export LD_LIBRARY_PATH=/opt/shibboleth/lib64:$LD_LIBRARY_PATH
+        echo "grouperContainer; INFO: (librarySetupFilesForProcess.sh-setupFilesForProcess_shib) Appending supervisord-shibsp.conf to supervisord.conf"
         cat /opt/tier-support/supervisord-shibsp.conf >> /opt/tier-support/supervisord.conf
-        cp -v /opt/tier-support/httpd-shib.conf /etc/httpd/conf.d/
-        mv -v /etc/httpd/conf.d/shib.conf.dontuse /etc/httpd/conf.d/shib.conf
+        cp /opt/tier-support/httpd-shib.conf /etc/httpd/conf.d/
+        echo "grouperContainer; INFO: (librarySetupFilesForProcess.sh-setupFilesForProcess_shib) cp /opt/tier-support/httpd-shib.conf /etc/httpd/conf.d/ , result: $?"
+        mv /etc/httpd/conf.d/shib.conf.dontuse /etc/httpd/conf.d/shib.conf
+        echo "grouperContainer; INFO: (librarySetupFilesForProcess.sh-setupFilesForProcess_shib) mv /etc/httpd/conf.d/shib.conf.dontuse /etc/httpd/conf.d/shib.conf , result: $?"
     fi
   fi
 

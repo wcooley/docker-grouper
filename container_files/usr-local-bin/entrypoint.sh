@@ -5,7 +5,7 @@ prep_conf
 
 if [ "$#" -eq 0 ];
   then
-    echo no component set to run
+    echo "grouperContainer; INFO: (entrypoint.sh) No component set to run"
     prep_finish
     setupFiles
     runCommand
@@ -31,7 +31,7 @@ else
       GROUPER_ENTRYPOINT_COMMAND=gsh
   fi
 
-  echo executing "$GROUPER_ENTRYPOINT_COMMAND $@"
+  echo "grouperContainer; INFO: (entrypoint.sh) Executing $GROUPER_ENTRYPOINT_COMMAND $@"
   exec "$GROUPER_ENTRYPOINT_COMMAND" "$@"                                                                                                          
 fi
 

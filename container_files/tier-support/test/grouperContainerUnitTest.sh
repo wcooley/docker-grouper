@@ -5,13 +5,13 @@ if [ "$#" -ne 4 ]; then
   exit 1
 fi
 
-expectedSuccesses=538
+expectedSuccesses=554
 
 export containerName=$1
 export imageName=$2
 export containerVersion=$3
 export grouperVersion=$4
-export globalSleepSecondsAfterRun=5
+export globalSleepSecondsAfterRun=10
 export globalExitOnError=false
 
 export successCount=0

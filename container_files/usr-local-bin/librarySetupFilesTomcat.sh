@@ -1,7 +1,6 @@
 #!/bin/bash
 
 setupFilesTomcat() {
-  setupFilesTomcat_logging
   setupFilesTomcat_loggingSlf4j
   setupFilesTomcat_turnOnAjp
   setupFilesTomcat_supervisor
@@ -15,21 +14,25 @@ setupFilesTomcat() {
 
 setupFilesTomcat_turnOnAjp() {
 
+  cp /opt/tomee/conf/server.xml /opt/tomee/conf/server.xml.currentOriginalInContainer
+  echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_turnOnAjp) cp /opt/tomee/conf/server.xml /opt/tomee/conf/server.xml.currentOriginalInContainer , result: $?"
   patch /opt/tomee/conf/server.xml /opt/tomee/conf/server.xml.turnOnAjp.patch
+  echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_turnOnAjp) Patch server.xml to turn on ajp, result: $?"
+  
 }
 
 setupFilesTomcat_accessLogs() {
   
   if [ "$GROUPER_TOMCAT_LOG_ACCESS" = "true" ]; then
   
-    setupPipe_tomcatAccessLog
-    
     # this patch happens after the last patch
     patch /opt/tomee/conf/server.xml /opt/tomee/conf/server.xml.loggingpipe.patch
+    echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_accessLogs) Patch server.xml to log access, result: $?"
     
   else  
 
     patch /opt/tomee/conf/server.xml /opt/tomee/conf/server.xml.nologging.patch
+    echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_accessLogs) Patch server.xml to not log access, result: $?"
     
   fi
 }
@@ -38,14 +41,17 @@ setupFilesTomcat_ports() {
 
       if [ "$GROUPER_TOMCAT_HTTP_PORT" != "8080" ]; then 
         sed -i "s|8080|$GROUPER_TOMCAT_HTTP_PORT|g" /opt/tomee/conf/server.xml
+        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_ports) update server.xml to change http port, result: $?"
       fi
       
       if [ "$GROUPER_TOMCAT_AJP_PORT" != "8009" ]; then 
         sed -i "s|8009|$GROUPER_TOMCAT_AJP_PORT|g" /opt/tomee/conf/server.xml
+        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_ports) update server.xml to change ajp port, result: $?"
       fi
   
       if [ "$GROUPER_TOMCAT_SHUTDOWN_PORT" != "8005" ]; then 
         sed -i "s|8005|$GROUPER_TOMCAT_SHUTDOWN_PORT|g" /opt/tomee/conf/server.xml
+        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_ports) update server.xml to change shutdown port, result: $?"
       fi
 }
 
@@ -55,14 +61,17 @@ setupFilesTomcat_context() {
     then
       # ws only and scim only dont have cookies
       sed -i "s|__GROUPER_CONTEXT_COOKIES__|$GROUPER_CONTEXT_COOKIES|g" /opt/tomee/conf/Catalina/localhost/grouper.xml
+      echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_context) Replace context cookies in grouper.xml, result: $?"
       
       # setup context
       sed -i "s|__GROUPER_TOMCAT_CONTEXT__|$GROUPER_TOMCAT_CONTEXT|g" /opt/tomee/conf/Catalina/localhost/grouper.xml
+      echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_context) Replace tomcat context in grouper.xml, result: $?"
       
       # rename file if needed since that can matter with tomcat
       if [ "$GROUPER_TOMCAT_CONTEXT" != "grouper" ]
         then  
-          mv /opt/tomee/conf/Catalina/localhost/grouper.xml "/opt/tomee/conf/Catalina/localhost/$GROUPER_TOMCAT_CONTEXT.xml"
+          mv -v /opt/tomee/conf/Catalina/localhost/grouper.xml "/opt/tomee/conf/Catalina/localhost/$GROUPER_TOMCAT_CONTEXT.xml"
+          echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_context) mv -v /opt/tomee/conf/Catalina/localhost/grouper.xml /opt/tomee/conf/Catalina/localhost/$GROUPER_TOMCAT_CONTEXT.xml , result: $?"
       fi
     
   fi
@@ -71,18 +80,30 @@ setupFilesTomcat_context() {
   if [ -f /etc/httpd/conf.d/grouper-www.conf ] && [ "$GROUPER_RUN_TOMCAT_NOT_SUPERVISOR" != "true" ]
     then
       sed -i "s|__GROUPER_APACHE_AJP_TIMEOUT_SECONDS__|$GROUPER_APACHE_AJP_TIMEOUT_SECONDS|g" /etc/httpd/conf.d/grouper-www.conf
+      results="$?"
       sed -i "s|__GROUPER_TOMCAT_CONTEXT__|$GROUPER_TOMCAT_CONTEXT|g" /etc/httpd/conf.d/grouper-www.conf
+      results="$results $?"
       sed -i "s|__GROUPER_URL_CONTEXT__|$GROUPER_URL_CONTEXT|g" /etc/httpd/conf.d/grouper-www.conf
+      results="$results $?"
       sed -i "s|__GROUPERWS_URL_CONTEXT__|$GROUPERWS_URL_CONTEXT|g" /etc/httpd/conf.d/grouper-www.conf
+      results="$results $?"
       sed -i "s|__GROUPERSCIM_URL_CONTEXT__|$GROUPERSCIM_URL_CONTEXT|g" /etc/httpd/conf.d/grouper-www.conf
+      results="$results $?"
       sed -i "s|__GROUPER_PROXY_PASS__|$GROUPER_PROXY_PASS|g" /etc/httpd/conf.d/grouper-www.conf
-      sed -i "s|__GROUPER_PROXY_PASS__|$GROUPER_PROXY_PASS|g" /etc/httpd/conf.d/ssl-enabled.conf
+      results="$results $?"
+      if [ -f /etc/httpd/conf.d/ssl-enabled.conf ]; then
+        sed -i "s|__GROUPER_PROXY_PASS__|$GROUPER_PROXY_PASS|g" /etc/httpd/conf.d/ssl-enabled.conf
+        results="$results $?"
+      fi
       sed -i "s|__GROUPERSCIM_PROXY_PASS__|$GROUPERSCIM_PROXY_PASS|g" /etc/httpd/conf.d/grouper-www.conf
+      results="$results $?"
       sed -i "s|__GROUPERWS_PROXY_PASS__|$GROUPERWS_PROXY_PASS|g" /etc/httpd/conf.d/grouper-www.conf
+      results="$results $?"
       if [ "$GROUPER_TOMCAT_AJP_PORT" != "8009" ]; then 
         sed -i "s|:8009/|:$GROUPER_TOMCAT_AJP_PORT/|g" /etc/httpd/conf.d/grouper-www.conf
+        results="$results $?"
       fi
-      
+      echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_context) Set contexts in grouper-www.conf and other files, results: $results"
   fi
 
 }
@@ -92,29 +113,27 @@ setupFilesTomcat_authn() {
     if [ "$GROUPER_WS_TOMCAT_AUTHN" = "true" ]
       then
         cp /opt/grouper/grouperWebapp/WEB-INF/web.wsTomcatAuthn.xml /opt/grouper/grouperWebapp/WEB-INF/web.xml
+        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_authn) /opt/grouper/grouperWebapp/WEB-INF/web.wsTomcatAuthn.xml /opt/grouper/grouperWebapp/WEB-INF/web.xml , result: $?"
         patch /opt/tomee/conf/server.xml /opt/tomee/conf/server.xml.tomcatAuthn.patch
+        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_authn) Patch server.xml for tomcat authn, result: $?"
     fi
-
-}
-
-setupFilesTomcat_logging() {
-
-  if [ "$GROUPER_RUN_TOMEE" = "true" ] && [ "$GROUPER_LOG_TO_HOST" != "true" ]
-    then
-      setupPipe_tomcatLog
-  fi
 
 }
 
 setupFilesTomcat_loggingSlf4j() {
 
-  rm -v /opt/tomee/lib/slf4j-api*.jar
-  rm -v /opt/tomee/lib/slf4j-jdk*.jar
-  cp -v /opt/grouper/grouperWebapp/WEB-INF/lib/slf4j-api-*.jar /opt/tomee/lib
+  rm /opt/tomee/lib/slf4j-api*.jar
+  echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_loggingSlf4j) rm /opt/tomee/lib/slf4j-api*.jar , result: $?"
+  rm /opt/tomee/lib/slf4j-jdk*.jar
+  echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_loggingSlf4j) rm /opt/tomee/lib/slf4j-jdk*.jar , result: $?"
+  cp /opt/grouper/grouperWebapp/WEB-INF/lib/slf4j-api-*.jar /opt/tomee/lib
+  echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_loggingSlf4j) cp /opt/grouper/grouperWebapp/WEB-INF/lib/slf4j-api-*.jar /opt/tomee/lib , result: $?"
   # tomee uses the jdk one
-  cp -v /opt/grouper/grouperWebapp/WEB-INF/lib/slf4j-jdk*.jar /opt/tomee/lib
+  cp /opt/grouper/grouperWebapp/WEB-INF/lib/slf4j-jdk*.jar /opt/tomee/lib
+  echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_loggingSlf4j) cp /opt/grouper/grouperWebapp/WEB-INF/lib/slf4j-jdk*.jar /opt/tomee/lib , result: $?"
   # grouper uses the log4j one
-  rm -v /opt/grouper/grouperWebapp/WEB-INF/lib/slf4j-jdk*.jar
+  rm /opt/grouper/grouperWebapp/WEB-INF/lib/slf4j-jdk*.jar
+  echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_loggingSlf4j) rm /opt/grouper/grouperWebapp/WEB-INF/lib/slf4j-jdk*.jar , result: $?"
 
 }
 
@@ -123,6 +142,7 @@ setupFilesTomcat_supervisor() {
   if [ "$GROUPER_RUN_TOMEE" = "true" ] && [ "$GROUPER_RUN_TOMCAT_NOT_SUPERVISOR" != "true" ]
     then
       cat /opt/tier-support/supervisord-tomee.conf >> /opt/tier-support/supervisord.conf
+      echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_supervisor) Append supervisord-tomee.conf to supervisord.conf"
   fi
 
 }
@@ -133,7 +153,6 @@ setupFilesTomcat_unsetAll() {
   unset -f setupFilesTomcat
   unset -f setupFilesTomcat_authn
   unset -f setupFilesTomcat_context
-  unset -f setupFilesTomcat_logging
   unset -f setupFilesTomcat_ports
   unset -f setupFilesTomcat_supervisor
   unset -f setupFilesTomcat_unsetAll
@@ -148,7 +167,6 @@ setupFilesTomcat_exportAll() {
   export -f setupFilesTomcat
   export -f setupFilesTomcat_authn
   export -f setupFilesTomcat_context
-  export -f setupFilesTomcat_logging
   export -f setupFilesTomcat_ports
   export -f setupFilesTomcat_supervisor
   export -f setupFilesTomcat_unsetAll

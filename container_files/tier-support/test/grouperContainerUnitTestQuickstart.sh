@@ -121,5 +121,32 @@ testContainerQuickstart() {
   curl -L -k -u GrouperSystem:thisPassIsCopyrightedDontUse https://localhost/grouper-ws-scim/v2/Groups/ -o index.html
   assertLocalFileContains index.html 'etc:workflowEditors'
 
+  docker stop $containerName
+  docker start $containerName
+
+  sleep $globalSleepSecondsAfterRun
+
+  # one for hsqldb
+  assertNumberOfTomcatProcesses 2
+  assertNumberOfApacheProcesses 5
+  assertNumberOfShibProcesses 0
+
+  assertListeningOnPort 443
+  assertListeningOnPort 80
+  assertListeningOnPort 8009
+  assertListeningOnPort 9001
+
+  curl -L -k -u GrouperSystem:thisPassIsCopyrightedDontUse https://localhost -o index.html
+  assertLocalFileContains index.html document.location.href
+
+  curl -L -k -u GrouperSystem:thisPassIsCopyrightedDontUse https://localhost/grouper/grouperUi/app/UiV2Main.index?operation=UiV2Main.indexMain -o index.html
+  assertLocalFileContains index.html 'end index.jsp'
+
+  containerCommandResultEquals "ps -ef | grep root | grep cat | grep -v grep | wc -l" 6
+  containerCommandResultEquals "ps -ef | grep root | grep awk | grep supervisord | wc -l" 1
+  containerCommandResultEquals "ps -ef | grep root | grep awk | grep grouper | wc -l" 1
+  containerCommandResultEquals "ps -ef | grep root | grep awk | grep httpd | wc -l" 1
+  containerCommandResultEquals "ps -ef | grep root | grep awk | grep tomee | wc -l" 1
+
 }
 export -f testContainerQuickstart

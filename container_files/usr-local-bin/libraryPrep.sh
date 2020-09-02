@@ -87,19 +87,22 @@ prep_ws() {
 }
 
 prep_conf() {
+
+    echo "grouperContainer; INFO: (libraryPrep.sh-prep_conf) Start setting up initial pipes"
+    setupPipe_logging
+    setupPipe_supervisordLog
+    setupPipe_grouperLog
+    echo "grouperContainer; INFO: (libraryPrep.sh-prep_conf) End setting up initial pipes"
     
     # if we are stopping and starting, we just read the env vars and we done
     if [ -f /opt/grouper/grouperEnv.sh ]
       then
-        echo "Loading env vars from /opt/grouper/grouperEnv.sh"
+        echo "grouperContainer; INFO: (libraryPrep.sh-prep_conf) Loading env vars from /opt/grouper/grouperEnv.sh"
         . /opt/grouper/grouperEnv.sh
         return
     fi
     
     prep_initDeprecatedEnvVars
-    setupPipe_logging
-    setupPipe_supervisordLog
-    setupPipe_grouperLog
     grouperScriptHooks_prepConfPost
 
 }
@@ -191,7 +194,7 @@ prep_finish() {
 
     if [ "$GROUPER_SETUP_FILES_COMPLETE" = "true" ]
       then
-        echo "GROUPER_SETUP_FILES_COMPLETE=true, skipping startup prep"
+        echo "grouperContainer; INFO: (libraryPrep.sh-prep_finish) GROUPER_SETUP_FILES_COMPLETE=true, skipping startup prep"
         prep_unsetAllAndFromFiles
         
         return
@@ -212,6 +215,7 @@ prep_finish() {
     grouperScriptHooks_finishPrepPost
         
     prep_unsetAllAndFromFiles
+    echo "grouperContainer; INFO: (libraryPrep.sh-prep_finish) End prep"
 }
 
 prep_unsetAllAndFromFiles() {

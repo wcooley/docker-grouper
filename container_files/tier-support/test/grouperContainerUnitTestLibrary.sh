@@ -163,6 +163,18 @@ assertNotListeningOnPort() {
   assertEquals "not listening on port $1" "0" "$var"
 }
 
+containerCommandResultEquals() {
+
+  if [ "$#" -ne 2 ]; then
+    echo "You must enter exactly 2 arguments: the command to run and the expected result"
+    exit 1
+  fi
+  local command="docker exec $containerName $1"
+  local var="$(runCommand "$command")"
+  assertEquals "$1" "$2" "$var"
+
+}
+
 runCommand() {
   if [ "$#" -ne 1 ]; then
     echo "Pass the command to run"

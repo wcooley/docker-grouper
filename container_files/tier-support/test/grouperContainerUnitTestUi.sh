@@ -19,6 +19,10 @@ testContainerUi() {
   docker run --detach --name $containerName --publish 443:443 $imageName ui
   sleep $globalSleepSecondsAfterRun
 
+
+  assertFileContains /opt/tomee/conf/server.xml 'address="0.0.0.0"'
+  assertFileContains /opt/tomee/conf/server.xml 'allowedRequestAttributesPattern=".*"'
+  
   assertFileExists /opt/grouper/grouperWebapp/WEB-INF/libWs/axis2-kernel-1.6.4.jar
   assertFileNotExists /opt/grouper/grouperWebapp/WEB-INF/lib/axis2-kernel-1.6.4.jar
   assertFileExists /opt/grouper/grouperWebapp/WEB-INF/libScim/stax-api-1.0-2.jar

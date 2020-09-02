@@ -1,5 +1,6 @@
 #!/bin/sh
 
+echo "grouperContainer; INFO: (library.sh) Start loading library.sh"
 . /usr/local/bin/libraryPrep.sh
 . /usr/local/bin/libraryPrepOnly.sh
 . /usr/local/bin/libraryRunCommand.sh
@@ -15,4 +16,5 @@
 
 # implementations of custom hooks
 . /usr/local/bin/grouperScriptHooks.sh
+echo "grouperContainer; INFO: (library.sh) End loading library.sh"
 
