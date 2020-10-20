@@ -71,10 +71,18 @@ setupFilesForProcess_shib() {
         export LD_LIBRARY_PATH=/opt/shibboleth/lib64:$LD_LIBRARY_PATH
         echo "grouperContainer; INFO: (librarySetupFilesForProcess.sh-setupFilesForProcess_shib) Appending supervisord-shibsp.conf to supervisord.conf"
         cat /opt/tier-support/supervisord-shibsp.conf >> /opt/tier-support/supervisord.conf
-        cp /opt/tier-support/httpd-shib.conf /etc/httpd/conf.d/
-        echo "grouperContainer; INFO: (librarySetupFilesForProcess.sh-setupFilesForProcess_shib) cp /opt/tier-support/httpd-shib.conf /etc/httpd/conf.d/ , result: $?"
-        mv /etc/httpd/conf.d/shib.conf.dontuse /etc/httpd/conf.d/shib.conf
-        echo "grouperContainer; INFO: (librarySetupFilesForProcess.sh-setupFilesForProcess_shib) mv /etc/httpd/conf.d/shib.conf.dontuse /etc/httpd/conf.d/shib.conf , result: $?"
+        if [ "$GROUPER_ORIGFILE_HTTPD_SHIB_CONF" = "true" ]; then
+          cp /opt/tier-support/httpd-shib.conf /etc/httpd/conf.d/
+          echo "grouperContainer; INFO: (librarySetupFilesForProcess.sh-setupFilesForProcess_shib) cp /opt/tier-support/httpd-shib.conf /etc/httpd/conf.d/ , result: $?"
+        else
+          echo "grouperContainer; INFO: (librarySetupFilesForProcess.sh-setupFilesForProcess_shib) /etc/httpd/conf.d/httpd-shib.conf is not the original file so will not be edited"
+        fi
+        if [ "$GROUPER_ORIGFILE_SHIB_CONF" = "true" ]; then
+          mv /etc/httpd/conf.d/shib.conf.dontuse /etc/httpd/conf.d/shib.conf
+          echo "grouperContainer; INFO: (librarySetupFilesForProcess.sh-setupFilesForProcess_shib) mv /etc/httpd/conf.d/shib.conf.dontuse /etc/httpd/conf.d/shib.conf , result: $?"
+        else
+          echo "grouperContainer; INFO: (librarySetupFilesForProcess.sh-setupFilesForProcess_shib) /etc/httpd/conf.d/shib.conf is not the original file so will not be edited"
+        fi
     fi
   fi
 

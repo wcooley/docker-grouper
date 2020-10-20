@@ -6,7 +6,7 @@ RUN yum update -y \
 RUN yum install -y wget tar unzip dos2unix patch
     
 ARG GROUPER_CONTAINER_VERSION
-ENV GROUPER_VERSION=2.5.35 \
+ENV GROUPER_VERSION=2.5.36 \
      GROUPER_CONTAINER_VERSION=$GROUPER_CONTAINER_VERSION
 
 # Install Corretto Java JDK
@@ -32,7 +32,7 @@ RUN echo 'Installing Grouper'; \
     cd /opt/grouper/$GROUPER_VERSION/ \
     && $JAVA_HOME/bin/java -cp :grouperInstaller.jar edu.internet2.middleware.grouperInstaller.GrouperInstaller
 FROM centos:centos7 as cleanup
-ENV GROUPER_VERSION=2.5.35 \
+ENV GROUPER_VERSION=2.5.36 \
     TOMEE_VERSION=7.0.0
 RUN mkdir -p /opt/grouper/grouperWebapp/
 RUN mkdir -p /opt/tomee/
@@ -87,6 +87,17 @@ RUN chmod +x /usr/local/bin/*.sh
 COPY container_files/httpd/* /etc/httpd/conf.d/
 COPY container_files/shibboleth/* /etc/shibboleth/
 RUN cp /dev/null /etc/httpd/conf.d/ssl.conf 
+
+# keep backup of files
+RUN mkdir -p /opt/tier-support/originalFiles ; \
+  cp /opt/grouper/grouperWebapp/WEB-INF/classes/log4j.properties /opt/tier-support/originalFiles 2>/dev/null ; \
+  cp /etc/httpd/conf/httpd.conf /opt/tier-support/originalFiles 2>/dev/null ; \
+  cp /etc/httpd/conf.d/ssl-enabled.conf /opt/tier-support/originalFiles 2>/dev/null ; \
+  cp /etc/httpd/conf.d/httpd-shib.conf /opt/tier-support/originalFiles 2>/dev/null ; \
+  cp /etc/httpd/conf.d/shib.conf /opt/tier-support/originalFiles 2>/dev/null ; \
+  cp /opt/tomee/conf/server.xml /opt/tier-support/originalFiles 2>/dev/null ; \
+  cp /opt/tomee/conf/Catalina/localhost/grouper.xml /opt/tier-support/originalFiles 2>/dev/null ; \
+  cp /opt/grouper/grouperWebapp/WEB-INF/web.xml /opt/tier-support/originalFiles 2>/dev/null
 
 WORKDIR /opt/grouper/grouperWebapp/WEB-INF/
 EXPOSE 80 443

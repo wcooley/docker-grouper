@@ -8,33 +8,43 @@ setupFilesTomcat() {
   setupFilesTomcat_context
   setupFilesTomcat_ports
   setupFilesTomcat_accessLogs
+  setupFilesTomcat_sessionTimeout
 }
 
 
 
 setupFilesTomcat_turnOnAjp() {
 
-  cp /opt/tomee/conf/server.xml /opt/tomee/conf/server.xml.currentOriginalInContainer
-  echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_turnOnAjp) cp /opt/tomee/conf/server.xml /opt/tomee/conf/server.xml.currentOriginalInContainer , result: $?"
-  patch /opt/tomee/conf/server.xml /opt/tomee/conf/server.xml.turnOnAjp.patch
-  echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_turnOnAjp) Patch server.xml to turn on ajp, result: $?"
+  if [ "$GROUPER_ORIGFILE_SERVER_XML" = "true" ]; then
+    cp /opt/tomee/conf/server.xml /opt/tomee/conf/server.xml.currentOriginalInContainer
+    echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_turnOnAjp) cp /opt/tomee/conf/server.xml /opt/tomee/conf/server.xml.currentOriginalInContainer , result: $?"
+    patch /opt/tomee/conf/server.xml /opt/tomee/conf/server.xml.turnOnAjp.patch
+    echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_turnOnAjp) Patch server.xml to turn on ajp, result: $?"
+  else
+    echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_turnOnAjp) /opt/tomee/conf/server.xml is not the original file so will not be edited"
+  fi
   
 }
 
 setupFilesTomcat_accessLogs() {
   
-  if [ "$GROUPER_TOMCAT_LOG_ACCESS" = "true" ]; then
+  if [ "$GROUPER_ORIGFILE_SERVER_XML" = "true" ]; then
+    if [ "$GROUPER_TOMCAT_LOG_ACCESS" = "true" ]; then
+    
+        # this patch happens after the last patch
+        patch /opt/tomee/conf/server.xml /opt/tomee/conf/server.xml.loggingpipe.patch
+        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_accessLogs) Patch server.xml to log access, result: $?"
+      
+    else  
   
-    # this patch happens after the last patch
-    patch /opt/tomee/conf/server.xml /opt/tomee/conf/server.xml.loggingpipe.patch
-    echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_accessLogs) Patch server.xml to log access, result: $?"
-    
-  else  
-
-    patch /opt/tomee/conf/server.xml /opt/tomee/conf/server.xml.nologging.patch
-    echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_accessLogs) Patch server.xml to not log access, result: $?"
-    
+      patch /opt/tomee/conf/server.xml /opt/tomee/conf/server.xml.nologging.patch
+      echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_accessLogs) Patch server.xml to not log access, result: $?"
+      
+    fi
+  else
+    echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_accessLogs) /opt/tomee/conf/server.xml is not the original file so will not be edited"
   fi
+  
 }
 
 setupFilesTomcat_ports() {
@@ -59,21 +69,24 @@ setupFilesTomcat_context() {
 
   if [ -f /opt/tomee/conf/Catalina/localhost/grouper.xml ]
     then
-      # ws only and scim only dont have cookies
-      sed -i "s|__GROUPER_CONTEXT_COOKIES__|$GROUPER_CONTEXT_COOKIES|g" /opt/tomee/conf/Catalina/localhost/grouper.xml
-      echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_context) Replace context cookies in grouper.xml, result: $?"
-      
-      # setup context
-      sed -i "s|__GROUPER_TOMCAT_CONTEXT__|$GROUPER_TOMCAT_CONTEXT|g" /opt/tomee/conf/Catalina/localhost/grouper.xml
-      echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_context) Replace tomcat context in grouper.xml, result: $?"
-      
-      # rename file if needed since that can matter with tomcat
-      if [ "$GROUPER_TOMCAT_CONTEXT" != "grouper" ]
-        then  
-          mv -v /opt/tomee/conf/Catalina/localhost/grouper.xml "/opt/tomee/conf/Catalina/localhost/$GROUPER_TOMCAT_CONTEXT.xml"
-          echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_context) mv -v /opt/tomee/conf/Catalina/localhost/grouper.xml /opt/tomee/conf/Catalina/localhost/$GROUPER_TOMCAT_CONTEXT.xml , result: $?"
-      fi
-    
+      if [ "$GROUPER_ORIGFILE_GROUPER_XML" = "true" ]; then
+        # ws only and scim only dont have cookies
+        sed -i "s|__GROUPER_CONTEXT_COOKIES__|$GROUPER_CONTEXT_COOKIES|g" /opt/tomee/conf/Catalina/localhost/grouper.xml
+        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_context) Replace context cookies in grouper.xml, result: $?"
+        
+        # setup context
+        sed -i "s|__GROUPER_TOMCAT_CONTEXT__|$GROUPER_TOMCAT_CONTEXT|g" /opt/tomee/conf/Catalina/localhost/grouper.xml
+        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_context) Replace tomcat context in grouper.xml, result: $?"
+        
+        # rename file if needed since that can matter with tomcat
+        if [ "$GROUPER_TOMCAT_CONTEXT" != "grouper" ]
+          then  
+            mv -v /opt/tomee/conf/Catalina/localhost/grouper.xml "/opt/tomee/conf/Catalina/localhost/$GROUPER_TOMCAT_CONTEXT.xml"
+            echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_context) mv -v /opt/tomee/conf/Catalina/localhost/grouper.xml /opt/tomee/conf/Catalina/localhost/$GROUPER_TOMCAT_CONTEXT.xml , result: $?"
+        fi
+      else
+        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_context) /opt/tomee/conf/Catalina/localhost/grouper.xml is not the original file so will not be edited"
+      fi    
   fi
 
   # setup the apache linkage to tomcat  
@@ -110,12 +123,19 @@ setupFilesTomcat_context() {
 
 setupFilesTomcat_authn() {
 
-    if [ "$GROUPER_WS_TOMCAT_AUTHN" = "true" ]
+    if [ "$GROUPER_WS_TOMCAT_AUTHN" = "true" ] 
       then
-        cp /opt/grouper/grouperWebapp/WEB-INF/web.wsTomcatAuthn.xml /opt/grouper/grouperWebapp/WEB-INF/web.xml
-        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_authn) /opt/grouper/grouperWebapp/WEB-INF/web.wsTomcatAuthn.xml /opt/grouper/grouperWebapp/WEB-INF/web.xml , result: $?"
-        patch /opt/tomee/conf/server.xml /opt/tomee/conf/server.xml.tomcatAuthn.patch
-        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_authn) Patch server.xml for tomcat authn, result: $?"
+      
+        if [ "$GROUPER_ORIGFILE_WEBAPP_WEB_XML" = "true" ]; then
+          cp /opt/tier-support/web.wsTomcatAuthn.xml /opt/grouper/grouperWebapp/WEB-INF/web.xml
+          echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_authn) cp /opt/tier-support/web.wsTomcatAuthn.xml /opt/grouper/grouperWebapp/WEB-INF/web.xml , result: $?"
+        else
+          echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_authn) /opt/grouper/grouperWebapp/WEB-INF/web.xml is not the original file so will not be edited"
+        fi
+
+        sed -i 's|tomcatAuthentication="false"|tomcatAuthentication="true"|g' /opt/tomee/conf/server.xml
+        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_authn) sed -i 's|tomcatAuthentication=''false''|tomcatAuthentication=''true''|g' /opt/tomee/conf/server.xml, result: $?"
+
     fi
 
 }
@@ -147,6 +167,14 @@ setupFilesTomcat_supervisor() {
 
 }
 
+setupFilesTomcat_sessionTimeout() {
+
+  if [ "$GROUPER_RUN_TOMEE" = "true" ] && [ "$GROUPER_TOMCAT_SESSION_TIMEOUT_MINUTES" != "-2" ]
+    then
+    sed -i "s|<session-timeout>30</session-timeout>|<session-timeout>$GROUPER_TOMCAT_SESSION_TIMEOUT_MINUTES</session-timeout>|g" /opt/tomee/conf/web.xml
+    echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_sessionTimeout) based on GROUPER_TOMCAT_SESSION_TIMEOUT_MINUTES, sed -i ''s|<session-timeout>30</session-timeout>|<session-timeout>$GROUPER_TOMCAT_SESSION_TIMEOUT_MINUTES</session-timeout>|g'' /opt/tomee/conf/web.xml , result=$?"
+  fi
+}
 
 setupFilesTomcat_unsetAll() {
 
@@ -158,6 +186,7 @@ setupFilesTomcat_unsetAll() {
   unset -f setupFilesTomcat_unsetAll
   unset -f setupFilesTomcat_accessLogs
   unset -f setupFilesTomcat_loggingSlf4j
+  unset -f setupFilesTomcat_sessionTimeout
   unset -f setupFilesTomcat_turnOnAjp
 
 }
@@ -172,6 +201,7 @@ setupFilesTomcat_exportAll() {
   export -f setupFilesTomcat_unsetAll
   export -f setupFilesTomcat_accessLogs
   export -f setupFilesTomcat_loggingSlf4j
+  export -f setupFilesTomcat_sessionTimeout
   export -f setupFilesTomcat_turnOnAjp
 }
 

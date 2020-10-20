@@ -1,8 +1,8 @@
-#!/bin/sh
+#!/bin/bash
 
 ### DO NOT EDIT OR OVERLAY THIS FILE
 # These definitions are here to define the functions.
-# You can overlay the grouperCustomShellHooks.sh file with any definitions of these functions
+# You can overlay the grouperScriptHooks.sh file with any definitions of these functions
 
 # called at the beginning of the container startup
 # after logging is setup
@@ -38,7 +38,7 @@ grouperScriptHooks_unsetAll() {
   unset -f grouperScriptHooks_setupFilesPost
   unset -f grouperScriptHooks_setupFilesPostChown
   unset -f grouperScriptHooks_unsetAll
-
+  unset -f grouperScriptHooks_exportAll
 }
 
 grouperScriptHooks_exportAll() {
@@ -49,7 +49,7 @@ grouperScriptHooks_exportAll() {
   export -f grouperScriptHooks_setupFilesPost
   export -f grouperScriptHooks_setupFilesPostChown
   export -f grouperScriptHooks_unsetAll
-
+  export -f grouperScriptHooks_exportAll
 }
 
 # export everything

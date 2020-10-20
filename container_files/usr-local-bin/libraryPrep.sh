@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 prep_quickstart() {
     
@@ -136,10 +136,13 @@ prep_initDeprecatedEnvVars() {
 
 }
 
+
 prep_finishBegin() {
     # default a lot of env variables
     # morph defaults to null
     # database password defaults to null
+    
+      
     if [ -z "$GROUPER_UI_GROUPER_AUTH" ] ; then export GROUPER_UI_GROUPER_AUTH=false; fi
     if [ -z "$GROUPER_WS_GROUPER_AUTH" ] ; then export GROUPER_WS_GROUPER_AUTH=false; fi
     if [ -z "$GROUPER_SCIM_GROUPER_AUTH" ] ; then export GROUPER_SCIM_GROUPER_AUTH=false; fi
@@ -176,6 +179,17 @@ prep_finishBegin() {
     
     if [ -z "$GROUPER_SHIB_LOG_USE_PIPE" ]; then export GROUPER_SHIB_LOG_USE_PIPE=true; fi
     
+    #Replace web.xml session timeout with env variable
+    if [[ -z "$GROUPER_TOMCAT_SESSION_TIMEOUT_MINUTES" ]]; then
+      if [[ "$GROUPER_UI" != 'true' ]] && [[ "$GROUPER_WS" = 'true' ]]; then
+        echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) $ GROUPER_TOMCAT_SESSION_TIMEOUT_MINUTES is not set, setting to WS default of 1"
+        export GROUPER_TOMCAT_SESSION_TIMEOUT_MINUTES=1
+      else
+        echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) $ GROUPER_TOMCAT_SESSION_TIMEOUT_MINUTES is not set, setting to UI default of 600 (10 hours)"
+        export GROUPER_TOMCAT_SESSION_TIMEOUT_MINUTES=600
+      
+      fi
+    fi
 }
 
 prep_finishEnd() {

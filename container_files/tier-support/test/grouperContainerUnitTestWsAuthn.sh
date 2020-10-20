@@ -1,6 +1,6 @@
 #!/bin/bash
 
-testContainerWs() {
+testContainerWsAuthn() {
 
   if [ "$#" -ne 0 ]; then
     echo "You must enter exactly 0 command line arguments"
@@ -11,12 +11,12 @@ testContainerWs() {
 
   echo
   echo '################'
-  echo Running container as ws
-  echo "docker run --detach --name $containerName --publish 443:443 -e GROUPER_SELF_SIGNED_CERT=true -e GROUPER_APACHE_SERVER_NAME=https://a.b.c:443 $imageName ws"
+  echo Running container as ws with tomcat authn
+  echo "docker run --detach --name $containerName --publish 443:443 -e GROUPER_SELF_SIGNED_CERT=true -e GROUPER_APACHE_SERVER_NAME=https://a.b.c:443 -e GROUPER_WS_TOMCAT_AUTHN=true $imageName ws"
   echo '################'
   echo
 
-  docker run --detach --name $containerName --publish 443:443 -e GROUPER_SELF_SIGNED_CERT=true -e GROUPER_APACHE_SERVER_NAME=https://a.b.c:443 $imageName ws
+  docker run --detach --name $containerName --publish 443:443 -e GROUPER_SELF_SIGNED_CERT=true -e GROUPER_APACHE_SERVER_NAME=https://a.b.c:443 -e GROUPER_WS_TOMCAT_AUTHN=true $imageName ws
   sleep $globalSleepSecondsAfterRun
 
   assertFileExists /opt/grouper/grouperWebapp/WEB-INF/libWs/axis2-kernel-1.6.4.jar
@@ -26,9 +26,9 @@ testContainerWs() {
   assertFileNotExists "/opt/grouper/grouperWebapp/WEB-INF/lib/grouper-messaging-activemq-$grouperVersion.jar"
   assertFileExists "/opt/grouper/grouperWebapp/WEB-INF/libUiAndDaemon/grouper-messaging-activemq-$grouperVersion.jar"
 
-  assertFileNotContains /opt/grouper/grouperWebapp/WEB-INF/web.xml "<auth-method>BASIC</auth-method>"
-  assertFileNotContains /opt/tomee/conf/server.xml 'tomcatAuthentication="true"'
-  assertFileContains /opt/tomee/conf/server.xml 'tomcatAuthentication="false"'
+  assertFileContains /opt/grouper/grouperWebapp/WEB-INF/web.xml "<auth-method>BASIC</auth-method>"
+  assertFileContains /opt/tomee/conf/server.xml 'tomcatAuthentication="true"'
+  assertFileNotContains /opt/tomee/conf/server.xml 'tomcatAuthentication="false"'
 
   assertFileContains /etc/httpd/conf.d/ssl-enabled.conf "Listen 443 https"
   assertFileNotContains /etc/httpd/conf.d/ssl-enabled.conf "__"
@@ -96,4 +96,4 @@ testContainerWs() {
   assertNotListeningOnPort 9001
 
 }
-export -f testContainerWs
+export -f testContainerWsAuthn

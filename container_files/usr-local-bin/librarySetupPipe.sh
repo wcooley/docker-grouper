@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 setupPipe() {
     echo "grouperContainer; INFO: (librarySetupPipe.sh-setupPipe) Setup pipe: $1"

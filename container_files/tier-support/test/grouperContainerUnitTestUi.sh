@@ -47,6 +47,7 @@ testContainerUi() {
   assertFileNotContains /etc/httpd/conf/httpd.conf "Options Indexes"
 
   assertFileContains /opt/grouper/grouperWebapp/WEB-INF/classes/log4j.properties "/tmp/logpipe"
+  assertFileContains /opt/tomee/conf/web.xml "<session-timeout>600</session-timeout>"
   assertFileContains /opt/grouper/grouperWebapp/WEB-INF/classes/log4j.properties "grouper-ui;"
 
   assertFileNotContains /opt/grouper/grouperWebapp/WEB-INF/classes/grouper.hibernate.properties grouperPasswordConfigOverride_UI_GrouperSystem_pass.elConfig

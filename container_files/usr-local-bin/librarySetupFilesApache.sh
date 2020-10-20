@@ -1,22 +1,31 @@
 #!/bin/bash
 
 setupFilesApache_indexes() {
-    if [ "$GROUPER_APACHE_DIRECTORY_INDEXES" = "false" ]
-      then
+  if [ "$GROUPER_APACHE_DIRECTORY_INDEXES" = "false" ]
+    then
+      if [ "$GROUPER_ORIGFILE_HTTPD_CONF" = "true" ]; then
         # take out the directory indexes from the docroot
         cp /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf.pre_noindexes
         echo "grouperContainer; INFO: (librarySetupFilesApache.sh-setupFilesApache_indexes) cp /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf.pre_noindexes , result=$?"
         patch /etc/httpd/conf/httpd.conf /etc/httpd/conf.d/httpd.conf.noindexes.patch
         echo "grouperContainer; INFO: (librarySetupFilesApache.sh-setupFilesApache_indexes) Patch httpd.conf to turn off indexes 'patch /etc/httpd/conf/httpd.conf /etc/httpd/conf.d/httpd.conf.noindexes.patch' result=$?"
-    fi
+      else
+        echo "grouperContainer; INFO: (librarySetupFilesApache.sh-setupFilesApache_indexes) /etc/httpd/conf/httpd.conf is not the original file so will not be changed"
+      fi
+  fi
+
 }
 
 setupFilesApache_selfSignedCert() {
-    if [ "$GROUPER_RUN_APACHE" = "true" ] && [ "$GROUPER_SELF_SIGNED_CERT" = "true" ] && [ "$GROUPER_USE_SSL" = "true" ]
-       then
+  if [ "$GROUPER_RUN_APACHE" = "true" ] && [ "$GROUPER_SELF_SIGNED_CERT" = "true" ] && [ "$GROUPER_USE_SSL" = "true" ]
+     then
+       if [ "$GROUPER_ORIGFILE_SSL_ENABLED_CONF" = "true" ]; then
          cp /opt/tier-support/ssl-enabled.conf /etc/httpd/conf.d/
          echo "grouperContainer; INFO: (librarySetupFilesApache.sh-setupFilesApache_selfSignedCert) cp /opt/tier-support/ssl-enabled.conf /etc/httpd/conf.d/ , result: $?"
-    fi
+       else
+         echo "grouperContainer; INFO: (librarySetupFilesApache.sh-setupFilesApache_selfSignedCert) /opt/tier-support/ssl-enabled.conf is not the original file so will not be edited"
+       fi
+  fi
 }
 
 setupFilesApache_ssl() {
@@ -76,6 +85,7 @@ setupFilesApache_ports() {
   fi
 
 }
+
 
 setupFilesApache() {
   setupFilesApache_supervisor

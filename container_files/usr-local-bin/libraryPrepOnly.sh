@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 prepOnly_component() {
     if [ "$GROUPER_WS" = "true" ] && [ "$GROUPER_UI" != "true" ] && [ "$GROUPER_SCIM" != "true" ] && [ "$GROUPER_DAEMON" != "true" ]

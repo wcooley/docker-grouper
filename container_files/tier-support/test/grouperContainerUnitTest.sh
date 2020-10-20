@@ -5,7 +5,7 @@ if [ "$#" -ne 4 ]; then
   exit 1
 fi
 
-expectedSuccesses=554
+expectedSuccesses=626
 
 export containerName=$1
 export imageName=$2
@@ -27,6 +27,7 @@ export failureCount=0
 . ./grouperContainerUnitTestSelfSigned.sh
 . ./grouperContainerUnitTestScim.sh
 . ./grouperContainerUnitTestWs.sh
+. ./grouperContainerUnitTestWsAuthn.sh
 . ./grouperContainerUnitTestQuickstart.sh
 . ./grouperContainerUnitTestUiSubimage.sh
 . ./grouperContainerUnitTestUiSubimageNonroot.sh
@@ -39,6 +40,7 @@ testContainerSelfSigned
 testContainerUiDifferentPorts
 testContainerScim
 testContainerWs
+testContainerWsAuthn
 testContainerQuickstart
 testContainerDaemon
 testContainerUiSubimage
@@ -46,6 +48,7 @@ testContainerUiSubimageNonroot
 
 dockerRemoveContainer
 dockerRemoveSubimage
+
 
 echo ""
 echo "$successCount successes, $failureCount failures"
