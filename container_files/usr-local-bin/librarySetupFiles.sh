@@ -64,9 +64,6 @@ setupFiles_storeEnvVars() {
   # go through env vars, should start with GROUPER and have an equals sign in there
   env | grep "^GROUPER" | grep "=" | sort >> /opt/grouper/grouperEnv.sh
 
-  # print these out
-  env | grep "^GROUPER" | grep "=" | sort
-
   sed -i "s|^GROUPER|export GROUPER|g" /opt/grouper/grouperEnv.sh
 
   if [ ! -f /home/tomcat/.bashrc ]
