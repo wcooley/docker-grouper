@@ -59,7 +59,7 @@ LABEL author="tier-packaging@internet2.edu <tier-packaging@internet2.edu>" \
       ImageOS=centos7
       
 ARG GROUPER_CONTAINER_VERSION
-ENV JAVA_HOME=/usr/lib/jvm/java-1.8.0-amazon-corretto
+
 ENV PATH=$PATH:$JAVA_HOME/bin \
     GROUPER_HOME=/opt/grouper/grouperWebapp/WEB-INF \
     GROUPER_CONTAINER_VERSION=$GROUPER_CONTAINER_VERSION
@@ -69,7 +69,18 @@ RUN yum update -y \
     && pip install --upgrade pip \
     && pip install supervisor \
     && yum clean -y all
-COPY --from=installing $JAVA_HOME $JAVA_HOME
+#COPY --from=installing $JAVA_HOME $JAVA_HOME
+# do this again so its in rpm history
+ARG CORRETTO_URL_PERM=https://corretto.aws/downloads/latest/amazon-corretto-8-x64-linux-jdk.rpm
+ARG CORRETTO_RPM=amazon-corretto-8-x64-linux-jdk.rpm
+COPY container_files/java-corretto/corretto-signing-key.pub .
+RUN curl -O -L $CORRETTO_URL_PERM \
+    && rpm --import corretto-signing-key.pub \
+    && rpm -K $CORRETTO_RPM \
+    && rpm -i $CORRETTO_RPM \
+    && rm -r corretto-signing-key.pub $CORRETTO_RPM
+ENV JAVA_HOME=/usr/lib/jvm/java-1.8.0-amazon-corretto
+
 COPY --from=cleanup /opt/tomee/ /opt/tomee/
 COPY --from=cleanup /opt/grouper/ /opt/grouper/
 RUN groupadd -r tomcat \
