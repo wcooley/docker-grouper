@@ -86,6 +86,7 @@ COPY --from=cleanup /opt/grouper/ /opt/grouper/
 RUN groupadd -r tomcat \
     && useradd -r -m -s /sbin/nologin -g tomcat tomcat \
     && chown -R tomcat:tomcat /opt/tomee  \
+    && rm -f /etc/alternatives/java \
     && ln -s $JAVA_HOME/bin/java /etc/alternatives/java \
     && mkdir -p /opt/tomee/conf/Catalina/localhost/ \
     && chown -R tomcat:tomcat /opt/grouper \
