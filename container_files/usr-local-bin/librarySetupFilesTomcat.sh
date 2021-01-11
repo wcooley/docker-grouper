@@ -142,18 +142,18 @@ setupFilesTomcat_authn() {
 
 setupFilesTomcat_loggingSlf4j() {
 
-  rm /opt/tomee/lib/slf4j-api*.jar
-  echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_loggingSlf4j) rm /opt/tomee/lib/slf4j-api*.jar , result: $?"
-  rm /opt/tomee/lib/slf4j-jdk*.jar
-  echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_loggingSlf4j) rm /opt/tomee/lib/slf4j-jdk*.jar , result: $?"
+  rm -f /opt/tomee/lib/slf4j-api*.jar
+  echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_loggingSlf4j) rm -f /opt/tomee/lib/slf4j-api*.jar , result: $?"
+  rm -f /opt/tomee/lib/slf4j-jdk*.jar
+  echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_loggingSlf4j) rm -f /opt/tomee/lib/slf4j-jdk*.jar , result: $?"
   cp /opt/grouper/grouperWebapp/WEB-INF/lib/slf4j-api-*.jar /opt/tomee/lib
   echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_loggingSlf4j) cp /opt/grouper/grouperWebapp/WEB-INF/lib/slf4j-api-*.jar /opt/tomee/lib , result: $?"
   # tomee uses the jdk one
   cp /opt/grouper/grouperWebapp/WEB-INF/lib/slf4j-jdk*.jar /opt/tomee/lib
   echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_loggingSlf4j) cp /opt/grouper/grouperWebapp/WEB-INF/lib/slf4j-jdk*.jar /opt/tomee/lib , result: $?"
   # grouper uses the log4j one
-  rm /opt/grouper/grouperWebapp/WEB-INF/lib/slf4j-jdk*.jar
-  echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_loggingSlf4j) rm /opt/grouper/grouperWebapp/WEB-INF/lib/slf4j-jdk*.jar , result: $?"
+  rm -f /opt/grouper/grouperWebapp/WEB-INF/lib/slf4j-jdk*.jar
+  echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_loggingSlf4j) rm -f /opt/grouper/grouperWebapp/WEB-INF/lib/slf4j-jdk*.jar , result: $?"
 
 }
 

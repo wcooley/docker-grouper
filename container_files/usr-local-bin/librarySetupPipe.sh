@@ -3,7 +3,7 @@
 setupPipe() {
     echo "grouperContainer; INFO: (librarySetupPipe.sh-setupPipe) Setup pipe: $1"
     if [ -e $1 ]; then
-        rm $1
+        rm -f $1
     fi
     mkfifo -m 666 $1
 }

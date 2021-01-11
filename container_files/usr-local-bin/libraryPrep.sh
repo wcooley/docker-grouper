@@ -1,8 +1,13 @@
 #!/bin/bash
 
+prep_openshift() {
+  if [ -z "$GROUPER_CHOWN_DIRS" ]; then export GROUPER_CHOWN_DIRS=false; fi
+  if [ -z "$GROUPER_SHIB_LOG_USE_PIPE" ]; then export GROUPER_SHIB_LOG_USE_PIPE=false; fi
+  if [ -z "$GROUPER_GSH_CHECK_USER" ]; then export GROUPER_GSH_CHECK_USER=false; fi
+  if [ -z "$GROUPER_RUN_PROCESSES_AS_USERS" ]; then export GROUPER_RUN_PROCESSES_AS_USERS=false; fi
+}
+
 prep_quickstart() {
-    
-    
     
     if [ "$GROUPER_RUN_TOMCAT_NOT_SUPERVISOR" != "true" ]; then
       if [ -z "$GROUPER_RUN_HSQLDB" ]; then export GROUPER_RUN_HSQLDB=true; fi
@@ -141,8 +146,9 @@ prep_finishBegin() {
     # default a lot of env variables
     # morph defaults to null
     # database password defaults to null
-    
-      
+    if [ "$GROUPER_OPENSHIFT" == 'true' ]; then
+      prep_openshift
+    fi  
     if [ -z "$GROUPER_UI_GROUPER_AUTH" ] ; then export GROUPER_UI_GROUPER_AUTH=false; fi
     if [ -z "$GROUPER_WS_GROUPER_AUTH" ] ; then export GROUPER_WS_GROUPER_AUTH=false; fi
     if [ -z "$GROUPER_SCIM_GROUPER_AUTH" ] ; then export GROUPER_SCIM_GROUPER_AUTH=false; fi
@@ -244,6 +250,7 @@ prep_unsetAll() {
   unset -f prep_finishBegin
   unset -f prep_finishEnd
   unset -f prep_initDeprecatedEnvVars
+  unset -f prep_openshift
   unset -f prep_quickstart
   unset -f prep_runScim
   unset -f prep_runUi
@@ -263,6 +270,7 @@ prep_exportAll() {
   export -f prep_finishBegin
   export -f prep_finishEnd
   export -f prep_initDeprecatedEnvVars
+  export -f prep_openshift
   export -f prep_quickstart
   export -f prep_runScim
   export -f prep_runUi

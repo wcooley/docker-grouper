@@ -100,6 +100,12 @@ COPY container_files/httpd/* /etc/httpd/conf.d/
 COPY container_files/shibboleth/* /etc/shibboleth/
 RUN cp /dev/null /etc/httpd/conf.d/ssl.conf 
 
+# this is to improve openshift
+RUN touch /opt/grouper/grouperEnv.sh \
+    && mkdir -p /opt/tomee/work/Catalina/localhost/ \
+    && chgrp -R root  /opt/grouper/ /etc/httpd/conf/ /home/tomcat/ /opt/tomee/ /usr/local/bin /etc/httpd/conf.d/ /opt/hsqldb/ /opt/tier-support/ \
+    && chmod -R g+rwx /opt/grouper/ /etc/httpd/conf/ /home/tomcat/ /opt/tomee/ /usr/local/bin /etc/httpd/conf.d/ /opt/hsqldb/ /opt/tier-support/
+
 # keep backup of files
 RUN mkdir -p /opt/tier-support/originalFiles ; \
   cp /opt/grouper/grouperWebapp/WEB-INF/classes/log4j.properties /opt/tier-support/originalFiles 2>/dev/null ; \

@@ -14,8 +14,8 @@ setupFilesForProcess_hsqldb() {
 setupFilesForProcess_hsqldbVersions() {
 
     # tomee hsql must match the grouper one, and the version cannot be 2.3.2 since it is query bugs (unit tests fail)
-    rm /opt/tomee/lib/hsqldb-*.jar
-    echo "grouperContainer; INFO: (librarySetupFilesForProcess.sh-setupFilesForProcess_hsqldbVersions) rm /opt/tomee/lib/hsqldb-*.jar , result: $?"
+    rm -f /opt/tomee/lib/hsqldb-*.jar
+    echo "grouperContainer; INFO: (librarySetupFilesForProcess.sh-setupFilesForProcess_hsqldbVersions) rm -f /opt/tomee/lib/hsqldb-*.jar , result: $?"
     cp /opt/grouper/grouperWebapp/WEB-INF/lib/hsqldb-*.jar /opt/tomee/lib/
     echo "grouperContainer; INFO: (librarySetupFilesForProcess.sh-setupFilesForProcess_hsqldbVersions) cp /opt/grouper/grouperWebapp/WEB-INF/lib/hsqldb-*.jar /opt/tomee/lib/ , result: $?"
 
