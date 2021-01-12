@@ -1,48 +1,118 @@
 #!/bin/bash
 
 prep_openshift() {
-  if [ -z "$GROUPER_CHOWN_DIRS" ]; then export GROUPER_CHOWN_DIRS=false; fi
-  if [ -z "$GROUPER_SHIB_LOG_USE_PIPE" ]; then export GROUPER_SHIB_LOG_USE_PIPE=false; fi
-  if [ -z "$GROUPER_GSH_CHECK_USER" ]; then export GROUPER_GSH_CHECK_USER=false; fi
-  if [ -z "$GROUPER_RUN_PROCESSES_AS_USERS" ]; then export GROUPER_RUN_PROCESSES_AS_USERS=false; fi
+  if [ "$GROUPER_OPENSHIFT" == 'true' ]; then
+    echo "grouperContainer; INFO: (libraryPrep.sh-prep_openshift) GROUPER_OPENSHIFT is true"
+    if [ -z "$GROUPER_CHOWN_DIRS" ]; then 
+      echo "grouperContainer; INFO: (libraryPrep.sh-prep_openshift) export GROUPER_CHOWN_DIRS=false"
+      export GROUPER_CHOWN_DIRS=false
+    fi
+    if [ -z "$GROUPER_SHIB_LOG_USE_PIPE" ]; then
+      echo "grouperContainer; INFO: (libraryPrep.sh-prep_openshift) export GROUPER_SHIB_LOG_USE_PIPE=false"    
+      export GROUPER_SHIB_LOG_USE_PIPE=false
+    fi
+    if [ -z "$GROUPER_USE_PIPES" ]; then
+      echo "grouperContainer; INFO: (libraryPrep.sh-prep_openshift) export GROUPER_USE_PIPES=false"    
+      export GROUPER_USE_PIPES=false
+    fi
+    if [ -z "$GROUPER_GSH_CHECK_USER" ]; then 
+      echo "grouperContainer; INFO: (libraryPrep.sh-prep_openshift) export GROUPER_GSH_CHECK_USER=false"    
+      export GROUPER_GSH_CHECK_USER=false
+    fi
+    if [ -z "$GROUPER_RUN_PROCESSES_AS_USERS" ]; then 
+      echo "grouperContainer; INFO: (libraryPrep.sh-prep_openshift) export GROUPER_RUN_PROCESSES_AS_USERS=false"    
+      export GROUPER_RUN_PROCESSES_AS_USERS=false
+    fi
+  fi
 }
 
 prep_quickstart() {
     
     if [ "$GROUPER_RUN_TOMCAT_NOT_SUPERVISOR" != "true" ]; then
-      if [ -z "$GROUPER_RUN_HSQLDB" ]; then export GROUPER_RUN_HSQLDB=true; fi
-      if [ -z "$GROUPER_SELF_SIGNED_CERT" ]; then export GROUPER_SELF_SIGNED_CERT=true; fi
-      if [ -z "$GROUPER_START_DELAY_SECONDS" ]; then export GROUPER_START_DELAY_SECONDS='10'; fi
-      if [ -z "$GROUPER_DATABASE_URL_FILE" ] && [ -z "$GROUPER_DATABASE_URL" ]; then export GROUPER_DATABASE_URL=jdbc:hsqldb:hsql://localhost:9001/grouper; fi
-      if [ -z "$GROUPER_DATABASE_USERNAME_FILE" ] && [ -z "$GROUPER_DATABASE_USERNAME" ]; then export GROUPER_DATABASE_USERNAME=sa; fi
+      if [ -z "$GROUPER_RUN_HSQLDB" ]; then
+        echo "grouperContainer; INFO: (libraryPrep.sh-prep_quickstart) export GROUPER_RUN_HSQLDB=true"    
+        export GROUPER_RUN_HSQLDB=true
+      fi
+      if [ -z "$GROUPER_SELF_SIGNED_CERT" ] && [ "$GROUPER_OPENSHIFT" != "true" ]; then 
+        echo "grouperContainer; INFO: (libraryPrep.sh-prep_quickstart) export GROUPER_SELF_SIGNED_CERT=true"    
+        export GROUPER_SELF_SIGNED_CERT=true
+      fi
+      if [ -z "$GROUPER_START_DELAY_SECONDS" ]; then 
+        echo "grouperContainer; INFO: (libraryPrep.sh-prep_quickstart) export GROUPER_START_DELAY_SECONDS='10'"    
+        export GROUPER_START_DELAY_SECONDS='10'
+      fi
+      if [ -z "$GROUPER_DATABASE_URL_FILE" ] && [ -z "$GROUPER_DATABASE_URL" ]; then 
+        echo "grouperContainer; INFO: (libraryPrep.sh-prep_quickstart) export GROUPER_DATABASE_URL=jdbc:hsqldb:hsql://localhost:9001/grouper"    
+        export GROUPER_DATABASE_URL=jdbc:hsqldb:hsql://localhost:9001/grouper
+      fi
+      if [ -z "$GROUPER_DATABASE_USERNAME_FILE" ] && [ -z "$GROUPER_DATABASE_USERNAME" ]; then
+        echo "grouperContainer; INFO: (libraryPrep.sh-prep_quickstart) export GROUPER_DATABASE_USERNAME=sa"    
+        export GROUPER_DATABASE_USERNAME=sa
+      fi
     fi
-    if [ -z "$GROUPER_RUN_SHIB_SP" ]; then export GROUPER_RUN_SHIB_SP=false; fi
-    if [ -z "$GROUPER_AUTO_DDL_UPTOVERSION" ]; then export GROUPER_AUTO_DDL_UPTOVERSION='v2.5.*'; fi
-    if [ -z "$GROUPER_UI_CONFIGURATION_EDITOR_SOURCEIPADDRESSES" ]; then export GROUPER_UI_CONFIGURATION_EDITOR_SOURCEIPADDRESSES='0.0.0.0/0'; fi
+    if [ -z "$GROUPER_RUN_SHIB_SP" ] && [ "$GROUPER_OPENSHIFT" != "true" ]; then 
+      echo "grouperContainer; INFO: (libraryPrep.sh-prep_quickstart) export GROUPER_RUN_SHIB_SP=false"    
+      export GROUPER_RUN_SHIB_SP=false
+    fi
+    if [ -z "$GROUPER_AUTO_DDL_UPTOVERSION" ]; then
+      echo "grouperContainer; INFO: (libraryPrep.sh-prep_quickstart) export GROUPER_AUTO_DDL_UPTOVERSION='v2.5.*'"    
+      export GROUPER_AUTO_DDL_UPTOVERSION='v2.5.*'
+    fi
+    if [ -z "$GROUPER_UI_CONFIGURATION_EDITOR_SOURCEIPADDRESSES" ]; then 
+      echo "grouperContainer; INFO: (libraryPrep.sh-prep_quickstart) export GROUPER_UI_CONFIGURATION_EDITOR_SOURCEIPADDRESSES='0.0.0.0/0'"    
+      export GROUPER_UI_CONFIGURATION_EDITOR_SOURCEIPADDRESSES='0.0.0.0/0'
+    fi
     # wait for database to start
-    if [ -z "$GROUPER_UI_GROUPER_AUTH" ]; then export GROUPER_UI_GROUPER_AUTH='true'; fi
-    if [ -z "$GROUPER_WS_GROUPER_AUTH" ]; then export GROUPER_WS_GROUPER_AUTH='true'; fi
-    if [ -z "$GROUPER_SCIM_GROUPER_AUTH" ] ; then export GROUPER_SCIM_GROUPER_AUTH=true; fi
-    if [ -z "$GROUPER_QUICKSTART" ]; then export GROUPER_QUICKSTART=true; fi
+    if [ -z "$GROUPER_UI_GROUPER_AUTH" ]; then 
+      echo "grouperContainer; INFO: (libraryPrep.sh-prep_quickstart) export GROUPER_UI_GROUPER_AUTH='true'"    
+      export GROUPER_UI_GROUPER_AUTH='true'
+    fi
+    if [ -z "$GROUPER_WS_GROUPER_AUTH" ]; then 
+      echo "grouperContainer; INFO: (libraryPrep.sh-prep_quickstart) export GROUPER_WS_GROUPER_AUTH='true'"    
+      export GROUPER_WS_GROUPER_AUTH='true'
+    fi
+    if [ -z "$GROUPER_SCIM_GROUPER_AUTH" ] ; then 
+      echo "grouperContainer; INFO: (libraryPrep.sh-prep_quickstart) export GROUPER_SCIM_GROUPER_AUTH=true"    
+      export GROUPER_SCIM_GROUPER_AUTH=true
+    fi
+    if [ -z "$GROUPER_QUICKSTART" ]; then 
+      echo "grouperContainer; INFO: (libraryPrep.sh-prep_quickstart) export GROUPER_QUICKSTART=true"    
+      export GROUPER_QUICKSTART=true
+    fi
 
 }
 
 prep_daemon() {
     
-    if [ -z "$GROUPER_DAEMON" ]; then export GROUPER_DAEMON=true; fi
-    if [ -z "$GROUPER_RUN_TOMEE" ]; then export GROUPER_RUN_TOMEE=true; fi
+    if [ -z "$GROUPER_DAEMON" ]; then 
+      echo "grouperContainer; INFO: (libraryPrep.sh-prep_daemon) export GROUPER_DAEMON=true"    
+      export GROUPER_DAEMON=true
+    fi
+    if [ -z "$GROUPER_RUN_TOMEE" ]; then 
+      echo "grouperContainer; INFO: (libraryPrep.sh-prep_daemon) export GROUPER_RUN_TOMEE=true"    
+      export GROUPER_RUN_TOMEE=true
+    fi
 }
 
 prep_scim() {
-    if [ -z "$GROUPER_SCIM" ]; then export GROUPER_SCIM=true; fi
-    if [ -z "$GROUPER_RUN_APACHE" ] && [ "$GROUPER_RUN_TOMCAT_NOT_SUPERVISOR" != "true" ]; then export GROUPER_RUN_APACHE=true; fi
-    if [ -z "$GROUPER_RUN_TOMEE" ]; then export GROUPER_RUN_TOMEE=true; fi
+    if [ -z "$GROUPER_SCIM" ]; then 
+      echo "grouperContainer; INFO: (libraryPrep.sh-prep_scim) export GROUPER_SCIM=true"    
+      export GROUPER_SCIM=true
+    fi
+    if [ -z "$GROUPER_RUN_APACHE" ] && [ "$GROUPER_RUN_TOMCAT_NOT_SUPERVISOR" != "true" ] && [ "$GROUPER_OPENSHIFT" != "true" ]; then 
+      echo "grouperContainer; INFO: (libraryPrep.sh-prep_scim) export GROUPER_RUN_APACHE=true"    
+      export GROUPER_RUN_APACHE=true
+    fi
+    if [ -z "$GROUPER_RUN_TOMEE" ]; then 
+      echo "grouperContainer; INFO: (libraryPrep.sh-prep_scim) export GROUPER_RUN_TOMEE=true"    
+      export GROUPER_RUN_TOMEE=true
+    fi
 }
 
 prep_ui() {
     if [ -z "$GROUPER_UI" ]; then export GROUPER_UI=true; fi
-    if [ -z "$GROUPER_RUN_APACHE" ] && [ "$GROUPER_RUN_TOMCAT_NOT_SUPERVISOR" != "true" ]; then export GROUPER_RUN_APACHE=true; fi
-    if [ -z "$GROUPER_RUN_SHIB_SP" ] && [ "$GROUPER_RUN_TOMCAT_NOT_SUPERVISOR" != "true" ]; then export GROUPER_RUN_SHIB_SP=true; fi
+    if [ -z "$GROUPER_RUN_APACHE" ] && [ "$GROUPER_RUN_TOMCAT_NOT_SUPERVISOR" != "true" ] && [ "$GROUPER_OPENSHIFT" != "true" ]; then export GROUPER_RUN_APACHE=true; fi
+    if [ -z "$GROUPER_RUN_SHIB_SP" ] && [ "$GROUPER_RUN_TOMCAT_NOT_SUPERVISOR" != "true" ] && [ "$GROUPER_OPENSHIFT" != "true" ]; then export GROUPER_RUN_SHIB_SP=true; fi
     if [ -z "$GROUPER_RUN_TOMEE" ]; then export GROUPER_RUN_TOMEE=true; fi
 }
 
@@ -85,15 +155,20 @@ prep_runScim() {
 
 
 prep_ws() {
-
     if [ -z "$GROUPER_WS" ]; then export GROUPER_WS=true; fi
-    if [ -z "$GROUPER_RUN_APACHE" ] && [ "$GROUPER_RUN_TOMCAT_NOT_SUPERVISOR" != "true" ]; then export GROUPER_RUN_APACHE=true; fi
+    if [ -z "$GROUPER_RUN_APACHE" ] && [ "$GROUPER_RUN_TOMCAT_NOT_SUPERVISOR" != "true" ] && [ "$GROUPER_OPENSHIFT" != "true" ] ; then export GROUPER_RUN_APACHE=true; fi
     if [ -z "$GROUPER_RUN_TOMEE" ]; then export GROUPER_RUN_TOMEE=true; fi
 }
 
 prep_conf() {
 
     echo "grouperContainer; INFO: (libraryPrep.sh-prep_conf) Start setting up initial pipes"
+    if [ -z "$GROUPER_USE_PIPES" ]; then
+      if [ "$GROUPER_OPENSHIFT" != 'true' ]; then
+        echo "grouperContainer; INFO: (libraryPrep.sh-prep_conf) GROUPER_USE_PIPES=true"
+        export GROUPER_USE_PIPES=true
+      fi
+    fi
     setupPipe_logging
     setupPipe_supervisordLog
     setupPipe_grouperLog
@@ -146,9 +221,7 @@ prep_finishBegin() {
     # default a lot of env variables
     # morph defaults to null
     # database password defaults to null
-    if [ "$GROUPER_OPENSHIFT" == 'true' ]; then
-      prep_openshift
-    fi  
+    prep_openshift
     if [ -z "$GROUPER_UI_GROUPER_AUTH" ] ; then export GROUPER_UI_GROUPER_AUTH=false; fi
     if [ -z "$GROUPER_WS_GROUPER_AUTH" ] ; then export GROUPER_WS_GROUPER_AUTH=false; fi
     if [ -z "$GROUPER_SCIM_GROUPER_AUTH" ] ; then export GROUPER_SCIM_GROUPER_AUTH=false; fi
