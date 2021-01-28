@@ -7,5 +7,5 @@ FROM i2incommon/grouper:2.5.40
 # this will overlay all the files from /opt/grouperContainer/slashRoot on to /
 COPY slashRoot /
  
-RUN chown -R tomcat:tomcat /opt/grouper \
- && chown -R tomcat:tomcat /opt/tomee
+RUN chown -R tomcat:root /opt/grouper \
+ && chown -R tomcat:root /opt/tomee

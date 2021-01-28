@@ -84,14 +84,11 @@ COPY --from=cleanup /opt/tomee/ /opt/tomee/
 COPY --from=cleanup /opt/grouper/ /opt/grouper/
 RUN groupadd -r tomcat \
     && useradd -r -m -s /sbin/nologin -g tomcat tomcat \
-    && chown -R tomcat:tomcat /opt/tomee  \
     && rm -f /etc/alternatives/java \
     && ln -s $JAVA_HOME/bin/java /etc/alternatives/java \
     && mkdir -p /opt/tomee/conf/Catalina/localhost/ \
-    && chown -R tomcat:tomcat /opt/grouper \
-    && mkdir /opt/hsqldb \
-    && chown tomcat:tomcat /opt/hsqldb
-
+    && mkdir /opt/hsqldb
+    
 COPY container_files/tier-support/ /opt/tier-support/
 COPY container_files/usr-local-bin/ /usr/local/bin/
 RUN chmod +x /usr/local/bin/*.sh
@@ -102,7 +99,7 @@ RUN cp /dev/null /etc/httpd/conf.d/ssl.conf
 # this is to improve openshift
 RUN touch /opt/grouper/grouperEnv.sh \
     && mkdir -p /opt/tomee/work/Catalina/localhost/ \
-    && chgrp -R root  /opt/grouper/ /etc/httpd/conf/ /home/tomcat/ /opt/tomee/ /usr/local/bin /etc/httpd/conf.d/ /opt/hsqldb/ /opt/tier-support/ \
+    && chown -R tomcat:root  /opt/grouper/ /etc/httpd/conf/ /home/tomcat/ /opt/tomee/ /usr/local/bin /etc/httpd/conf.d/ /opt/hsqldb/ /opt/tier-support/ \
     && chmod -R g+rwx /opt/grouper/ /etc/httpd/conf/ /home/tomcat/ /opt/tomee/ /usr/local/bin /etc/httpd/conf.d/ /opt/hsqldb/ /opt/tier-support/
 
 # keep backup of files

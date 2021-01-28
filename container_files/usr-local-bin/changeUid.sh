@@ -13,5 +13,5 @@ newUid=$2
 oldUid="$(id -u "$username")"
 usermod -u "$newUid" "$username"
 echo "grouperContainer; INFO: (changeUid.sh) usermod -u \"$newUid\" \"$username\" , result: $?"
-find / -xdev -type d -user "$oldUid" -exec chown -h "$username" {} \;
-echo "grouperContainer; INFO: (changeUid.sh) find / -xdev -type d -user \"$oldUid\" -exec chown -h \"$username\" {} \; , result: $?"
+find / -xdev -user "$oldUid" -exec chown -h "$username" {} \;
+echo "grouperContainer; INFO: (changeUid.sh) find / -xdev -user \"$oldUid\" -exec chown -h \"$username\" {} \; , result: $?"
