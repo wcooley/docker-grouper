@@ -47,9 +47,9 @@ prepOnly_ui() {
 prepOnly_ws() {
     if [ "$GROUPER_WS_ONLY" = "true" ]
        then
-         if [ -z "$GROUPER_LOG_PREFIX" ]; then export 
+         if [ -z "$GROUPER_LOG_PREFIX" ]; then  
            echo "grouperContainer; INFO: (libraryPrep.sh-prepOnly_ui) export GROUPER_LOG_PREFIX=grouper-ws"
-           GROUPER_LOG_PREFIX=grouper-ws
+           export GROUPER_LOG_PREFIX=grouper-ws
          fi
          if [ -z "$GROUPER_CONTEXT_COOKIES" ]; then 
            echo "grouperContainer; INFO: (libraryPrep.sh-prepOnly_ui) export GROUPER_CONTEXT_COOKIES=false"

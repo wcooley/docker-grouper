@@ -83,6 +83,9 @@ setupFiles_storeEnvVars() {
   if [ $returnCode != 0 ]; then exit $returnCode; fi
 
   sed -i "s|^GROUPER|export GROUPER|g" /opt/grouper/grouperEnv.sh
+  returnCode=$?
+  echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_storeEnvVars) sed -i \"s|^GROUPER|export GROUPER|g\" /opt/grouper/grouperEnv.sh , result: $returnCode"
+  if [ $returnCode != 0 ]; then exit $returnCode; fi
 
   if [ ! -f /home/tomcat/.bashrc ]
     then
