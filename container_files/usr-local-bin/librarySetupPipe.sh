@@ -4,8 +4,10 @@ setupPipe() {
     echo "grouperContainer; INFO: (librarySetupPipe.sh-setupPipe) Setup pipe: $1"
     if [ -e $1 ]; then
         rm -f $1
+        returnCode=$?
     fi
     mkfifo -m 666 $1
+    returnCode=$?
 }
 
 setupPipe_logging() {

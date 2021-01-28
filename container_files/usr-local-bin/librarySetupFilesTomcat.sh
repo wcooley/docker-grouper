@@ -12,14 +12,18 @@ setupFilesTomcat() {
 }
 
 
-
 setupFilesTomcat_turnOnAjp() {
 
   if [ "$GROUPER_ORIGFILE_SERVER_XML" = "true" ]; then
     cp /opt/tomee/conf/server.xml /opt/tomee/conf/server.xml.currentOriginalInContainer
-    echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_turnOnAjp) cp /opt/tomee/conf/server.xml /opt/tomee/conf/server.xml.currentOriginalInContainer , result: $?"
+    returnCode=$?
+    echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_turnOnAjp) cp /opt/tomee/conf/server.xml /opt/tomee/conf/server.xml.currentOriginalInContainer , result: $returnCode"
+    if [ $returnCode != 0 ]; then exit $returnCode; fi
+
     patch /opt/tomee/conf/server.xml /opt/tomee/conf/server.xml.turnOnAjp.patch
-    echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_turnOnAjp) Patch server.xml to turn on ajp, result: $?"
+    returnCode=$?
+    echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_turnOnAjp) Patch server.xml to turn on ajp: patch /opt/tomee/conf/server.xml /opt/tomee/conf/server.xml.turnOnAjp.patch, result: $returnCode"
+    if [ $returnCode != 0 ]; then exit $returnCode; fi
   else
     echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_turnOnAjp) /opt/tomee/conf/server.xml is not the original file so will not be edited"
   fi
@@ -31,14 +35,18 @@ setupFilesTomcat_accessLogs() {
   if [ "$GROUPER_ORIGFILE_SERVER_XML" = "true" ]; then
     if [ "$GROUPER_TOMCAT_LOG_ACCESS" = "true" ]; then
     
-        # this patch happens after the last patch
-        patch /opt/tomee/conf/server.xml /opt/tomee/conf/server.xml.loggingpipe.patch
-        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_accessLogs) Patch server.xml to log access, result: $?"
+      # this patch happens after the last patch
+      patch /opt/tomee/conf/server.xml /opt/tomee/conf/server.xml.loggingpipe.patch
+      returnCode=$?
+      echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_accessLogs) Patch server.xml to log access: patch /opt/tomee/conf/server.xml /opt/tomee/conf/server.xml.loggingpipe.patch , result: $returnCode"
+      if [ $returnCode != 0 ]; then exit $returnCode; fi
       
     else  
   
       patch /opt/tomee/conf/server.xml /opt/tomee/conf/server.xml.nologging.patch
-      echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_accessLogs) Patch server.xml to not log access, result: $?"
+      returnCode=$?
+      echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_accessLogs) Patch server.xml to not log access: patch /opt/tomee/conf/server.xml /opt/tomee/conf/server.xml.nologging.patch , result: $returnCode"
+      if [ $returnCode != 0 ]; then exit $returnCode; fi
       
     fi
   else
@@ -51,17 +59,23 @@ setupFilesTomcat_ports() {
 
       if [ "$GROUPER_TOMCAT_HTTP_PORT" != "8080" ]; then 
         sed -i "s|8080|$GROUPER_TOMCAT_HTTP_PORT|g" /opt/tomee/conf/server.xml
-        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_ports) update server.xml to change http port, result: $?"
+        returnCode=$?
+        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_ports) update server.xml to change http port: sed -i \"s|8080|$GROUPER_TOMCAT_HTTP_PORT|g\" /opt/tomee/conf/server.xml, result: $returnCode"
+        if [ $returnCode != 0 ]; then exit $returnCode; fi
       fi
       
       if [ "$GROUPER_TOMCAT_AJP_PORT" != "8009" ]; then 
         sed -i "s|8009|$GROUPER_TOMCAT_AJP_PORT|g" /opt/tomee/conf/server.xml
-        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_ports) update server.xml to change ajp port, result: $?"
+        returnCode=$?
+        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_ports) update server.xml to change ajp port: sed -i \"s|8009|$GROUPER_TOMCAT_AJP_PORT|g\" /opt/tomee/conf/server.xml, result: $returnCode"
+        if [ $returnCode != 0 ]; then exit $returnCode; fi
       fi
   
       if [ "$GROUPER_TOMCAT_SHUTDOWN_PORT" != "8005" ]; then 
         sed -i "s|8005|$GROUPER_TOMCAT_SHUTDOWN_PORT|g" /opt/tomee/conf/server.xml
-        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_ports) update server.xml to change shutdown port, result: $?"
+        returnCode=$?
+        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_ports) update server.xml to change shutdown port: sed -i \"s|8005|$GROUPER_TOMCAT_SHUTDOWN_PORT|g\" /opt/tomee/conf/server.xml , result: $returnCode"
+        if [ $returnCode != 0 ]; then exit $returnCode; fi
       fi
 }
 
@@ -72,17 +86,23 @@ setupFilesTomcat_context() {
       if [ "$GROUPER_ORIGFILE_GROUPER_XML" = "true" ]; then
         # ws only and scim only dont have cookies
         sed -i "s|__GROUPER_CONTEXT_COOKIES__|$GROUPER_CONTEXT_COOKIES|g" /opt/tomee/conf/Catalina/localhost/grouper.xml
-        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_context) Replace context cookies in grouper.xml, result: $?"
+        returnCode=$?
+        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_context) Replace context cookies in grouper.xml: sed -i \"s|__GROUPER_CONTEXT_COOKIES__|$GROUPER_CONTEXT_COOKIES|g\" /opt/tomee/conf/Catalina/localhost/grouper.xml , result: $returnCode"
+        if [ $returnCode != 0 ]; then exit $returnCode; fi
         
         # setup context
         sed -i "s|__GROUPER_TOMCAT_CONTEXT__|$GROUPER_TOMCAT_CONTEXT|g" /opt/tomee/conf/Catalina/localhost/grouper.xml
-        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_context) Replace tomcat context in grouper.xml, result: $?"
+        returnCode=$?
+        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_context) Replace tomcat context in grouper.xml: sed -i \"s|__GROUPER_TOMCAT_CONTEXT__|$GROUPER_TOMCAT_CONTEXT|g\" /opt/tomee/conf/Catalina/localhost/grouper.xml, result: $returnCode"
+        if [ $returnCode != 0 ]; then exit $returnCode; fi
         
         # rename file if needed since that can matter with tomcat
         if [ "$GROUPER_TOMCAT_CONTEXT" != "grouper" ]
           then  
             mv -v /opt/tomee/conf/Catalina/localhost/grouper.xml "/opt/tomee/conf/Catalina/localhost/$GROUPER_TOMCAT_CONTEXT.xml"
-            echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_context) mv -v /opt/tomee/conf/Catalina/localhost/grouper.xml /opt/tomee/conf/Catalina/localhost/$GROUPER_TOMCAT_CONTEXT.xml , result: $?"
+            returnCode=$?
+            echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_context) mv -v /opt/tomee/conf/Catalina/localhost/grouper.xml \"/opt/tomee/conf/Catalina/localhost/$GROUPER_TOMCAT_CONTEXT.xml\" , result: $returnCode"
+            if [ $returnCode != 0 ]; then exit $returnCode; fi
         fi
       else
         echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_context) /opt/tomee/conf/Catalina/localhost/grouper.xml is not the original file so will not be edited"
@@ -111,12 +131,14 @@ setupFilesTomcat_context() {
       sed -i "s|__GROUPERSCIM_PROXY_PASS__|$GROUPERSCIM_PROXY_PASS|g" /etc/httpd/conf.d/grouper-www.conf
       results="$results $?"
       sed -i "s|__GROUPERWS_PROXY_PASS__|$GROUPERWS_PROXY_PASS|g" /etc/httpd/conf.d/grouper-www.conf
-      results="$results $?"
+      returnCode=$?
+      results="$results $returnCode"
       if [ "$GROUPER_TOMCAT_AJP_PORT" != "8009" ]; then 
         sed -i "s|:8009/|:$GROUPER_TOMCAT_AJP_PORT/|g" /etc/httpd/conf.d/grouper-www.conf
         results="$results $?"
       fi
       echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_context) Set contexts in grouper-www.conf and other files, results: $results"
+      if [ $returnCode != 0 ]; then exit $returnCode; fi
   fi
 
 }
@@ -128,13 +150,17 @@ setupFilesTomcat_authn() {
       
         if [ "$GROUPER_ORIGFILE_WEBAPP_WEB_XML" = "true" ]; then
           cp /opt/tier-support/web.wsTomcatAuthn.xml /opt/grouper/grouperWebapp/WEB-INF/web.xml
-          echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_authn) cp /opt/tier-support/web.wsTomcatAuthn.xml /opt/grouper/grouperWebapp/WEB-INF/web.xml , result: $?"
+          returnCode=$?
+          echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_authn) cp /opt/tier-support/web.wsTomcatAuthn.xml /opt/grouper/grouperWebapp/WEB-INF/web.xml , result: $returnCode"
+          if [ $returnCode != 0 ]; then exit $returnCode; fi
         else
           echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_authn) /opt/grouper/grouperWebapp/WEB-INF/web.xml is not the original file so will not be edited"
         fi
 
         sed -i 's|tomcatAuthentication="false"|tomcatAuthentication="true"|g' /opt/tomee/conf/server.xml
-        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_authn) sed -i 's|tomcatAuthentication=''false''|tomcatAuthentication=''true''|g' /opt/tomee/conf/server.xml, result: $?"
+        returnCode=$?
+        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_authn) sed -i 's|tomcatAuthentication=\"false\"|tomcatAuthentication=\"true\"|g' /opt/tomee/conf/server.xml, result: $returnCode"
+        if [ $returnCode != 0 ]; then exit $returnCode; fi
 
     fi
 
@@ -142,18 +168,27 @@ setupFilesTomcat_authn() {
 
 setupFilesTomcat_loggingSlf4j() {
 
-  rm -f /opt/tomee/lib/slf4j-api*.jar
-  echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_loggingSlf4j) rm -f /opt/tomee/lib/slf4j-api*.jar , result: $?"
-  rm -f /opt/tomee/lib/slf4j-jdk*.jar
-  echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_loggingSlf4j) rm -f /opt/tomee/lib/slf4j-jdk*.jar , result: $?"
+  rm -f /opt/tomee/lib/slf4j-api*.jar /opt/tomee/lib/slf4j-jdk*.jar
+  returnCode=$?
+  echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_loggingSlf4j) rm -f /opt/tomee/lib/slf4j-api*.jar /opt/tomee/lib/slf4j-jdk*.jar , result: $returnCode"
+  if [ $returnCode != 0 ]; then exit $returnCode; fi
+
   cp /opt/grouper/grouperWebapp/WEB-INF/lib/slf4j-api-*.jar /opt/tomee/lib
-  echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_loggingSlf4j) cp /opt/grouper/grouperWebapp/WEB-INF/lib/slf4j-api-*.jar /opt/tomee/lib , result: $?"
+  returnCode=$?
+  echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_loggingSlf4j) cp /opt/grouper/grouperWebapp/WEB-INF/lib/slf4j-api-*.jar /opt/tomee/lib , result: $returnCode"
+  if [ $returnCode != 0 ]; then exit $returnCode; fi
+
   # tomee uses the jdk one
   cp /opt/grouper/grouperWebapp/WEB-INF/lib/slf4j-jdk*.jar /opt/tomee/lib
-  echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_loggingSlf4j) cp /opt/grouper/grouperWebapp/WEB-INF/lib/slf4j-jdk*.jar /opt/tomee/lib , result: $?"
+  returnCode=$?
+  echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_loggingSlf4j) cp /opt/grouper/grouperWebapp/WEB-INF/lib/slf4j-jdk*.jar /opt/tomee/lib , result: $returnCode"
+  if [ $returnCode != 0 ]; then exit $returnCode; fi
+
   # grouper uses the log4j one
   rm -f /opt/grouper/grouperWebapp/WEB-INF/lib/slf4j-jdk*.jar
-  echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_loggingSlf4j) rm -f /opt/grouper/grouperWebapp/WEB-INF/lib/slf4j-jdk*.jar , result: $?"
+  returnCode=$?
+  echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_loggingSlf4j) rm -f /opt/grouper/grouperWebapp/WEB-INF/lib/slf4j-jdk*.jar , result: $returnCode"
+  if [ $returnCode != 0 ]; then exit $returnCode; fi
 
 }
 
@@ -162,7 +197,9 @@ setupFilesTomcat_supervisor() {
   if [ "$GROUPER_RUN_TOMEE" = "true" ] && [ "$GROUPER_RUN_TOMCAT_NOT_SUPERVISOR" != "true" ]
     then
       cat /opt/tier-support/supervisord-tomee.conf >> /opt/tier-support/supervisord.conf
-      echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_supervisor) Append supervisord-tomee.conf to supervisord.conf"
+      returnCode=$?
+      echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_supervisor) Append supervisord-tomee.conf to supervisord.conf: cat /opt/tier-support/supervisord-tomee.conf >> /opt/tier-support/supervisord.conf , result: $returnCode"
+      if [ $returnCode != 0 ]; then exit $returnCode; fi
   fi
 
 }
@@ -172,7 +209,9 @@ setupFilesTomcat_sessionTimeout() {
   if [ "$GROUPER_RUN_TOMEE" = "true" ] && [ "$GROUPER_TOMCAT_SESSION_TIMEOUT_MINUTES" != "-2" ]
     then
     sed -i "s|<session-timeout>30</session-timeout>|<session-timeout>$GROUPER_TOMCAT_SESSION_TIMEOUT_MINUTES</session-timeout>|g" /opt/tomee/conf/web.xml
-    echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_sessionTimeout) based on GROUPER_TOMCAT_SESSION_TIMEOUT_MINUTES, sed -i ''s|<session-timeout>30</session-timeout>|<session-timeout>$GROUPER_TOMCAT_SESSION_TIMEOUT_MINUTES</session-timeout>|g'' /opt/tomee/conf/web.xml , result=$?"
+    returnCode=$?
+    echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_sessionTimeout) based on GROUPER_TOMCAT_SESSION_TIMEOUT_MINUTES, sed -i \"s|<session-timeout>30</session-timeout>|<session-timeout>$GROUPER_TOMCAT_SESSION_TIMEOUT_MINUTES</session-timeout>|g\" /opt/tomee/conf/web.xml , result=$returnCode"
+    if [ $returnCode != 0 ]; then exit $returnCode; fi
   fi
 }
 

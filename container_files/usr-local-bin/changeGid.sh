@@ -13,6 +13,6 @@ newGid=$2
 getentOutput="$(getent group "$groupname")"
 oldGid="$( echo "$getentOutput" |cut -d\: -f3 )"
 groupmod -g "$newGid" "$groupname"
-echo "grouperContainer; INFO: (changeGid.sh) groupmod -g $newGid $groupname , result: $?"
+echo "grouperContainer; INFO: (changeGid.sh) groupmod -g \"$newGid\" \"$groupname\" , result: $?"
 find / -xdev -type d -group "$oldGid" -exec chgrp -h "$groupname" {} \;
-echo "grouperContainer; INFO: (changeGid.sh) find / -xdev -type d -group $oldGid -exec chgrp -h $groupname {} \; , result: $?"
+echo "grouperContainer; INFO: (changeGid.sh) find / -xdev -type d -group \"$oldGid\" -exec chgrp -h \"$groupname\" {} \; , result: $?"

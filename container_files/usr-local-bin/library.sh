@@ -27,7 +27,9 @@ echo "grouperContainer; INFO: (library.sh) Start loading library.sh"
 # need this before the copy happens
 if [ -f /opt/grouper/slashRoot/usr/local/bin/grouperScriptHooks.sh ] ; then
   cp /opt/grouper/slashRoot/usr/local/bin/grouperScriptHooks.sh /usr/local/bin/grouperScriptHooks.sh
-  echo "grouperContainer; INFO: (library.sh) cp /opt/grouper/slashRoot/usr/local/bin/grouperScriptHooks.sh /usr/local/bin/grouperScriptHooks.sh, result=$?"
+  returnCode=$?
+  echo "grouperContainer; INFO: (library.sh) cp /opt/grouper/slashRoot/usr/local/bin/grouperScriptHooks.sh /usr/local/bin/grouperScriptHooks.sh, result=$returnCode"
+  if [ $returnCode != 0 ]; then exit $returnCode; fi
 fi
 # implementations of custom hooks
 . /usr/local/bin/grouperScriptHooks.sh

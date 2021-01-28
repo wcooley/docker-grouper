@@ -1,14 +1,19 @@
 #!/bin/bash
 
 setupFilesApache_indexes() {
-  if [ "$GROUPER_APACHE_DIRECTORY_INDEXES" = "false" ]
+  if [ "$GROUPER_RUN_APACHE" = "true" ] && [ "$GROUPER_APACHE_DIRECTORY_INDEXES" = "false" ]
     then
       if [ "$GROUPER_ORIGFILE_HTTPD_CONF" = "true" ]; then
         # take out the directory indexes from the docroot
         cp /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf.pre_noindexes
-        echo "grouperContainer; INFO: (librarySetupFilesApache.sh-setupFilesApache_indexes) cp /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf.pre_noindexes , result=$?"
+        returnCode=$?
+        echo "grouperContainer; INFO: (librarySetupFilesApache.sh-setupFilesApache_indexes) cp /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf.pre_noindexes, result: $returnCode"
+        if [ $returnCode != 0 ]; then exit $returnCode; fi
+        
         patch /etc/httpd/conf/httpd.conf /etc/httpd/conf.d/httpd.conf.noindexes.patch
-        echo "grouperContainer; INFO: (librarySetupFilesApache.sh-setupFilesApache_indexes) Patch httpd.conf to turn off indexes 'patch /etc/httpd/conf/httpd.conf /etc/httpd/conf.d/httpd.conf.noindexes.patch' result=$?"
+        returnCode=$?
+        echo "grouperContainer; INFO: (librarySetupFilesApache.sh-setupFilesApache_indexes) Patch httpd.conf to turn off indexes 'patch /etc/httpd/conf/httpd.conf /etc/httpd/conf.d/httpd.conf.noindexes.patch' result=$returnCode"
+        if [ $returnCode != 0 ]; then exit $returnCode; fi
       else
         echo "grouperContainer; INFO: (librarySetupFilesApache.sh-setupFilesApache_indexes) /etc/httpd/conf/httpd.conf is not the original file so will not be changed"
       fi
@@ -21,7 +26,9 @@ setupFilesApache_selfSignedCert() {
      then
        if [ "$GROUPER_ORIGFILE_SSL_ENABLED_CONF" = "true" ]; then
          cp /opt/tier-support/ssl-enabled.conf /etc/httpd/conf.d/
+         returnCode=$?
          echo "grouperContainer; INFO: (librarySetupFilesApache.sh-setupFilesApache_selfSignedCert) cp /opt/tier-support/ssl-enabled.conf /etc/httpd/conf.d/ , result: $?"
+         if [ $returnCode != 0 ]; then exit $returnCode; fi
        else
          echo "grouperContainer; INFO: (librarySetupFilesApache.sh-setupFilesApache_selfSignedCert) /opt/tier-support/ssl-enabled.conf is not the original file so will not be edited"
        fi
@@ -34,12 +41,16 @@ setupFilesApache_ssl() {
        if [ -f /etc/httpd/conf.d/ssl.conf ]
          then
            mv /etc/httpd/conf.d/ssl.conf /etc/httpd/conf.d/ssl.conf.dontuse
+           returnCode=$?
            echo "grouperContainer; INFO: (librarySetupFilesApache.sh-setupFilesApache_ssl) mv /etc/httpd/conf.d/ssl.conf /etc/httpd/conf.d/ssl.conf.dontuse , result: $?"
+           if [ $returnCode != 0 ]; then exit $returnCode; fi
        fi
        if [ -f /etc/httpd/conf.d/ssl-enabled.conf ]
          then
            mv -v /etc/httpd/conf.d/ssl-enabled.conf /etc/httpd/conf.d/ssl-enabled.conf.dontuse
+           returnCode=$?
            echo "grouperContainer; INFO: (librarySetupFilesApache.sh-setupFilesApache_ssl) mv -v /etc/httpd/conf.d/ssl-enabled.conf /etc/httpd/conf.d/ssl-enabled.conf.dontuse , result: $?"
+           if [ $returnCode != 0 ]; then exit $returnCode; fi
        fi
     fi
 }
@@ -54,6 +65,9 @@ setupFilesApache_serverName() {
       echo "ServerName $GROUPER_APACHE_SERVER_NAME" >> /etc/httpd/conf.d/grouper-www.conf
       echo "UseCanonicalName On" >> /etc/httpd/conf.d/grouper-www.conf
       echo >> /etc/httpd/conf.d/grouper-www.conf
+      returnCode=$?
+      echo "grouperContainer; INFO: (librarySetupFilesApache.sh-setupFilesApache_serverName) Setup ServerName $GROUPER_APACHE_SERVER_NAME in /etc/httpd/conf.d/grouper-www.conf , result: $?"
+      if [ $returnCode != 0 ]; then exit $returnCode; fi
   fi
 
 }
@@ -62,8 +76,10 @@ setupFilesApache_serverName() {
 setupFilesApache_supervisor() {
   if [ "$GROUPER_RUN_APACHE" = "true" ]
     then
-      echo "grouperContainer; INFO: (librarySetupFilesApache.sh-setupFilesApache_supervisor) Appending supervisord-httpd.conf to supervisord.conf"
       cat /opt/tier-support/supervisord-httpd.conf >> /opt/tier-support/supervisord.conf
+      returnCode=$?
+      echo "grouperContainer; INFO: (librarySetupFilesApache.sh-setupFilesApache_supervisor) cat /opt/tier-support/supervisord-httpd.conf >> /opt/tier-support/supervisord.conf , result: $?"
+      if [ $returnCode != 0 ]; then exit $returnCode; fi
   fi
 
 }
@@ -75,13 +91,17 @@ setupFilesApache_ports() {
   if [ "$GROUPER_RUN_APACHE" = "true" ] && [ -f /etc/httpd/conf.d/ssl-enabled.conf ]
     then
       sed -i "s|__GROUPER_APACHE_SSL_PORT__|$GROUPER_APACHE_SSL_PORT|g" /etc/httpd/conf.d/ssl-enabled.conf
-      echo "grouperContainer; INFO: (librarySetupFilesApache.sh-setupFilesApache_ports) Replace apache ssl port in ssl-enabled.conf', result: $?"
+      returnCode=$?
+      echo "grouperContainer; INFO: (librarySetupFilesApache.sh-setupFilesApache_ports) sed -i \"s|__GROUPER_APACHE_SSL_PORT__|$GROUPER_APACHE_SSL_PORT|g\" /etc/httpd/conf.d/ssl-enabled.conf , result: $?"
+      if [ $returnCode != 0 ]; then exit $returnCode; fi
   fi
   
   if [ "$GROUPER_RUN_APACHE" = "true" ] && [ "$GROUPER_APACHE_NONSSL_PORT" != "80" ]
     then
       sed -i "s|Listen 80|Listen $GROUPER_APACHE_NONSSL_PORT|g" /etc/httpd/conf/httpd.conf
-      echo "grouperContainer; INFO: (librarySetupFilesApache.sh-setupFilesApache_ports) Replace apache non-ssl port in httpd.conf', result: $?"
+      returnCode=$?
+      echo "grouperContainer; INFO: (librarySetupFilesApache.sh-setupFilesApache_ports) Replace apache non-ssl port in httpd.conf, sed -i \"s|Listen 80|Listen $GROUPER_APACHE_NONSSL_PORT|g\" /etc/httpd/conf/httpd.conf , result: $?"
+      if [ $returnCode != 0 ]; then exit $returnCode; fi
   fi
 
 }

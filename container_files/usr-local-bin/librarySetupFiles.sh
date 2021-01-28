@@ -7,12 +7,24 @@ setupFiles_linkGrouperSecrets() {
 
         if [[ $label_file == grouper_* ]]; then
             ln -sf /run/secrets/$label_file /opt/grouper/grouperWebapp/WEB-INF/classes/$file
+            returnCode=$?
+            echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_linkGrouperSecrets) ln -sf /run/secrets/$label_file /opt/grouper/grouperWebapp/WEB-INF/classes/$file, result: $returnCode"
+            if [ $returnCode != 0 ]; then exit $returnCode; fi
         elif [[ $label_file == shib_* ]]; then
             ln -sf /run/secrets/$label_file /etc/shibboleth/$file
+            returnCode=$?
+            echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_linkGrouperSecrets) ln -sf /run/secrets/$label_file /etc/shibboleth/$file, result: $returnCode"
+            if [ $returnCode != 0 ]; then exit $returnCode; fi
         elif [[ $label_file == httpd_* ]]; then
             ln -sf /run/secrets/$label_file /etc/httpd/conf.d/$file
+            returnCode=$?
+            echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_linkGrouperSecrets) ln -sf /run/secrets/$label_file /etc/httpd/conf.d/$file, result: $returnCode"
+            if [ $returnCode != 0 ]; then exit $returnCode; fi
         elif [ "$label_file" == "host-key.pem" ]; then
             ln -sf /run/secrets/host-key.pem /etc/pki/tls/private/host-key.pem
+            returnCode=$?
+            echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_linkGrouperSecrets) ln -sf /run/secrets/host-key.pem /etc/pki/tls/private/host-key.pem, result: $returnCode"
+            if [ $returnCode != 0 ]; then exit $returnCode; fi
         fi
     done
 }
@@ -21,8 +33,10 @@ setupFiles_rsyncSlashRoot() {
     if [ -d "/opt/grouper/slashRoot" ]; then
         # Copy any files into the root filesystem
         rsync -l -r -v /opt/grouper/slashRoot/ /
+        returnCode=$?
+        echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_rsyncSlashRoot) rsync -l -r -v /opt/grouper/slashRoot/ /, result: $returnCode"
+        if [ $returnCode != 0 ]; then exit $returnCode; fi
     fi
-
 }
 
 setupFiles_localLogging() {
@@ -47,10 +61,10 @@ setupFiles_chownDirs() {
     # do this last
     if [ "$GROUPER_CHOWN_DIRS" = "true" ]
       then
-        chown -R tomcat:tomcat /opt/grouper/grouperWebapp
-        echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_chownDirs) chown -R tomcat:tomcat /opt/grouper/grouperWebapp, result: $?"
-        chown -R tomcat:tomcat /opt/tomee
-        echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_chownDirs) chown -R tomcat:tomcat /opt/tomee, result: $?"
+        chown -R tomcat:tomcat /opt/grouper/grouperWebapp /opt/tomee
+        returnCode=$?
+        echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_chownDirs) chown -R tomcat:tomcat /opt/grouper/grouperWebapp /opt/tomee, result: $returnCode"
+        if [ $returnCode != 0 ]; then exit $returnCode; fi
     fi
 }
 
@@ -64,18 +78,25 @@ setupFiles_storeEnvVars() {
   # go through env vars, should start with GROUPER and have an equals sign in there
   env | grep "^GROUPER" | grep "=" | sort >> /opt/grouper/grouperEnv.sh
 
+  returnCode=$?
+  echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_storeEnvVars) env | grep \"^GROUPER\" | grep \"=\" | sort >> /opt/grouper/grouperEnv.sh, result: $returnCode"
+  if [ $returnCode != 0 ]; then exit $returnCode; fi
+
   sed -i "s|^GROUPER|export GROUPER|g" /opt/grouper/grouperEnv.sh
 
   if [ ! -f /home/tomcat/.bashrc ]
     then
       echo "grouperContainer; ERROR: (librarySetupFiles.sh-setupFiles_storeEnvVars) Why doesnt /home/tomcat/.bashrc exist????"
       exit 1
-  fi  
+  fi
   if ! grep -q grouperEnv /home/tomcat/.bashrc
     then
-      echo "" >> /home/tomcat/.bashrc  
+      echo "" >> /home/tomcat/.bashrc
       echo ". /opt/grouper/grouperEnv.sh" >> /home/tomcat/.bashrc
-      echo "" >> /home/tomcat/.bashrc  
+      echo "" >> /home/tomcat/.bashrc
+      returnCode=$?
+      echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_storeEnvVars) echo \". /opt/grouper/grouperEnv.sh\" >> /home/tomcat/.bashrc , result: $returnCode"
+      if [ $returnCode != 0 ]; then exit $returnCode; fi
   fi
 
   # if we own this file (i.e. running as root)  
@@ -94,6 +115,9 @@ setupFiles_storeEnvVars() {
         echo "export JAVA_HOME=$JAVA_HOME" >> /etc/bashrc  
         echo "export PATH=$JAVA_HOME/bin:\$PATH" >> /etc/bashrc  
         echo "" >> /etc/bashrc  
+        returnCode=$?
+        echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_storeEnvVars)  echo env var script to /etc/bashrc, result: $returnCode"
+        if [ $returnCode != 0 ]; then exit $returnCode; fi
     fi    
   fi 
   echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_storeEnvVars) End store env vars in /opt/grouper/grouperEnv.sh"
@@ -128,56 +152,110 @@ setupFiles_analyzeOriginalFiles() {
     setupFiles_originalFile /opt/tomee/conf/Catalina/localhost/grouper.xml
     original_file=$?
     if [ -z "$GROUPER_ORIGFILE_GROUPER_XML" ] && [[ $original_file -eq 0 ]]
-      then export GROUPER_ORIGFILE_GROUPER_XML=true; fi
-    if [ -z "$GROUPER_ORIGFILE_GROUPER_XML" ] ; then export GROUPER_ORIGFILE_GROUPER_XML=false; fi
+      then
+        echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_analyzeOriginalFiles) export GROUPER_ORIGFILE_GROUPER_XML=true"
+        export GROUPER_ORIGFILE_GROUPER_XML=true
+    fi
+    if [ -z "$GROUPER_ORIGFILE_GROUPER_XML" ] ; then 
+      echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_analyzeOriginalFiles) export GROUPER_ORIGFILE_GROUPER_XML=false"
+      export GROUPER_ORIGFILE_GROUPER_XML=false
+    fi
       
     setupFiles_originalFile /opt/tomee/conf/server.xml
     original_file=$?
     if [ -z "$GROUPER_ORIGFILE_SERVER_XML" ] && [[ $original_file -eq 0 ]]
-      then export GROUPER_ORIGFILE_SERVER_XML=true; fi
-    if [ -z "$GROUPER_ORIGFILE_SERVER_XML" ] ; then export GROUPER_ORIGFILE_SERVER_XML=false; fi
+      then 
+        echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_analyzeOriginalFiles) export GROUPER_ORIGFILE_SERVER_XML=true"
+        export GROUPER_ORIGFILE_SERVER_XML=true
+    fi
+    if [ -z "$GROUPER_ORIGFILE_SERVER_XML" ] ; then 
+      echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_analyzeOriginalFiles) export GROUPER_ORIGFILE_SERVER_XML=false"
+      export GROUPER_ORIGFILE_SERVER_XML=false
+    fi
 
     setupFiles_originalFile /opt/grouper/grouperWebapp/WEB-INF/classes/log4j.properties
     original_file=$?
     if [ -z "$GROUPER_ORIGFILE_LOG4J_PROPERTIES" ] && [[ $original_file -eq 0 ]]
-      then export GROUPER_ORIGFILE_LOG4J_PROPERTIES=true; fi
-    if [ -z "$GROUPER_ORIGFILE_LOG4J_PROPERTIES" ] ; then export GROUPER_ORIGFILE_LOG4J_PROPERTIES=false; fi
+      then 
+        echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_analyzeOriginalFiles) export GROUPER_ORIGFILE_LOG4J_PROPERTIES=true"
+        export GROUPER_ORIGFILE_LOG4J_PROPERTIES=true
+    fi
+    if [ -z "$GROUPER_ORIGFILE_LOG4J_PROPERTIES" ] ; then
+      echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_analyzeOriginalFiles) export GROUPER_ORIGFILE_LOG4J_PROPERTIES=false"
+      export GROUPER_ORIGFILE_LOG4J_PROPERTIES=false
+    fi
 
     setupFiles_originalFile /etc/httpd/conf/httpd.conf
     original_file=$?
     if [ -z "$GROUPER_ORIGFILE_HTTPD_CONF" ] && [[ $original_file -eq 0 ]]
-      then export GROUPER_ORIGFILE_HTTPD_CONF=true; fi
-    if [ -z "$GROUPER_ORIGFILE_HTTPD_CONF" ] ; then export GROUPER_ORIGFILE_HTTPD_CONF=false; fi
+      then 
+        echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_analyzeOriginalFiles) export GROUPER_ORIGFILE_HTTPD_CONF=true"
+        export GROUPER_ORIGFILE_HTTPD_CONF=true
+    fi
+    if [ -z "$GROUPER_ORIGFILE_HTTPD_CONF" ] ; then 
+      echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_analyzeOriginalFiles) export GROUPER_ORIGFILE_HTTPD_CONF=false"
+      export GROUPER_ORIGFILE_HTTPD_CONF=false
+    fi
 
     setupFiles_originalFile /etc/httpd/conf.d/ssl-enabled.conf
     original_file=$?
     if [ -z "$GROUPER_ORIGFILE_SSL_ENABLED_CONF" ] && [[ $original_file -eq 0 ]]
-      then export GROUPER_ORIGFILE_SSL_ENABLED_CONF=true; fi
-    if [ -z "$GROUPER_ORIGFILE_SSL_ENABLED_CONF" ] ; then export GROUPER_ORIGFILE_SSL_ENABLED_CONF=false; fi
+      then 
+        echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_analyzeOriginalFiles) export GROUPER_ORIGFILE_SSL_ENABLED_CONF=true"
+        export GROUPER_ORIGFILE_SSL_ENABLED_CONF=true
+    fi
+    if [ -z "$GROUPER_ORIGFILE_SSL_ENABLED_CONF" ] ; then 
+      echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_analyzeOriginalFiles) export GROUPER_ORIGFILE_SSL_ENABLED_CONF=false"
+      export GROUPER_ORIGFILE_SSL_ENABLED_CONF=false
+    fi
 
     setupFiles_originalFile /etc/httpd/conf.d/httpd-shib.conf
     original_file=$?
     if [ -z "$GROUPER_ORIGFILE_HTTPD_SHIB_CONF" ] && [[ $original_file -eq 0 ]]
-      then export GROUPER_ORIGFILE_HTTPD_SHIB_CONF=true; fi
-    if [ -z "$GROUPER_ORIGFILE_HTTPD_SHIB_CONF" ] ; then export GROUPER_ORIGFILE_HTTPD_SHIB_CONF=false; fi
+      then 
+        echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_analyzeOriginalFiles) export GROUPER_ORIGFILE_HTTPD_SHIB_CONF=true"
+        export GROUPER_ORIGFILE_HTTPD_SHIB_CONF=true
+    fi
+    if [ -z "$GROUPER_ORIGFILE_HTTPD_SHIB_CONF" ] ; then 
+      echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_analyzeOriginalFiles) export GROUPER_ORIGFILE_HTTPD_SHIB_CONF=false"
+      export GROUPER_ORIGFILE_HTTPD_SHIB_CONF=false
+    fi
 
     setupFiles_originalFile /etc/httpd/conf.d/shib.conf
     original_file=$?
     if [ -z "$GROUPER_ORIGFILE_SHIB_CONF" ] && [[ $original_file -eq 0 ]]
-      then export GROUPER_ORIGFILE_SHIB_CONF=true; fi
-    if [ -z "$GROUPER_ORIGFILE_SHIB_CONF" ] ; then export GROUPER_ORIGFILE_SHIB_CONF=false; fi
+      then 
+        echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_analyzeOriginalFiles) export GROUPER_ORIGFILE_SHIB_CONF=true"
+        export GROUPER_ORIGFILE_SHIB_CONF=true
+    fi
+    if [ -z "$GROUPER_ORIGFILE_SHIB_CONF" ] ; then 
+      echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_analyzeOriginalFiles) export GROUPER_ORIGFILE_SHIB_CONF=false"
+      export GROUPER_ORIGFILE_SHIB_CONF=false
+    fi
 
     setupFiles_originalFile /opt/tomee/conf/Catalina/localhost/grouper.xml
     original_file=$?
     if [ -z "$GROUPER_ORIGFILE_GROUPER_XML" ] && [[ $original_file -eq 0 ]]
-      then export GROUPER_ORIGFILE_GROUPER_XML=true; fi
-    if [ -z "$GROUPER_ORIGFILE_GROUPER_XML" ] ; then export GROUPER_ORIGFILE_GROUPER_XML=false; fi
+      then 
+        echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_analyzeOriginalFiles) export GROUPER_ORIGFILE_GROUPER_XML=true"
+        export GROUPER_ORIGFILE_GROUPER_XML=true
+    fi
+    if [ -z "$GROUPER_ORIGFILE_GROUPER_XML" ] ; then 
+      echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_analyzeOriginalFiles) export GROUPER_ORIGFILE_GROUPER_XML=false"
+      export GROUPER_ORIGFILE_GROUPER_XML=false
+    fi
 
     setupFiles_originalFile /opt/grouper/grouperWebapp/WEB-INF/web.xml
     original_file=$?
     if [ -z "$GROUPER_ORIGFILE_WEBAPP_WEB_XML" ] && [[ $original_file -eq 0 ]]
-      then export GROUPER_ORIGFILE_WEBAPP_WEB_XML=true; fi
-    if [ -z "$GROUPER_ORIGFILE_WEBAPP_WEB_XML" ] ; then export GROUPER_ORIGFILE_WEBAPP_WEB_XML=false; fi
+      then 
+        echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_analyzeOriginalFiles) export GROUPER_ORIGFILE_WEBAPP_WEB_XML=true"
+        export GROUPER_ORIGFILE_WEBAPP_WEB_XML=true
+    fi
+    if [ -z "$GROUPER_ORIGFILE_WEBAPP_WEB_XML" ] ; then 
+      echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_analyzeOriginalFiles) export GROUPER_ORIGFILE_WEBAPP_WEB_XML=false"
+      export GROUPER_ORIGFILE_WEBAPP_WEB_XML=false
+    fi
 
 }
 

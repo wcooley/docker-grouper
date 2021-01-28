@@ -54,7 +54,7 @@ testContainerUiSubimageNonroot() {
   assertEnvVar GROUPER_APACHE_AJP_TIMEOUT_SECONDS "3600"
   assertEnvVar GROUPER_APACHE_NONSSL_PORT "80"
   assertEnvVar GROUPER_APACHE_SSL_PORT "443"
-  assertEnvVar GROUPER_CHOWN_DIRS "true"
+  assertEnvVarNot GROUPER_CHOWN_DIRS "true"
   assertEnvVar GROUPER_CONTAINER_VERSION "$containerVersion"
   assertEnvVar GROUPER_DAEMON "false"
   assertEnvVar GROUPER_GSH_CHECK_USER "true"
