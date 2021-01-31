@@ -21,20 +21,6 @@ setupFilesApache_indexes() {
 
 }
 
-setupFilesApache_selfSignedCert() {
-  if [ "$GROUPER_RUN_APACHE" = "true" ] && [ "$GROUPER_SELF_SIGNED_CERT" = "true" ] && [ "$GROUPER_USE_SSL" = "true" ]
-     then
-       if [ "$GROUPER_ORIGFILE_SSL_ENABLED_CONF" = "true" ]; then
-         cp /opt/tier-support/ssl-enabled.conf /etc/httpd/conf.d/
-         returnCode=$?
-         echo "grouperContainer; INFO: (librarySetupFilesApache.sh-setupFilesApache_selfSignedCert) cp /opt/tier-support/ssl-enabled.conf /etc/httpd/conf.d/ , result: $?"
-         if [ $returnCode != 0 ]; then exit $returnCode; fi
-       else
-         echo "grouperContainer; INFO: (librarySetupFilesApache.sh-setupFilesApache_selfSignedCert) /opt/tier-support/ssl-enabled.conf is not the original file so will not be edited"
-       fi
-  fi
-}
-
 setupFilesApache_ssl() {
     if [ "$GROUPER_RUN_APACHE" = "true" ] && [ "$GROUPER_USE_SSL" != "true" ]
        then
@@ -52,6 +38,48 @@ setupFilesApache_ssl() {
            echo "grouperContainer; INFO: (librarySetupFilesApache.sh-setupFilesApache_ssl) mv -v /etc/httpd/conf.d/ssl-enabled.conf /etc/httpd/conf.d/ssl-enabled.conf.dontuse , result: $?"
            if [ $returnCode != 0 ]; then exit $returnCode; fi
        fi
+    fi
+    if [ "$GROUPER_RUN_APACHE" = "true" ] && [ "$GROUPER_USE_SSL" = "true" ] && [ -f /etc/httpd/conf.d/ssl-enabled.conf ] && [ "$GROUPER_ORIGFILE_SSL_ENABLED_CONF" = "true" ] ; then
+    
+      if [ "$GROUPER_SSL_USE_STAPLING" = "true" ]; then
+        sed -i "s|__GROUPER_SSL_USE_STAPLING__|on|g" /etc/httpd/conf.d/ssl-enabled.conf
+        returnCode=$?
+        echo "grouperContainer; INFO: (librarySetupFilesApache.sh-setupFilesApache_ports) sed -i \"s|__GROUPER_SSL_USE_STAPLING__|on|g\" /etc/httpd/conf.d/ssl-enabled.conf , result: $?"
+        if [ $returnCode != 0 ]; then exit $returnCode; fi
+      else 
+        sed -i "s|__GROUPER_SSL_USE_STAPLING__|off|g" /etc/httpd/conf.d/ssl-enabled.conf
+        returnCode=$?
+        echo "grouperContainer; INFO: (librarySetupFilesApache.sh-setupFilesApache_ports) sed -i \"s|__GROUPER_SSL_USE_STAPLING__|on|g\" /etc/httpd/conf.d/ssl-enabled.conf , result: $?"
+        if [ $returnCode != 0 ]; then exit $returnCode; fi
+      
+      fi
+
+      sed -i "s|__GROUPER_SSL_CERT_FILE__|$GROUPER_SSL_CERT_FILE|g" /etc/httpd/conf.d/ssl-enabled.conf
+      returnCode=$?
+      echo "grouperContainer; INFO: (librarySetupFilesApache.sh-setupFilesApache_ports) Set cert file: sed -i \"s|SSLCertificateChainFile __GROUPER_SSL_CERT_FILE__|$GROUPER_SSL_CERT_FILE|g\" /etc/httpd/conf.d/ssl-enabled.conf , result: $?"
+      if [ $returnCode != 0 ]; then exit $returnCode; fi
+      
+      sed -i "s|__GROUPER_SSL_KEY_FILE__|$GROUPER_SSL_KEY_FILE|g" /etc/httpd/conf.d/ssl-enabled.conf
+      returnCode=$?
+      echo "grouperContainer; INFO: (librarySetupFilesApache.sh-setupFilesApache_ports) Set cert file: sed -i \"s|SSLCertificateChainFile __GROUPER_SSL_KEY_FILE__|$GROUPER_SSL_KEY_FILE|g\" /etc/httpd/conf.d/ssl-enabled.conf , result: $?"
+      if [ $returnCode != 0 ]; then exit $returnCode; fi
+      
+      if [ "$GROUPER_SSL_USE_CHAIN_FILE" = "true" ]; then
+
+        sed -i "s|__GROUPER_SSL_CHAIN_FILE__|$GROUPER_SSL_CHAIN_FILE|g" /etc/httpd/conf.d/ssl-enabled.conf
+        returnCode=$?
+        echo "grouperContainer; INFO: (librarySetupFilesApache.sh-setupFilesApache_ports) No chain setting: sed -i \"s|SSLCertificateChainFile __GROUPER_SSL_CHAIN_FILE__|$GROUPER_SSL_CHAIN_FILE|g\" /etc/httpd/conf.d/ssl-enabled.conf , result: $?"
+        if [ $returnCode != 0 ]; then exit $returnCode; fi
+        
+    
+      else
+        sed -i "s|SSLCertificateChainFile __GROUPER_SSL_CHAIN_FILE__||g" /etc/httpd/conf.d/ssl-enabled.conf
+        returnCode=$?
+        echo "grouperContainer; INFO: (librarySetupFilesApache.sh-setupFilesApache_ports) No chain setting: sed -i \"s|SSLCertificateChainFile __GROUPER_SSL_CHAIN_FILE__||g\" /etc/httpd/conf.d/ssl-enabled.conf , result: $?"
+        if [ $returnCode != 0 ]; then exit $returnCode; fi
+    
+      fi
+    
     fi
 }
 
@@ -88,7 +116,7 @@ setupFilesApache_ports() {
 
   # filter the ssl config for ssl port
   
-  if [ "$GROUPER_RUN_APACHE" = "true" ] && [ -f /etc/httpd/conf.d/ssl-enabled.conf ]
+  if [ "$GROUPER_RUN_APACHE" = "true" ] && [ -f /etc/httpd/conf.d/ssl-enabled.conf ] && [ "$GROUPER_ORIGFILE_SSL_ENABLED_CONF" = "true" ]
     then
       sed -i "s|__GROUPER_APACHE_SSL_PORT__|$GROUPER_APACHE_SSL_PORT|g" /etc/httpd/conf.d/ssl-enabled.conf
       returnCode=$?
@@ -109,7 +137,6 @@ setupFilesApache_ports() {
 
 setupFilesApache() {
   setupFilesApache_supervisor
-  setupFilesApache_selfSignedCert
   setupFilesApache_ports
   setupFilesApache_ssl
   setupFilesApache_serverName
@@ -120,7 +147,6 @@ setupFilesApache_unsetAll() {
   unset -f setupFilesApache
   unset -f setupFilesApache_indexes
   unset -f setupFilesApache_ports
-  unset -f setupFilesApache_selfSignedCert
   unset -f setupFilesApache_ssl
   unset -f setupFilesApache_supervisor
   unset -f setupFilesApache_unsetAll
@@ -131,7 +157,6 @@ setupFilesApache_exportAll() {
   export -f setupFilesApache
   export -f setupFilesApache_indexes
   export -f setupFilesApache_ports
-  export -f setupFilesApache_selfSignedCert
   export -f setupFilesApache_ssl
   export -f setupFilesApache_supervisor
   export -f setupFilesApache_unsetAll

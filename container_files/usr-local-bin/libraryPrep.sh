@@ -96,6 +96,7 @@ prep_daemon() {
 }
 
 prep_scim() {
+    
     if [ -z "$GROUPER_SCIM" ]; then 
       echo "grouperContainer; INFO: (libraryPrep.sh-prep_scim) export GROUPER_SCIM=true"    
       export GROUPER_SCIM=true
@@ -111,6 +112,7 @@ prep_scim() {
 }
 
 prep_ui() {
+
     if [ -z "$GROUPER_UI" ]; then 
       echo "grouperContainer; INFO: (libraryPrep.sh-prep_ui) export GROUPER_UI=true"    
       export GROUPER_UI=true
@@ -174,6 +176,7 @@ prep_runScim() {
 
 
 prep_ws() {
+
     if [ -z "$GROUPER_WS" ]; then 
       echo "grouperContainer; INFO: (libraryPrep.sh-prep_ws) export GROUPER_WS=true"    
       export GROUPER_WS=true
@@ -293,6 +296,80 @@ prep_finishBegin() {
       echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_USE_SSL=true"
       export GROUPER_USE_SSL=true
     fi
+    if [ "$GROUPER_USE_SSL" = "true" ]; then
+      if [ -z "$GROUPER_SELF_SIGNED_CERT" ] && [ -z "$GROUPER_SSL_CERT_FILE" ] && [ ! -f /etc/pki/tls/certs/host-cert.pem ] ; then 
+      
+        echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) GROUPER_SELF_SIGNED_CERT and GROUPER_SSL_CERT_FILE are not specified and /etc/pki/tls/certs/host-cert.pem does not exist, so: export GROUPER_SELF_SIGNED_CERT=true"
+        export GROUPER_SELF_SIGNED_CERT=true
+      
+      fi
+      if [ "$GROUPER_SELF_SIGNED_CERT" = "true" ]; then
+  
+        # default the cert path to self signed and no chain file
+        if [ -z "$GROUPER_SSL_CERT_FILE" ] ; then 
+          echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_SSL_CERT_FILE=/etc/pki/tls/certs/localhost.crt"
+          export GROUPER_SSL_CERT_FILE=/etc/pki/tls/certs/localhost.crt
+        fi
+        if [ -z "$GROUPER_SSL_KEY_FILE" ] ; then 
+          echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_SSL_KEY_FILE=/etc/pki/tls/private/localhost.key"
+          export GROUPER_SSL_KEY_FILE=/etc/pki/tls/private/localhost.key
+        fi
+        if [ -z "$GROUPER_SSL_CHAIN_FILE" ] && [ -z "$GROUPER_SSL_USE_CHAIN_FILE" ] ; then 
+          echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_SSL_USE_CHAIN_FILE=false"
+          export GROUPER_SSL_USE_CHAIN_FILE=false
+        fi
+      
+      fi
+      # default the cert path
+      if [ -z "$GROUPER_SSL_CERT_FILE" ] ; then 
+        echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_SSL_CERT_FILE=/etc/pki/tls/certs/host-cert.pem"
+        export GROUPER_SSL_CERT_FILE=/etc/pki/tls/certs/host-cert.pem
+      fi
+      if [ -z "$GROUPER_SSL_KEY_FILE" ] ; then 
+        echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_SSL_KEY_FILE=/etc/pki/tls/private/host-key.pem"
+        export GROUPER_SSL_KEY_FILE=/etc/pki/tls/private/host-key.pem
+      fi
+      if [ -z "$GROUPER_SSL_CHAIN_FILE" ] ; then 
+      
+        if [ -f /etc/pki/tls/certs/cachain.pem ]; then
+      
+          echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_SSL_USE_CHAIN_FILE=true"
+          export GROUPER_SSL_USE_CHAIN_FILE=true
+          echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_SSL_CHAIN_FILE=/etc/pki/tls/certs/cachain.pem"
+          export GROUPER_SSL_CHAIN_FILE=/etc/pki/tls/certs/cachain.pem
+        else 
+
+          echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_SSL_USE_CHAIN_FILE=false"
+          export GROUPER_SSL_USE_CHAIN_FILE=false
+        
+        fi
+      fi
+      if [ -z "$GROUPER_SSL_USE_CHAIN_FILE" ] ; then 
+
+        if [ -z "$GROUPER_SSL_CHAIN_FILE" ]; then
+
+          echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_SSL_USE_CHAIN_FILE=false"
+          export GROUPER_SSL_USE_CHAIN_FILE=false
+
+        else
+
+          echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_SSL_USE_CHAIN_FILE=true"
+          export GROUPER_SSL_USE_CHAIN_FILE=true
+        
+        fi
+      
+      fi
+      if [ -z "$GROUPER_SSL_USE_STAPLING" ] ; then 
+
+        echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_SSL_USE_STAPLING=true"
+        export GROUPER_SSL_USE_STAPLING=true
+      
+      fi
+      
+    fi
+    
+    
+    
     if [ -z "$GROUPER_RUN_PROCESSES_AS_USERS" ]; then 
       echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_RUN_PROCESSES_AS_USERS=true"
       export GROUPER_RUN_PROCESSES_AS_USERS=true
@@ -315,8 +392,6 @@ prep_finishBegin() {
       echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_APACHE_AJP_TIMEOUT_SECONDS=3600"
       export GROUPER_APACHE_AJP_TIMEOUT_SECONDS=3600
     fi
-    
-    
     if [ -z "$GROUPER_APACHE_SSL_PORT" ] ; then 
       echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_APACHE_SSL_PORT=443"
       export GROUPER_APACHE_SSL_PORT=443

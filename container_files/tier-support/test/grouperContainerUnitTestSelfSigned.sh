@@ -19,8 +19,19 @@ testContainerSelfSigned() {
   docker run --detach --name $containerName --publish 443:443 -e GROUPER_SELF_SIGNED_CERT=true -e GROUPER_LOG_TO_HOST=true $imageName ui
   sleep $globalSleepSecondsAfterRun
 
+  assertFileContains /etc/httpd/conf.d/ssl-enabled.conf "SSLUseStapling on"
+  assertFileContains /etc/httpd/conf.d/ssl-enabled.conf "SSLCertificateFile /etc/pki/tls/certs/localhost.crt"
+  assertFileContains /etc/httpd/conf.d/ssl-enabled.conf "SSLCertificateKeyFile /etc/pki/tls/private/localhost.key"
+  assertFileNotContains /etc/httpd/conf.d/ssl-enabled.conf "SSLCertificateChainFile"
+  assertFileContains /etc/httpd/conf.d/ssl-enabled.conf "Listen 443 https"
+  assertFileNotContains /etc/httpd/conf.d/ssl-enabled.conf "__"
   assertFileNotContains /etc/httpd/conf.d/ssl-enabled.conf cachain.pem
   assertFileContains /etc/httpd/conf.d/ssl-enabled.conf /etc/pki/tls/certs/localhost.crt
+  assertEnvVar GROUPER_SSL_USE_CHAIN_FILE "false"
+  assertEnvVar GROUPER_SSL_CERT_FILE "/etc/pki/tls/certs/localhost.crt"
+  assertEnvVar GROUPER_SSL_KEY_FILE "/etc/pki/tls/private/localhost.key"
+  assertEnvVar GROUPER_SSL_USE_STAPLING "true"
+
 
   assertFileContains /etc/httpd/conf.d/grouper-www.conf "ProxyPass /grouper ajp://localhost:8009/grouper timeout=3600"
   assertFileContains /etc/httpd/conf.d/grouper-www.conf "#ProxyPass /grouper-ws ajp://localhost:8009/grouper timeout=3600"

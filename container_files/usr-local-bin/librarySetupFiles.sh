@@ -49,6 +49,14 @@ setupFiles_localLogging() {
         echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_localLogging) /opt/grouper/grouperWebapp/WEB-INF/classes/log4j.properties is not the original file so will not be edited"
       fi
   fi
+  if [ -f /opt/grouper/grouperWebapp/WEB-INF/classes/log4j_additional.properties ]; then
+    echo >> /opt/grouper/grouperWebapp/WEB-INF/classes/log4j.properties
+    cat /opt/grouper/grouperWebapp/WEB-INF/classes/log4j_additional.properties >> /opt/grouper/grouperWebapp/WEB-INF/classes/log4j.properties
+    returnCode=$?
+    echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_localLogging) cat /opt/grouper/grouperWebapp/WEB-INF/classes/log4j_additional.properties >> /opt/grouper/grouperWebapp/WEB-INF/classes/log4j.properties, result: $returnCode"
+    if [ $returnCode != 0 ]; then exit $returnCode; fi
+    
+  fi
 
 }
 

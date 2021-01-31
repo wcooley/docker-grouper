@@ -30,8 +30,6 @@ testContainerUi() {
   assertFileExists "/opt/grouper/grouperWebapp/WEB-INF/lib/grouper-messaging-activemq-$grouperVersion.jar"
   assertFileExists "/opt/grouper/grouperWebapp/WEB-INF/libUiAndDaemon/grouper-messaging-activemq-$grouperVersion.jar"
 
-  assertFileContains /etc/httpd/conf.d/ssl-enabled.conf "Listen 443 https"
-  assertFileNotContains /etc/httpd/conf.d/ssl-enabled.conf "__"
   assertFileContains /etc/httpd/conf/httpd.conf "Listen 80"
   assertFileContains /opt/tier-support/supervisord.conf "program:shibbolethsp"
   assertFileContains /opt/tier-support/supervisord.conf "program:tomee"
@@ -39,8 +37,20 @@ testContainerUi() {
   assertFileContains /opt/tier-support/supervisord.conf "user=shibd"
   assertFileNotContains /opt/tier-support/supervisord.conf "program:hsqldb"
   assertFileNotContains /opt/tier-support/supervisord.conf "__"
-  assertFileContains /etc/httpd/conf.d/ssl-enabled.conf cachain.pem
+
+  assertFileContains /etc/httpd/conf.d/ssl-enabled.conf "SSLUseStapling on"
+  assertFileNotContains /etc/httpd/conf.d/ssl-enabled.conf "SSLCertificateChainFile /etc/pki/tls/certs/cachain.pem"
+  assertFileContains /etc/httpd/conf.d/ssl-enabled.conf "SSLCertificateFile /etc/pki/tls/certs/host-cert.pem"
+  assertFileContains /etc/httpd/conf.d/ssl-enabled.conf "SSLCertificateKeyFile /etc/pki/tls/private/host-key.pem"
+  assertFileContains /etc/httpd/conf.d/ssl-enabled.conf "Listen 443 https"
+  assertFileNotContains /etc/httpd/conf.d/ssl-enabled.conf "__"
+  assertFileNotContains /etc/httpd/conf.d/ssl-enabled.conf cachain.pem
   assertFileNotContains /etc/httpd/conf.d/ssl-enabled.conf /etc/pki/tls/certs/localhost.crt
+  assertEnvVar GROUPER_SSL_USE_CHAIN_FILE "false"
+  assertEnvVar GROUPER_SSL_CERT_FILE "/etc/pki/tls/certs/host-cert.pem"
+  assertEnvVar GROUPER_SSL_KEY_FILE "/etc/pki/tls/certs/cachain.pem"
+  assertEnvVarNot GROUPER_SSL_CHAIN_FILE "/etc/pki/tls/certs/cachain.pem"
+  assertEnvVar GROUPER_SSL_USE_STAPLING "true"
 
   assertFileContains /opt/tomee/conf/Catalina/localhost/grouper.xml 'cookies="true"'
 
