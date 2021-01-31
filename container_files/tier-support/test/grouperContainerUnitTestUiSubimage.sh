@@ -49,7 +49,7 @@ testContainerUiSubimage() {
   assertFileContains /opt/tier-support/supervisord.conf "user=shibd"
   assertFileNotContains /opt/tier-support/supervisord.conf "program:hsqldb"
   assertFileNotContains /opt/tier-support/supervisord.conf "__"
-  assertFileContains /etc/httpd/conf.d/ssl-enabled.conf cachain.pem
+  assertFileNotContains /etc/httpd/conf.d/ssl-enabled.conf cachain.pem
   assertFileNotContains /etc/httpd/conf.d/ssl-enabled.conf /etc/pki/tls/certs/localhost.crt
 
   assertFileContains /opt/grouper/grouperWebapp/WEB-INF/classes/log4j.properties "/tmp/logpipe"

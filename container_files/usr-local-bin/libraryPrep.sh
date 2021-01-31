@@ -487,6 +487,18 @@ prep_finishEnd() {
       echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishEnd) export GROUPERUI_LOGOUT_REDIRECTTOURL=/Shibboleth.sso/Logout"
       export GROUPERUI_LOGOUT_REDIRECTTOURL=/Shibboleth.sso/Logout
     fi
+    if [ -z "$GROUPER_REDIRECT_FROM_SLASH_TO_GROUPER" ]; then 
+      if [ "$GROUPER_PROXY_PASS" = "#" ]; then 
+    
+        echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishEnd) export GROUPER_REDIRECT_FROM_SLASH_TO_GROUPER=false"
+        export GROUPER_REDIRECT_FROM_SLASH_TO_GROUPER=false
+      else
+        echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishEnd) export GROUPER_REDIRECT_FROM_SLASH_TO_GROUPER=true"
+        export GROUPER_REDIRECT_FROM_SLASH_TO_GROUPER=true
+      
+      fi
+    
+    fi
 
 }
 

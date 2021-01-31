@@ -124,9 +124,26 @@ setupFilesTomcat_context() {
       results="$results $?"
       sed -i "s|__GROUPER_PROXY_PASS__|$GROUPER_PROXY_PASS|g" /etc/httpd/conf.d/grouper-www.conf
       results="$results $?"
+
+      if [ "$GROUPER_REDIRECT_FROM_SLASH_TO_GROUPER" = "true" ]; then
+        sed -i "s|__GROUPER_REDIRECT_FROM_SLASH_TO_GROUPER__||g" /etc/httpd/conf.d/grouper-www.conf
+        results="$results $?"
+      else
+        sed -i "s|__GROUPER_REDIRECT_FROM_SLASH_TO_GROUPER__|#|g" /etc/httpd/conf.d/grouper-www.conf
+        results="$results $?"
+      fi
+
       if [ -f /etc/httpd/conf.d/ssl-enabled.conf ]; then
         sed -i "s|__GROUPER_PROXY_PASS__|$GROUPER_PROXY_PASS|g" /etc/httpd/conf.d/ssl-enabled.conf
         results="$results $?"
+
+        if [ "$GROUPER_REDIRECT_FROM_SLASH_TO_GROUPER" = "true" ]; then
+          sed -i "s|__GROUPER_REDIRECT_FROM_SLASH_TO_GROUPER__||g" /etc/httpd/conf.d/ssl-enabled.conf
+          results="$results $?"
+        else
+          sed -i "s|__GROUPER_REDIRECT_FROM_SLASH_TO_GROUPER__|#|g" /etc/httpd/conf.d/ssl-enabled.conf
+          results="$results $?"
+        fi
       fi
       sed -i "s|__GROUPERSCIM_PROXY_PASS__|$GROUPERSCIM_PROXY_PASS|g" /etc/httpd/conf.d/grouper-www.conf
       results="$results $?"

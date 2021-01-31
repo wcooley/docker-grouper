@@ -43,6 +43,10 @@ testContainerUi() {
   assertFileContains /etc/httpd/conf.d/ssl-enabled.conf "SSLCertificateFile /etc/pki/tls/certs/host-cert.pem"
   assertFileContains /etc/httpd/conf.d/ssl-enabled.conf "SSLCertificateKeyFile /etc/pki/tls/private/host-key.pem"
   assertFileContains /etc/httpd/conf.d/ssl-enabled.conf "Listen 443 https"
+  assertFileContains /etc/httpd/conf.d/ssl-enabled.conf "RewriteRule"
+  assertFileNotContains /etc/httpd/conf.d/ssl-enabled.conf "#RewriteRule"
+  assertFileContains /etc/httpd/conf.d/grouper-www.conf "RewriteRule"
+  assertFileNotContains /etc/httpd/conf.d/grouper-www.conf "#RewriteRule"
   assertFileNotContains /etc/httpd/conf.d/ssl-enabled.conf "__"
   assertFileNotContains /etc/httpd/conf.d/ssl-enabled.conf cachain.pem
   assertFileNotContains /etc/httpd/conf.d/ssl-enabled.conf /etc/pki/tls/certs/localhost.crt

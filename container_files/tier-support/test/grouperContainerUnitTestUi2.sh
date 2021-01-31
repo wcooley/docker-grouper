@@ -12,11 +12,11 @@ testContainerUi2() {
   echo
   echo '################'
   echo Running container as ui
-  echo "docker run --detach --name $containerName --publish 443:443 -e GROUPER_SSL_USE_STAPLING=false -e GROUPER_SSL_CERT_FILE=/a/b/cert -e GROUPER_SSL_KEY_FILE=/a/b/key -e GROUPER_SSL_CHAIN_FILE=/a/b/chain  $imageName ui"
+  echo "docker run --detach --name $containerName --publish 443:443 -e GROUPER_SSL_USE_STAPLING=false -e GROUPER_SSL_CERT_FILE=/a/b/cert -e GROUPER_SSL_KEY_FILE=/a/b/key -e GROUPER_SSL_CHAIN_FILE=/a/b/chain -e GROUPER_REDIRECT_FROM_SLASH_TO_GROUPER=false $imageName ui"
   echo '################'
   echo
 
-  docker run --detach --name $containerName --publish 443:443 -e GROUPER_SSL_USE_STAPLING=false -e GROUPER_SSL_CERT_FILE=/a/b/cert -e GROUPER_SSL_KEY_FILE=/a/b/key -e GROUPER_SSL_CHAIN_FILE=/a/b/chain $imageName ui
+  docker run --detach --name $containerName --publish 443:443 -e GROUPER_SSL_USE_STAPLING=false -e GROUPER_SSL_CERT_FILE=/a/b/cert -e GROUPER_SSL_KEY_FILE=/a/b/key -e GROUPER_SSL_CHAIN_FILE=/a/b/chain -e GROUPER_REDIRECT_FROM_SLASH_TO_GROUPER=false  $imageName ui
   sleep $globalSleepSecondsAfterRun
 
 
@@ -43,6 +43,8 @@ testContainerUi2() {
   assertFileContains /etc/httpd/conf.d/ssl-enabled.conf "SSLCertificateKeyFile /a/b/key"
   assertFileContains /etc/httpd/conf.d/ssl-enabled.conf "SSLCertificateChainFile /a/b/chain"
   assertFileContains /etc/httpd/conf.d/ssl-enabled.conf "Listen 443 https"
+  assertFileContains /etc/httpd/conf.d/ssl-enabled.conf "#RewriteRule"
+  assertFileContains /etc/httpd/conf.d/grouper-www.conf "#RewriteRule"
   assertFileNotContains /etc/httpd/conf.d/ssl-enabled.conf "__"
   assertFileNotContains /etc/httpd/conf.d/ssl-enabled.conf cachain.pem
   assertFileNotContains /etc/httpd/conf.d/ssl-enabled.conf /etc/pki/tls/certs/localhost.crt

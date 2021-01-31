@@ -18,7 +18,7 @@ mkdir -p $reldir/slashRoot/usr/local/bin
 rsync -avzpl $grouperContainerGitPath/container_files/usr-local-bin/* $reldir/slashRoot/usr/local/bin
 
 mkdir -p $reldir/slashRoot/etc/httpd/conf.d
-rsync -avzpl $grouperContainerGitPath/container_files/httpd/ssl-enabled.conf $reldir/slashRoot/etc/httpd/conf.d
+rsync -avzpl $grouperContainerGitPath/container_files/httpd/* $reldir/slashRoot/etc/httpd/conf.d
 
 mkdir -p $reldir/slashRoot/opt/tier-support/originalFiles
 rsync -avzpl $reldir/etc/httpd/conf.d/ssl-enabled.conf $reldir/slashRoot/opt/tier-support/originalFiles
