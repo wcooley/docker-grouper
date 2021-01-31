@@ -270,7 +270,18 @@ setupFiles_analyzeOriginalFiles() {
 
 }
 
+setupFiles_removePids() {
+  if [ "$GROUPER_RUN_APACHE" = "true" ] && [ -f /run/httpd/httpd.pid ]; then
+    rm -f /run/httpd/httpd.pid
+    returnCode=$?
+    echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_removePids) rm -f /run/httpd/httpd.pid , result: $returnCode"
+    if [ $returnCode != 0 ]; then exit $returnCode; fi
+  fi
+}
+
 setupFiles() {
+
+  setupFiles_removePids
 
   if [ "$GROUPER_SETUP_FILES_COMPLETE" = "true" ]
     then
@@ -337,6 +348,7 @@ setupFiles_unsetAll() {
   unset -f setupFiles_localLogging
   unset -f setupFiles_loggingPrefix
   unset -f setupFiles_originalFile
+  unset -f setupFiles_removePids
   unset -f setupFiles_rsyncSlashRoot
   unset -f setupFiles_storeEnvVars
   unset -f setupFiles_unsetAll
@@ -351,6 +363,7 @@ setupFiles_exportAll() {
   export -f setupFiles_localLogging
   export -f setupFiles_loggingPrefix
   export -f setupFiles_originalFile
+  export -f setupFiles_removePids
   export -f setupFiles_rsyncSlashRoot
   export -f setupFiles_storeEnvVars
   export -f setupFiles_unsetAll
