@@ -12,11 +12,11 @@ testContainerSelfSigned() {
   echo
   echo '################'
   echo Running container as ui with self signed cert
-  echo "docker run --detach --name $containerName --publish 443:443 -e GROUPER_SELF_SIGNED_CERT=true -e GROUPER_LOG_TO_HOST=true $imageName ui"
+  echo "docker run --detach --name $containerName --publish 443:443 -e GROUPER_SELF_SIGNED_CERT=true -e GROUPER_LOG_TO_HOST=true -e GROUPER_APACHE_REMOTE_IP_HEADER=myRemoteIpHeader -e GROUPER_APACHE_REMOTE_IP_TRUSTED_PROXY=10.0.2.16/28 $imageName ui"
   echo '################'
   echo
 
-  docker run --detach --name $containerName --publish 443:443 -e GROUPER_SELF_SIGNED_CERT=true -e GROUPER_LOG_TO_HOST=true $imageName ui
+  docker run --detach --name $containerName --publish 443:443 -e GROUPER_SELF_SIGNED_CERT=true -e GROUPER_LOG_TO_HOST=true -e GROUPER_APACHE_REMOTE_IP_HEADER=myRemoteIpHeader -e GROUPER_APACHE_REMOTE_IP_TRUSTED_PROXY=10.0.2.16/28 $imageName ui
   sleep $globalSleepSecondsAfterRun
 
   assertFileContains /etc/httpd/conf.d/ssl-enabled.conf "SSLUseStapling on"
@@ -38,6 +38,9 @@ testContainerSelfSigned() {
   assertFileContains /etc/httpd/conf.d/grouper-www.conf "#ProxyPass /grouper-ws-scim ajp://localhost:8009/grouper timeout=3600"
   assertFileContains /etc/httpd/conf.d/grouper-www.conf "\"/grouper/\""
   assertFileNotContains /etc/httpd/conf.d/grouper-www.conf "__"
+  assertFileContains /etc/httpd/conf.d/grouper-www.conf "RemoteIPHeader myRemoteIpHeader"
+  assertFileContains /etc/httpd/conf.d/grouper-www.conf "RemoteIPTrustedProxy 10.0.2.16/28"
+  
 
   assertFileNotContains /opt/grouper/grouperWebapp/WEB-INF/classes/log4j.properties "/tmp/logpipe"
 
@@ -74,7 +77,6 @@ testContainerSelfSigned() {
   assertEnvVar GROUPER_WS_GROUPER_AUTH "false"
 
   assertNumberOfTomcatProcesses 1
-  # bad cert apache wont start
   assertNumberOfApacheProcesses 5
   assertNumberOfShibProcesses 1
 

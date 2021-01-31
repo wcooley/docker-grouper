@@ -24,13 +24,13 @@ testContainerUiSubimage() {
   echo cat DockerFile
   cat Dockerfile
   echo "docker build -t $subimageId ."
-  echo "docker run --detach --name $containerName --publish 443:443 $subimageId ui"
+  echo "docker run --detach --name $containerName --publish 443:443 -e GROUPER_SSL_CERT_FILE=/etc/pki/tls/certs/host-cert.pem $subimageId ui"
   echo '################'
   echo
 
   docker build -t "$subimageId" .
 
-  docker run --detach --name $containerName --publish 443:443 $subimageId ui
+  docker run --detach --name $containerName --publish 443:443 -e GROUPER_SSL_CERT_FILE=/etc/pki/tls/certs/host-cert.pem $subimageId ui
   sleep $globalSleepSecondsAfterRun
 
   assertFileExists /opt/grouper/grouperWebapp/WEB-INF/libWs/axis2-kernel-1.6.4.jar

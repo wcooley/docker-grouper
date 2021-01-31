@@ -12,11 +12,11 @@ testContainerUi() {
   echo
   echo '################'
   echo Running container as ui
-  echo "docker run --detach --name $containerName --publish 443:443 $imageName ui"
+  echo "docker run --detach --name $containerName --publish 443:443 -e GROUPER_SSL_CERT_FILE=/etc/pki/tls/certs/host-cert.pem $imageName ui"
   echo '################'
   echo
 
-  docker run --detach --name $containerName --publish 443:443 $imageName ui
+  docker run --detach --name $containerName --publish 443:443 -e GROUPER_SSL_CERT_FILE=/etc/pki/tls/certs/host-cert.pem $imageName ui
   sleep $globalSleepSecondsAfterRun
 
 
@@ -48,7 +48,7 @@ testContainerUi() {
   assertFileNotContains /etc/httpd/conf.d/ssl-enabled.conf /etc/pki/tls/certs/localhost.crt
   assertEnvVar GROUPER_SSL_USE_CHAIN_FILE "false"
   assertEnvVar GROUPER_SSL_CERT_FILE "/etc/pki/tls/certs/host-cert.pem"
-  assertEnvVar GROUPER_SSL_KEY_FILE "/etc/pki/tls/certs/cachain.pem"
+  assertEnvVar GROUPER_SSL_KEY_FILE "/etc/pki/tls/private/host-key.pem"
   assertEnvVarNot GROUPER_SSL_CHAIN_FILE "/etc/pki/tls/certs/cachain.pem"
   assertEnvVar GROUPER_SSL_USE_STAPLING "true"
 
@@ -68,6 +68,8 @@ testContainerUi() {
   
   assertFileNotContains /etc/httpd/conf.d/grouper-www.conf "ServerName"
   assertFileNotContains /etc/httpd/conf.d/grouper-www.conf "UseCanonicalName On"
+  assertFileNotContains /etc/httpd/conf.d/grouper-www.conf "RemoteIPHeader"
+  assertFileNotContains /etc/httpd/conf.d/grouper-www.conf "RemoteIPTrustedProxy"
 
   assertFileNotContains /opt/tomee/conf/server.xml "AccessLogValve"
 

@@ -100,6 +100,30 @@ setupFilesApache_serverName() {
 
 }
 
+setupFilesApache_remoteip() {
+  if [ "$GROUPER_RUN_APACHE" = "true" ] && [ ! -z "$GROUPER_APACHE_REMOTE_IP_HEADER" ] && [ "$GROUPER_APACHE_REMOTE_IP_HEADER" != "" ] && [ -f /etc/httpd/conf.d/grouper-www.conf ]
+    then
+      echo "grouperContainer; INFO: (librarySetupFilesApache.sh-setupFilesApache_remoteip) Appending RemoteIPHeader to grouper-www.conf"
+      echo >> /etc/httpd/conf.d/grouper-www.conf
+      echo "RemoteIPHeader $GROUPER_APACHE_REMOTE_IP_HEADER" >> /etc/httpd/conf.d/grouper-www.conf
+      returnCode=$?
+      echo >> /etc/httpd/conf.d/grouper-www.conf
+      echo "grouperContainer; INFO: (librarySetupFilesApache.sh-setupFilesApache_remoteip) echo \"RemoteIPHeader $GROUPER_APACHE_REMOTE_IP_HEADER\" >> /etc/httpd/conf.d/grouper-www.conf , result: $?"
+      if [ $returnCode != 0 ]; then exit $returnCode; fi
+  fi
+  if [ "$GROUPER_RUN_APACHE" = "true" ] && [ ! -z "$GROUPER_APACHE_REMOTE_IP_TRUSTED_PROXY" ] && [ "$GROUPER_APACHE_REMOTE_IP_TRUSTED_PROXY" != "" ] && [ -f /etc/httpd/conf.d/grouper-www.conf ]
+    then
+      echo "grouperContainer; INFO: (librarySetupFilesApache.sh-setupFilesApache_remoteip) Appending RemoteIPTrustedProxy to grouper-www.conf"
+      echo >> /etc/httpd/conf.d/grouper-www.conf
+      echo "RemoteIPTrustedProxy $GROUPER_APACHE_REMOTE_IP_TRUSTED_PROXY" >> /etc/httpd/conf.d/grouper-www.conf
+      returnCode=$?
+      echo >> /etc/httpd/conf.d/grouper-www.conf
+      echo "grouperContainer; INFO: (librarySetupFilesApache.sh-setupFilesApache_remoteip) echo \"RemoteIPTrustedProxy $GROUPER_APACHE_REMOTE_IP_TRUSTED_PROXY\" >> /etc/httpd/conf.d/grouper-www.conf , result: $?"
+      if [ $returnCode != 0 ]; then exit $returnCode; fi
+  fi
+
+}
+
 
 setupFilesApache_supervisor() {
   if [ "$GROUPER_RUN_APACHE" = "true" ]
@@ -138,6 +162,7 @@ setupFilesApache_ports() {
 setupFilesApache() {
   setupFilesApache_supervisor
   setupFilesApache_ports
+  setupFilesApache_remoteip
   setupFilesApache_ssl
   setupFilesApache_serverName
   setupFilesApache_indexes
@@ -147,6 +172,7 @@ setupFilesApache_unsetAll() {
   unset -f setupFilesApache
   unset -f setupFilesApache_indexes
   unset -f setupFilesApache_ports
+  unset -f setupFilesApache_remoteip
   unset -f setupFilesApache_ssl
   unset -f setupFilesApache_supervisor
   unset -f setupFilesApache_unsetAll
@@ -157,6 +183,7 @@ setupFilesApache_exportAll() {
   export -f setupFilesApache
   export -f setupFilesApache_indexes
   export -f setupFilesApache_ports
+  export -f setupFilesApache_remoteip
   export -f setupFilesApache_ssl
   export -f setupFilesApache_supervisor
   export -f setupFilesApache_unsetAll
