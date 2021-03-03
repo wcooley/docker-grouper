@@ -11,7 +11,7 @@ testContainerUiNoSsl() {
 
   echo
   echo '################'
-  echo Running container as ui without SSL
+  echo Running container as ui without SSL with SSL client
   echo "docker run --detach --name $containerName --publish 443:443 -e GROUPER_USE_SSL=false -e GROUPER_TOMCAT_LOG_ACCESS=true -e GROUPER_APACHE_DIRECTORY_INDEXES=true -e GROUPER_TOMCAT_SESSION_TIMEOUT_MINUTES=30 $imageName ui"
   echo '################'
   echo
@@ -33,6 +33,9 @@ testContainerUiNoSsl() {
   assertFileContains /opt/tier-support/supervisord.conf "user=shibd"
   assertFileNotContains /opt/tier-support/supervisord.conf "__"
   assertFileContains /opt/tomee/conf/server.xml "AccessLogValve"
+  assertFileContains /opt/tomee/conf/server.xml 'secure="true"'
+  assertFileContains /opt/tomee/conf/server.xml 'scheme="https"'
+  assertFileNotContains /opt/tomee/conf/server.xml 'scheme="http"'
   assertFileContains /opt/tomee/conf/web.xml "<session-timeout>30</session-timeout>"
   
 
@@ -67,6 +70,7 @@ testContainerUiNoSsl() {
   assertEnvVar GROUPER_USE_SSL "false"
   assertEnvVar GROUPER_WS "false"
   assertEnvVar GROUPER_WS_GROUPER_AUTH "false"
+  assertEnvVar GROUPER_WEBCLIENT_IS_SSL "true"
 
   assertNumberOfTomcatProcesses 1
   assertNumberOfApacheProcesses 5

@@ -367,8 +367,12 @@ prep_finishBegin() {
       fi
       
     fi
+    if [ -z "$GROUPER_WEBCLIENT_IS_SSL" ] ; then 
+
+      echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_WEBCLIENT_IS_SSL=true (browser or WS client is SSL)"
+      export GROUPER_WEBCLIENT_IS_SSL=true
     
-    
+    fi
     
     if [ -z "$GROUPER_RUN_PROCESSES_AS_USERS" ]; then 
       echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_RUN_PROCESSES_AS_USERS=true"

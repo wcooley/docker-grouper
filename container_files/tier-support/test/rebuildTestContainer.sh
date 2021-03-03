@@ -12,24 +12,25 @@ export grouperContainerGitPath=$3
 export subimageName=my-grouper-$2
 
 export reldir=`dirname $0`
+cd $reldir
 
 # /mnt/c/mchyzer/git/grouper_container
-mkdir -p $reldir/slashRoot/usr/local/bin
-rsync -avzpl $grouperContainerGitPath/container_files/usr-local-bin/* $reldir/slashRoot/usr/local/bin
+mkdir -p slashRoot/usr/local/bin
+rsync -avzpl $grouperContainerGitPath/container_files/usr-local-bin/* slashRoot/usr/local/bin
 
-mkdir -p $reldir/slashRoot/etc/httpd/conf.d
-rsync -avzpl $grouperContainerGitPath/container_files/httpd/* $reldir/slashRoot/etc/httpd/conf.d
+mkdir -p slashRoot/etc/httpd/conf.d
+rsync -avzpl $grouperContainerGitPath/container_files/httpd/* slashRoot/etc/httpd/conf.d
 
-mkdir -p $reldir/slashRoot/opt/tier-support/originalFiles
-rsync -avzpl $reldir/etc/httpd/conf.d/ssl-enabled.conf $reldir/slashRoot/opt/tier-support/originalFiles
+mkdir -p slashRoot/opt/tier-support/originalFiles
+rsync -avzpl etc/httpd/conf.d/ssl-enabled.conf slashRoot/opt/tier-support/originalFiles
 
 rsync -avzpl $grouperContainerGitPath/container_files/tier-support/test/grouper*.sh $reldir
 
-#mkdir -p $reldir/slashRoot/opt/tomee/conf
-#rsync -avzpl $grouperContainerGitPath/container_files/tomee/conf/* $reldir/slashRoot/opt/tomee/conf/
+#mkdir -p slashRoot/opt/tomee/conf
+#rsync -avzpl $grouperContainerGitPath/container_files/tomee/conf/* slashRoot/opt/tomee/conf/
 
-sed -i "s|__BASE_CONTAINER__|$grouperBaseImageName|g" "$reldir/testContainer.Dockerfile"
+sed -i "s|__BASE_CONTAINER__|$grouperBaseImageName|g" "testContainer.Dockerfile"
 
-docker build -f $reldir/testContainer.Dockerfile -t $subimageName --build-arg GROUPER_VERSION=$grouperBaseContainerVersion $reldir
+docker build -f testContainer.Dockerfile -t $subimageName --build-arg GROUPER_VERSION=$grouperBaseContainerVersion $reldir
 
 echo "Run tests with: ./grouperContainerUnitTest.sh grouper-test $subimageName:latest $grouperBaseContainerVersion $grouperBaseContainerVersion"

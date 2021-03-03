@@ -9,6 +9,7 @@ setupFilesTomcat() {
   setupFilesTomcat_ports
   setupFilesTomcat_accessLogs
   setupFilesTomcat_sessionTimeout
+  setupFilesTomcat_ssl
 }
 
 
@@ -232,12 +233,35 @@ setupFilesTomcat_sessionTimeout() {
   fi
 }
 
+setupFilesTomcat_ssl() {
+
+  if [ "$GROUPER_WEBCLIENT_IS_SSL" = "false" ]
+    then
+    sed -i 's|secure="true"||g' /opt/tomee/conf/server.xml
+    returnCode=$?
+    echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_ssl) based on GROUPER_WEBCLIENT_IS_SSL, sed -i 's|secure=\"true\"||g' /opt/tomee/conf/server.xml , result=$returnCode"
+    if [ $returnCode != 0 ] && [ "$GROUPER_ORIGFILE_SERVER_XML" = "true" ]
+      then
+        exit $returnCode
+    fi  
+    sed -i 's|scheme="https"|scheme="http"|g' /opt/tomee/conf/server.xml
+    returnCode=$?
+    echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_ssl) based on GROUPER_WEBCLIENT_IS_SSL, sed -i 's|scheme=\"https\"|scheme=\"http\"|g' /opt/tomee/conf/server.xml , result=$returnCode"
+    if [ $returnCode != 0 ] && [ "$GROUPER_ORIGFILE_SERVER_XML" = "true" ]
+      then
+        exit $returnCode
+    fi  
+  fi
+}
+
+
 setupFilesTomcat_unsetAll() {
 
   unset -f setupFilesTomcat
   unset -f setupFilesTomcat_authn
   unset -f setupFilesTomcat_context
   unset -f setupFilesTomcat_ports
+  unset -f setupFilesTomcat_ssl
   unset -f setupFilesTomcat_supervisor
   unset -f setupFilesTomcat_unsetAll
   unset -f setupFilesTomcat_accessLogs
@@ -253,6 +277,7 @@ setupFilesTomcat_exportAll() {
   export -f setupFilesTomcat_authn
   export -f setupFilesTomcat_context
   export -f setupFilesTomcat_ports
+  export -f setupFilesTomcat_ssl
   export -f setupFilesTomcat_supervisor
   export -f setupFilesTomcat_unsetAll
   export -f setupFilesTomcat_accessLogs

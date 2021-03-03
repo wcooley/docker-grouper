@@ -5,7 +5,7 @@ if [ "$#" -ne 4 ]; then
   exit 1
 fi
 
-expectedSuccesses=692
+expectedSuccesses=710
 
 export containerName=$1
 export imageName=$2
@@ -23,6 +23,7 @@ export failureCount=0
 . ./grouperContainerUnitTestUi.sh
 . ./grouperContainerUnitTestUi2.sh
 . ./grouperContainerUnitTestUiNoSsl.sh
+. ./grouperContainerUnitTestUiNoSslOrClient.sh
 . ./grouperContainerUnitTestUiDifferentPorts.sh
 . ./grouperContainerUnitTestSlashRoot.sh
 . ./grouperContainerUnitTestSelfSigned.sh
@@ -36,6 +37,7 @@ export failureCount=0
 testContainerUi
 testContainerUi2
 testContainerUiNoSsl
+testContainerUiNoSslOrClient
 testContainerSlashRoot
 testContainerSelfSigned
 testContainerUiDifferentPorts
@@ -49,7 +51,6 @@ testContainerUiSubimageNonroot
 
 dockerRemoveContainer
 dockerRemoveSubimage
-
 
 
 
