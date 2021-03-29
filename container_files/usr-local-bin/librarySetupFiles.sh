@@ -72,7 +72,8 @@ setupFiles_chownDirs() {
         chown -R tomcat:tomcat /opt/grouper/grouperWebapp /opt/tomee
         returnCode=$?
         echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_chownDirs) chown -R tomcat:tomcat /opt/grouper/grouperWebapp /opt/tomee, result: $returnCode"
-        if [ $returnCode != 0 ]; then exit $returnCode; fi
+        # dont fail on chown
+        #if [ $returnCode != 0 ]; then exit $returnCode; fi
     fi
 }
 
