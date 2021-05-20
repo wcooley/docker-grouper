@@ -22,7 +22,7 @@ mkdir -p slashRoot/etc/httpd/conf.d
 rsync -avzpl $grouperContainerGitPath/container_files/httpd/* slashRoot/etc/httpd/conf.d
 
 mkdir -p slashRoot/opt/tier-support/originalFiles
-rsync -avzpl etc/httpd/conf.d/ssl-enabled.conf slashRoot/opt/tier-support/originalFiles
+rsync -avzpl $grouperContainerGitPath/container_files/httpd/ssl-enabled.conf slashRoot/opt/tier-support/originalFiles
 
 rsync -avzpl $grouperContainerGitPath/container_files/tier-support/test/grouper*.sh $reldir
 

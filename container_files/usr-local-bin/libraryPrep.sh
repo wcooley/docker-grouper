@@ -451,6 +451,11 @@ prep_finishBegin() {
       export GROUPER_SHIB_LOG_USE_PIPE=true
     fi
     
+    if [ -z "$GROUPER_APACHE_STATUS_PATH" ] ; then 
+      echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_APACHE_STATUS_PATH=/status_grouper/status"
+      export GROUPER_APACHE_STATUS_PATH=/status_grouper/status
+    fi
+    
     #Replace web.xml session timeout with env variable
     if [[ -z "$GROUPER_TOMCAT_SESSION_TIMEOUT_MINUTES" ]]; then
       if [[ "$GROUPER_UI" != 'true' ]] && [[ "$GROUPER_WS" = 'true' ]]; then

@@ -124,6 +124,19 @@ setupFilesApache_remoteip() {
 
 }
 
+setupFilesApache_status() {
+  if [ "$GROUPER_RUN_APACHE" = "true" ] && [ ! -z "$GROUPER_APACHE_STATUS_PATH" ] && [ "$GROUPER_APACHE_STATUS_PATH" != "" ] && [ "$GROUPER_APACHE_STATUS_PATH" != "none" ] && [ -f /etc/httpd/conf.d/grouper-www.conf ]
+    then
+      echo "grouperContainer; INFO: (librarySetupFilesApache.sh-setupFilesApache_status) Appending status to grouper-www.conf"
+      echo >> /etc/httpd/conf.d/grouper-www.conf
+      # ProxyPass /status_grouper/status ajp://localhost:8009/grouper/status timeout=2401
+      echo "ProxyPass $GROUPER_APACHE_STATUS_PATH ajp://localhost:$GROUPER_TOMCAT_AJP_PORT/$GROUPER_TOMCAT_CONTEXT/status timeout=2401" >> /etc/httpd/conf.d/grouper-www.conf
+      returnCode=$?
+      echo >> /etc/httpd/conf.d/grouper-www.conf
+      echo "grouperContainer; INFO: (librarySetupFilesApache.sh-setupFilesApache_status) echo \"ProxyPass $GROUPER_APACHE_STATUS_PATH ajp://localhost:$GROUPER_TOMCAT_AJP_PORT/$GROUPER_TOMCAT_CONTEXT/status timeout=2401\" >> /etc/httpd/conf.d/grouper-www.conf , result: $?"
+      if [ $returnCode != 0 ]; then exit $returnCode; fi
+  fi
+}
 
 setupFilesApache_supervisor() {
   if [ "$GROUPER_RUN_APACHE" = "true" ]
@@ -164,6 +177,7 @@ setupFilesApache() {
   setupFilesApache_ports
   setupFilesApache_remoteip
   setupFilesApache_ssl
+  setupFilesApache_status
   setupFilesApache_serverName
   setupFilesApache_indexes
 }
@@ -174,6 +188,7 @@ setupFilesApache_unsetAll() {
   unset -f setupFilesApache_ports
   unset -f setupFilesApache_remoteip
   unset -f setupFilesApache_ssl
+  unset -f setupFilesApache_status
   unset -f setupFilesApache_supervisor
   unset -f setupFilesApache_unsetAll
   unset -f setupFilesApache_serverName
@@ -185,6 +200,7 @@ setupFilesApache_exportAll() {
   export -f setupFilesApache_ports
   export -f setupFilesApache_remoteip
   export -f setupFilesApache_ssl
+  export -f setupFilesApache_status
   export -f setupFilesApache_supervisor
   export -f setupFilesApache_unsetAll
   export -f setupFilesApache_serverName

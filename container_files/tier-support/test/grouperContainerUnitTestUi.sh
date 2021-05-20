@@ -46,6 +46,7 @@ testContainerUi() {
   assertFileContains /etc/httpd/conf.d/ssl-enabled.conf "RewriteRule"
   assertFileNotContains /etc/httpd/conf.d/ssl-enabled.conf "#RewriteRule"
   assertFileContains /etc/httpd/conf.d/grouper-www.conf "RewriteRule"
+  assertFileContains /etc/httpd/conf.d/grouper-www.conf "ProxyPass /status_grouper/status ajp://localhost:8009/grouper/status timeout=2401"
   assertFileNotContains /etc/httpd/conf.d/grouper-www.conf "#RewriteRule"
   assertFileNotContains /etc/httpd/conf.d/ssl-enabled.conf "__"
   assertFileNotContains /etc/httpd/conf.d/ssl-enabled.conf cachain.pem
