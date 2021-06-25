@@ -113,10 +113,6 @@ RUN mkdir -p /opt/tier-support/originalFiles ; \
   cp /opt/tomee/conf/Catalina/localhost/grouper.xml /opt/tier-support/originalFiles 2>/dev/null ; \
   cp /opt/grouper/grouperWebapp/WEB-INF/web.xml /opt/tier-support/originalFiles 2>/dev/null
 
-# Export this variable so that shibd can find its CURL library
-RUN LD_LIBRARY_PATH="/opt/shibboleth/lib64"
-RUN export LD_LIBRARY_PATH
-
 WORKDIR /opt/grouper/grouperWebapp/WEB-INF/
 EXPOSE 80 443
 HEALTHCHECK NONE
