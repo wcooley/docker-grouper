@@ -67,7 +67,6 @@ RUN ln -sf /usr/share/zoneinfo/UTC /etc/localtime
 RUN yum update -y \
     && yum install -y cron logrotate python3-pip rsync sudo patch supervisor \
     && pip3 install --upgrade setuptools \
-    && pip3 install --upgrade pip3 \
     && yum clean -y all
 #COPY --from=installing $JAVA_HOME $JAVA_HOME
 # do this again so its in rpm history
