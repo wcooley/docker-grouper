@@ -84,16 +84,16 @@ setupFiles_storeEnvVars() {
   echo "#!/bin/sh" > /opt/grouper/grouperEnv.sh
   echo "" >> /opt/grouper/grouperEnv.sh
 
-  # go through env vars, should start with GROUPER and have an equals sign in there
-  env | grep "^GROUPER" | grep "=" | sort >> /opt/grouper/grouperEnv.sh
-
+  # go through env vars, should start with GROUPER*; this handles quoting but not multiline
+  export -p | grep "^declare -x GROUPER" | sort >> /opt/grouper/grouperEnv.sh
   returnCode=$?
-  echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_storeEnvVars) env | grep \"^GROUPER\" | grep \"=\" | sort >> /opt/grouper/grouperEnv.sh, result: $returnCode"
+  echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_storeEnvVars) export -p | grep \"^declare -x GROUPER\" | sort >> /opt/grouper/grouperEnv.sh, result: $returnCode"
   if [ $returnCode != 0 ]; then exit $returnCode; fi
 
-  sed -i "s|^GROUPER|export GROUPER|g" /opt/grouper/grouperEnv.sh
+  # declare -x exports to the current and child processes, but not globally to the procid=1 process; `export` works, as well as `declare -x -g`
+  sed -i "s|^declare -x |export |" /opt/grouper/grouperEnv.sh
   returnCode=$?
-  echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_storeEnvVars) sed -i \"s|^GROUPER|export GROUPER|g\" /opt/grouper/grouperEnv.sh , result: $returnCode"
+  echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_storeEnvVars) sed -i \"s|^declare -x |export |\" /opt/grouper/grouperEnv.sh, result: $returnCode"
   if [ $returnCode != 0 ]; then exit $returnCode; fi
 
   if [ ! -f /home/tomcat/.bashrc ]
