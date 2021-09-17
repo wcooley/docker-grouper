@@ -71,6 +71,14 @@ setupFilesTomcat_ports() {
         echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_ports) update server.xml to change ajp port: sed -i \"s|8009|$GROUPER_TOMCAT_AJP_PORT|g\" /opt/tomee/conf/server.xml, result: $returnCode"
         if [ $returnCode != 0 ]; then exit $returnCode; fi
       fi
+      
+      if [ "$GROUPER_TOMCAT_MAX_HEADER_COUNT" != "-1" ]; then 
+        # add in maxHeaderCount since new chrome sends too many headers
+        sed -i "s|port=\"$GROUPER_TOMCAT_AJP_PORT\"|port=\"$GROUPER_TOMCAT_AJP_PORT\" maxHeaderCount=\"$GROUPER_TOMCAT_MAX_HEADER_COUNT\" |g" /opt/tomee/conf/server.xml
+        returnCode=$?
+        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_ports) update server.xml add maxHeaderCount: sed -i \"s|port=\"$GROUPER_TOMCAT_AJP_PORT\"|port=\"$GROUPER_TOMCAT_AJP_PORT\" maxHeaderCount=\"$GROUPER_TOMCAT_MAX_HEADER_COUNT\" |g\" /opt/tomee/conf/server.xml, result: $returnCode"
+        if [ $returnCode != 0 ]; then exit $returnCode; fi
+      fi
   
       if [ "$GROUPER_TOMCAT_SHUTDOWN_PORT" != "8005" ]; then 
         sed -i "s|8005|$GROUPER_TOMCAT_SHUTDOWN_PORT|g" /opt/tomee/conf/server.xml

@@ -437,6 +437,10 @@ prep_finishBegin() {
       echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_TOMCAT_HTTP_PORT=8080"
       export GROUPER_TOMCAT_HTTP_PORT=8080
     fi
+    if [ -z "$GROUPER_TOMCAT_MAX_HEADER_COUNT" ]; then 
+      echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_TOMCAT_MAX_HEADER_COUNT=200"
+      export GROUPER_TOMCAT_MAX_HEADER_COUNT=200
+    fi
     if [ -z "$GROUPER_TOMCAT_AJP_PORT" ]; then 
       echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_TOMCAT_AJP_PORT=8009"
       export GROUPER_TOMCAT_AJP_PORT=8009

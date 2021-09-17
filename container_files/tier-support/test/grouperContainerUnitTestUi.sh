@@ -78,6 +78,10 @@ testContainerUi() {
 
   assertFileNotContains /opt/tomee/conf/server.xml "AccessLogValve"
 
+  assertFileContains /opt/tomee/conf/server.xml "maxHeaderCount"
+  assertFileContains /opt/tomee/conf/server.xml "200"
+  assertFileNotContains /opt/tomee/conf/server.xml "1235"
+
   assertFileContains /opt/tomee/conf/server.xml "tomcatAuthentication"
 
   assertEnvVarNot GROUPER_APACHE_SERVER_NAME https://a.b.c:443

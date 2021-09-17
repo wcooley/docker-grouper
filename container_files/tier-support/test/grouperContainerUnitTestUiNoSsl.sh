@@ -12,11 +12,11 @@ testContainerUiNoSsl() {
   echo
   echo '################'
   echo Running container as ui without SSL with SSL client
-  echo "docker run --detach --name $containerName --publish 443:443 -e GROUPER_USE_SSL=false -e GROUPER_TOMCAT_LOG_ACCESS=true -e GROUPER_APACHE_DIRECTORY_INDEXES=true -e GROUPER_TOMCAT_SESSION_TIMEOUT_MINUTES=30 $imageName ui"
+  echo "docker run --detach --name $containerName --publish 443:443 -e GROUPER_TOMCAT_MAX_HEADER_COUNT=-1 -e GROUPER_USE_SSL=false -e GROUPER_TOMCAT_LOG_ACCESS=true -e GROUPER_APACHE_DIRECTORY_INDEXES=true -e GROUPER_TOMCAT_SESSION_TIMEOUT_MINUTES=30 $imageName ui"
   echo '################'
   echo
 
-  docker run --detach --name $containerName --publish 443:443 -e GROUPER_USE_SSL=false -e GROUPER_TOMCAT_LOG_ACCESS=true -e GROUPER_APACHE_DIRECTORY_INDEXES=true -e GROUPER_TOMCAT_SESSION_TIMEOUT_MINUTES=30 $imageName ui
+  docker run --detach --name $containerName --publish 443:443 -e GROUPER_TOMCAT_MAX_HEADER_COUNT=-1 -e GROUPER_USE_SSL=false -e GROUPER_TOMCAT_LOG_ACCESS=true -e GROUPER_APACHE_DIRECTORY_INDEXES=true -e GROUPER_TOMCAT_SESSION_TIMEOUT_MINUTES=30 $imageName ui
   sleep $globalSleepSecondsAfterRun
 
   assertFileExists /etc/httpd/conf.d/ssl-enabled.conf.dontuse
@@ -38,6 +38,7 @@ testContainerUiNoSsl() {
   assertFileNotContains /opt/tomee/conf/server.xml 'scheme="http"'
   assertFileContains /opt/tomee/conf/web.xml "<session-timeout>30</session-timeout>"
   
+  assertFileNotContains /opt/tomee/conf/server.xml "maxHeaderCount"
 
   assertEnvVar GROUPER_TOMCAT_LOG_ACCESS "true"
   assertEnvVar GROUPERSCIM_PROXY_PASS "#"

@@ -12,11 +12,11 @@ testContainerUi2() {
   echo
   echo '################'
   echo Running container as ui
-  echo "docker run --detach --name $containerName --publish 443:443 -e GROUPER_SSL_USE_STAPLING=false -e GROUPER_SSL_CERT_FILE=/a/b/cert -e GROUPER_SSL_KEY_FILE=/a/b/key -e GROUPER_SSL_CHAIN_FILE=/a/b/chain -e GROUPER_REDIRECT_FROM_SLASH_TO_GROUPER=false -e GROUPER_APACHE_STATUS_PATH=none $imageName ui"
+  echo "docker run --detach --name $containerName --publish 443:443 -e GROUPER_TOMCAT_MAX_HEADER_COUNT=1235 -e GROUPER_SSL_USE_STAPLING=false -e GROUPER_SSL_CERT_FILE=/a/b/cert -e GROUPER_SSL_KEY_FILE=/a/b/key -e GROUPER_SSL_CHAIN_FILE=/a/b/chain -e GROUPER_REDIRECT_FROM_SLASH_TO_GROUPER=false -e GROUPER_APACHE_STATUS_PATH=none $imageName ui"
   echo '################'
   echo
 
-  docker run --detach --name $containerName --publish 443:443 -e GROUPER_SSL_USE_STAPLING=false -e GROUPER_SSL_CERT_FILE=/a/b/cert -e GROUPER_SSL_KEY_FILE=/a/b/key -e GROUPER_SSL_CHAIN_FILE=/a/b/chain -e GROUPER_REDIRECT_FROM_SLASH_TO_GROUPER=false -e GROUPER_APACHE_STATUS_PATH=none $imageName ui
+  docker run --detach --name $containerName --publish 443:443 -e GROUPER_TOMCAT_MAX_HEADER_COUNT=1235 -e GROUPER_SSL_USE_STAPLING=false -e GROUPER_SSL_CERT_FILE=/a/b/cert -e GROUPER_SSL_KEY_FILE=/a/b/key -e GROUPER_SSL_CHAIN_FILE=/a/b/chain -e GROUPER_REDIRECT_FROM_SLASH_TO_GROUPER=false -e GROUPER_APACHE_STATUS_PATH=none $imageName ui
   sleep $globalSleepSecondsAfterRun
 
 
@@ -37,6 +37,9 @@ testContainerUi2() {
   assertFileContains /opt/tier-support/supervisord.conf "user=shibd"
   assertFileNotContains /opt/tier-support/supervisord.conf "program:hsqldb"
   assertFileNotContains /opt/tier-support/supervisord.conf "__"
+
+  assertFileContains /opt/tomee/conf/server.xml "maxHeaderCount"
+  assertFileContains /opt/tomee/conf/server.xml "1235"
 
   assertFileContains /etc/httpd/conf.d/ssl-enabled.conf "SSLUseStapling off"
   assertFileContains /etc/httpd/conf.d/ssl-enabled.conf "SSLCertificateFile /a/b/cert"
