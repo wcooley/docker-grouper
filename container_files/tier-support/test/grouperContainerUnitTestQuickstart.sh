@@ -33,7 +33,6 @@ testContainerQuickstart() {
   assertFileNotContains /opt/tier-support/supervisord.conf "program:shibbolethsp"
   assertFileContains /opt/tier-support/supervisord.conf "program:tomee"
   assertFileContains /opt/tier-support/supervisord.conf "program:httpd"
-  assertFileContains /opt/tier-support/supervisord.conf "program:hsqldb"
   assertFileNotContains /opt/tier-support/supervisord.conf "user=shibd"
   assertFileNotContains /opt/tier-support/supervisord.conf "__"
   assertFileNotContains /etc/httpd/conf.d/ssl-enabled.conf cachain.pem
@@ -80,8 +79,7 @@ testContainerQuickstart() {
   assertEnvVar GROUPER_WS "true"
   assertEnvVar GROUPER_WS_GROUPER_AUTH "true"
 
-  # one for hsqldb
-  assertNumberOfTomcatProcesses 2
+  assertNumberOfTomcatProcesses 1
   # bad cert apache wont start
   assertNumberOfApacheProcesses 5
   assertNumberOfShibProcesses 0
@@ -126,8 +124,7 @@ testContainerQuickstart() {
 
   sleep $globalSleepSecondsAfterRun
 
-  # one for hsqldb
-  assertNumberOfTomcatProcesses 2
+  assertNumberOfTomcatProcesses 1
   assertNumberOfApacheProcesses 5
   assertNumberOfShibProcesses 0
 

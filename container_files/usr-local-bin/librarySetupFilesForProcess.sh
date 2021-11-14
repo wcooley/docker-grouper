@@ -1,29 +1,5 @@
 #!/bin/bash
 
-setupFilesForProcess_hsqldb() {
-  # construct the supervisord file based on FLAGS passed in or what was in CMD
-  if [ "$GROUPER_RUN_HSQLDB" = "true" ]
-    then
-      cat /opt/tier-support/supervisord-hsqldb.conf >> /opt/tier-support/supervisord.conf
-      returnCode=$?
-      echo "grouperContainer; INFO: (librarySetupFilesForProcess.sh-setupFilesForProcess_hsqldb) cat /opt/tier-support/supervisord-hsqldb.conf >> /opt/tier-support/supervisord.conf , result: $returnCode"
-      if [ $returnCode != 0 ]; then exit $returnCode; fi
-  fi
-}
-
-setupFilesForProcess_hsqldbVersions() {
-
-    # tomee hsql must match the grouper one, and the version cannot be 2.3.2 since it is query bugs (unit tests fail)
-    rm -f /opt/tomee/lib/hsqldb-*.jar
-    returnCode=$?
-    echo "grouperContainer; INFO: (librarySetupFilesForProcess.sh-setupFilesForProcess_hsqldbVersions) rm -f /opt/tomee/lib/hsqldb-*.jar , result: $returnCode"
-    if [ $returnCode != 0 ]; then exit $returnCode; fi
-    cp /opt/grouper/grouperWebapp/WEB-INF/lib/hsqldb-*.jar /opt/tomee/lib/
-    returnCode=$?
-    echo "grouperContainer; INFO: (librarySetupFilesForProcess.sh-setupFilesForProcess_hsqldbVersions) cp /opt/grouper/grouperWebapp/WEB-INF/lib/hsqldb-*.jar /opt/tomee/lib/ , result: $returnCode"
-    if [ $returnCode != 0 ]; then exit $returnCode; fi
-}
-
 setupFilesForProcess_supervisor() {
 
   if [ "$GROUPER_RUN_TOMCAT_NOT_SUPERVISOR" != "true" ]; then
@@ -35,10 +11,6 @@ setupFilesForProcess_supervisor() {
 }
 
 setupFilesForProcess() {
-
-  setupFilesForProcess_hsqldbVersions
-
-  setupFilesForProcess_hsqldb
 
   setupFilesForProcess_shib
   
@@ -107,8 +79,6 @@ setupFilesForProcess_shib() {
 setupFilesForProcess_unsetAll() {
 
   unset -f setupFilesForProcess
-  unset -f setupFilesForProcess_hsqldb
-  unset -f setupFilesForProcess_hsqldbVersions
   unset -f setupFilesForProcess_shib
   unset -f setupFilesForProcess_supervisor
   unset -f setupFilesForProcess_supervisorFinal
@@ -119,8 +89,6 @@ setupFilesForProcess_unsetAll() {
 setupFilesForProcess_exportAll() {
 
   export -f setupFilesForProcess
-  export -f setupFilesForProcess_hsqldb
-  export -f setupFilesForProcess_hsqldbVersions
   export -f setupFilesForProcess_shib
   export -f setupFilesForProcess_supervisor
   export -f setupFilesForProcess_supervisorFinal

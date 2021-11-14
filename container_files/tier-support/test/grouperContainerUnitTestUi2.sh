@@ -35,7 +35,6 @@ testContainerUi2() {
   assertFileContains /opt/tier-support/supervisord.conf "program:tomee"
   assertFileContains /opt/tier-support/supervisord.conf "program:httpd"
   assertFileContains /opt/tier-support/supervisord.conf "user=shibd"
-  assertFileNotContains /opt/tier-support/supervisord.conf "program:hsqldb"
   assertFileNotContains /opt/tier-support/supervisord.conf "__"
 
   assertFileContains /opt/tomee/conf/server.xml "maxHeaderCount"

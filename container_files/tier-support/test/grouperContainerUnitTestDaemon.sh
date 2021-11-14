@@ -29,7 +29,6 @@ testContainerDaemon() {
   assertFileNotContains /opt/tier-support/supervisord.conf "program:shibbolethsp"
   assertFileContains /opt/tier-support/supervisord.conf "program:tomee"
   assertFileNotContains /opt/tier-support/supervisord.conf "program:httpd"
-  assertFileNotContains /opt/tier-support/supervisord.conf "program:hsqldb"
   assertFileNotContains /opt/tier-support/supervisord.conf "user=shibd"
   assertFileNotContains /opt/tier-support/supervisord.conf "__"
 
@@ -68,7 +67,6 @@ testContainerDaemon() {
   assertEnvVar GROUPER_WS "false"
   assertEnvVar GROUPER_WS_GROUPER_AUTH "false"
 
-  # one for hsqldb
   assertNumberOfTomcatProcesses 1
   # bad cert apache wont start
   assertNumberOfApacheProcesses 0

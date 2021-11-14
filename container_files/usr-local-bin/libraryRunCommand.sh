@@ -3,7 +3,6 @@
 runCommand() {
 
   echo "grouperContainer; INFO: (libraryRunCommand.sh-runCommand) Start setting up remaining pipes"
-  setupPipe_hsqldbLog
   setupPipe_httpdLog
   setupPipe_shibdLog
   setupPipe_tomcatLog

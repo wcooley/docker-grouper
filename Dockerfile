@@ -86,8 +86,7 @@ RUN groupadd -r tomcat \
     && useradd -r -m -s /sbin/nologin -g tomcat tomcat \
     && rm -f /etc/alternatives/java \
     && ln -s $JAVA_HOME/bin/java /etc/alternatives/java \
-    && mkdir -p /opt/tomee/conf/Catalina/localhost/ \
-    && mkdir /opt/hsqldb
+    && mkdir -p /opt/tomee/conf/Catalina/localhost/ 
     
 COPY container_files/tier-support/ /opt/tier-support/
 COPY container_files/usr-local-bin/ /usr/local/bin/
@@ -99,8 +98,8 @@ RUN cp /dev/null /etc/httpd/conf.d/ssl.conf
 # this is to improve openshift
 RUN touch /opt/grouper/grouperEnv.sh \
     && mkdir -p /opt/tomee/work/Catalina/localhost/ \
-    && chown -R tomcat:root  /opt/grouper/ /etc/httpd/conf/ /home/tomcat/ /opt/tomee/ /usr/local/bin /etc/httpd/conf.d/ /opt/hsqldb/ /opt/tier-support/ \
-    && chmod -R g+rwx /opt/grouper/ /etc/httpd/conf/ /home/tomcat/ /opt/tomee/ /usr/local/bin /etc/httpd/conf.d/ /opt/hsqldb/ /opt/tier-support/
+    && chown -R tomcat:root  /opt/grouper/ /etc/httpd/conf/ /home/tomcat/ /opt/tomee/ /usr/local/bin /etc/httpd/conf.d/ /opt/tier-support/ \
+    && chmod -R g+rwx /opt/grouper/ /etc/httpd/conf/ /home/tomcat/ /opt/tomee/ /usr/local/bin /etc/httpd/conf.d/ /opt/tier-support/
 
 # keep backup of files
 RUN mkdir -p /opt/tier-support/originalFiles ; \

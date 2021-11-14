@@ -35,7 +35,6 @@ testContainerUi() {
   assertFileContains /opt/tier-support/supervisord.conf "program:tomee"
   assertFileContains /opt/tier-support/supervisord.conf "program:httpd"
   assertFileContains /opt/tier-support/supervisord.conf "user=shibd"
-  assertFileNotContains /opt/tier-support/supervisord.conf "program:hsqldb"
   assertFileNotContains /opt/tier-support/supervisord.conf "__"
 
   assertFileContains /etc/httpd/conf.d/ssl-enabled.conf "SSLUseStapling on"

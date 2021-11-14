@@ -30,10 +30,6 @@ prep_quickstart() {
     
     if [ "$GROUPER_RUN_TOMCAT_NOT_SUPERVISOR" != "true" ]; then
       echo "grouperContainer; INFO: (libraryPrep.sh-prep_quickstart) GROUPER_RUN_TOMCAT_NOT_SUPERVISOR is not true"    
-      if [ -z "$GROUPER_RUN_HSQLDB" ]; then
-        echo "grouperContainer; INFO: (libraryPrep.sh-prep_quickstart) export GROUPER_RUN_HSQLDB=true"    
-        export GROUPER_RUN_HSQLDB=true
-      fi
       if [ -z "$GROUPER_SELF_SIGNED_CERT" ] && [ "$GROUPER_OPENSHIFT" != "true" ]; then 
         echo "grouperContainer; INFO: (libraryPrep.sh-prep_quickstart) export GROUPER_SELF_SIGNED_CERT=true"    
         export GROUPER_SELF_SIGNED_CERT=true
@@ -41,14 +37,6 @@ prep_quickstart() {
       if [ -z "$GROUPER_START_DELAY_SECONDS" ]; then 
         echo "grouperContainer; INFO: (libraryPrep.sh-prep_quickstart) export GROUPER_START_DELAY_SECONDS='10'"    
         export GROUPER_START_DELAY_SECONDS='10'
-      fi
-      if [ -z "$GROUPER_DATABASE_URL_FILE" ] && [ -z "$GROUPER_DATABASE_URL" ]; then 
-        echo "grouperContainer; INFO: (libraryPrep.sh-prep_quickstart) export GROUPER_DATABASE_URL=jdbc:hsqldb:hsql://localhost:9001/grouper"    
-        export GROUPER_DATABASE_URL=jdbc:hsqldb:hsql://localhost:9001/grouper
-      fi
-      if [ -z "$GROUPER_DATABASE_USERNAME_FILE" ] && [ -z "$GROUPER_DATABASE_USERNAME" ]; then
-        echo "grouperContainer; INFO: (libraryPrep.sh-prep_quickstart) export GROUPER_DATABASE_USERNAME=sa"    
-        export GROUPER_DATABASE_USERNAME=sa
       fi
     fi
     if [ -z "$GROUPER_RUN_SHIB_SP" ] && [ "$GROUPER_OPENSHIFT" != "true" ]; then 
@@ -236,12 +224,6 @@ prep_initDeprecatedEnvVars() {
     then 
       echo "grouperContainer; INFO: (libraryPrep.sh-prep_initDeprecatedEnvVars) export GROUPER_RUN_TOMEE=$RUN_TOMEE"
       export GROUPER_RUN_TOMEE="$RUN_TOMEE"
-  fi
-
-  if [ ! -z "$RUN_HSQLDB" ] && [ -z "$GROUPER_RUN_HSQLDB" ]
-    then 
-      echo "grouperContainer; INFO: (libraryPrep.sh-prep_initDeprecatedEnvVars) export GROUPER_RUN_HSQLDB=$RUN_HSQLDB"
-      export GROUPER_RUN_HSQLDB="$RUN_HSQLDB"
   fi
 
   if [ ! -z "$SELF_SIGNED_CERT" ] && [ -z "$GROUPER_SELF_SIGNED_CERT" ]

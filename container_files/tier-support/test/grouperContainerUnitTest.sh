@@ -5,7 +5,7 @@ if [ "$#" -ne 4 ]; then
   exit 1
 fi
 
-expectedSuccesses=721
+expectedSuccesses=716
 
 export containerName=$1
 export imageName=$2

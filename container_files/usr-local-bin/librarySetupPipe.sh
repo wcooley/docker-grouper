@@ -70,15 +70,6 @@ setupPipe_tomcatAccessLog() {
   fi
 }
 
-setupPipe_hsqldbLog() {
-  if [ "$GROUPER_USE_PIPES" == "true" ]; then
-    if [ "$GROUPER_RUN_HSQLDB" = "true" ]; then
-      setupPipe /tmp/loghsqldb
-      (cat <> /tmp/loghsqldb | awk -v ENV="$ENV" -v UT="$USERTOKEN" '{printf "hsqldb;console;%s;%s;%s\n", ENV, UT, $0; fflush()}' &>/tmp/logpipe) &
-    fi
-  fi
-}
-
 setupPipe_supervisordLog() {
   if [ "$GROUPER_USE_PIPES" == "true" ]; then
     setupPipe /tmp/logsuperd
@@ -90,7 +81,6 @@ setupPipe_unsetAll() {
 
   unset -f setupPipe
   unset -f setupPipe_grouperLog
-  unset -f setupPipe_hsqldbLog
   unset -f setupPipe_httpdLog
   unset -f setupPipe_logging
   unset -f setupPipe_shibdLog
@@ -105,7 +95,6 @@ setupPipe_exportAll() {
 
   export -f setupPipe
   export -f setupPipe_grouperLog
-  export -f setupPipe_hsqldbLog
   export -f setupPipe_httpdLog
   export -f setupPipe_logging
   export -f setupPipe_shibdLog
