@@ -44,8 +44,8 @@ prep_quickstart() {
       export GROUPER_RUN_SHIB_SP=false
     fi
     if [ -z "$GROUPER_AUTO_DDL_UPTOVERSION" ]; then
-      echo "grouperContainer; INFO: (libraryPrep.sh-prep_quickstart) export GROUPER_AUTO_DDL_UPTOVERSION='v2.5.*'"    
-      export GROUPER_AUTO_DDL_UPTOVERSION='v2.5.*'
+      echo "grouperContainer; INFO: (libraryPrep.sh-prep_quickstart) export GROUPER_AUTO_DDL_UPTOVERSION='v2.6.*'"    
+      export GROUPER_AUTO_DDL_UPTOVERSION='v2.6.*'
     fi
     if [ -z "$GROUPER_UI_CONFIGURATION_EDITOR_SOURCEIPADDRESSES" ]; then 
       echo "grouperContainer; INFO: (libraryPrep.sh-prep_quickstart) export GROUPER_UI_CONFIGURATION_EDITOR_SOURCEIPADDRESSES='0.0.0.0/0'"    

@@ -39,7 +39,7 @@ setupFilesForComponent_ui() {
 
 setupFilesForComponent_quickstart() {
 
-    if [ ! -z "$GROUPERSYSTEM_QUICKSTART_PASS" ] && [ "$GROUPER_QUICKSTART" = 'true' ]
+    if [ ! -z "$GROUPERSYSTEM_QUICKSTART_PASS" ]
       then
         if [ "$GROUPER_UI_GROUPER_AUTH" = 'true' ]
           then
