@@ -50,7 +50,6 @@ setupFilesForProcess_shib() {
     
     if [ "$GROUPER_RUN_SHIB_SP" = "true" ]
       then
-        export LD_LIBRARY_PATH=/opt/shibboleth/lib64:$LD_LIBRARY_PATH
         echo "grouperContainer; INFO: (librarySetupFilesForProcess.sh-setupFilesForProcess_shib) Appending supervisord-shibsp.conf to supervisord.conf"
         cat /opt/tier-support/supervisord-shibsp.conf >> /opt/tier-support/supervisord.conf
         returnCode=$?
