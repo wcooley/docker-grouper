@@ -124,8 +124,10 @@ setupFiles_storeEnvVars() {
         echo "" >> /etc/bashrc  
         echo "export GROUPER_GSH_CHECK_USER=$GROUPER_GSH_CHECK_USER" >> /etc/bashrc  
         echo "export GROUPER_GSH_USER=$GROUPER_GSH_USER" >> /etc/bashrc  
-        echo "export JAVA_HOME=$JAVA_HOME" >> /etc/bashrc  
-        echo "export PATH=$JAVA_HOME/bin:\$PATH" >> /etc/bashrc  
+        if [ "$GROUPER_PUT_JAVA_HOME_IN_BASHRC" = "true" ]; then
+          echo "export JAVA_HOME=$GROUPER_JAVA_HOME" >> /etc/bashrc  
+          echo "export PATH=$GROUPER_JAVA_HOME/bin:\$PATH" >> /etc/bashrc
+        fi  
         echo "" >> /etc/bashrc  
         returnCode=$?
         echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_storeEnvVars)  echo env var script to /etc/bashrc, result: $returnCode"
