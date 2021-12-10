@@ -2,6 +2,7 @@
 
 setupFilesTomcat() {
   setupFilesTomcat_loggingSlf4j
+  setupFilesTomcat_log4j
   setupFilesTomcat_turnOnAjp
   setupFilesTomcat_supervisor
   setupFilesTomcat_authn
@@ -218,6 +219,20 @@ setupFilesTomcat_loggingSlf4j() {
 
 }
 
+setupFilesTomcat_log4j() {
+
+  rm -f /opt/tomee/bin/log4j-*
+  returnCode=$?
+  echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_log4j) rm -f /opt/tomee/bin/log4j-* , result: $returnCode"
+  if [ $returnCode != 0 ]; then exit $returnCode; fi
+
+  cp /opt/tier-support/log4j_fix/*.jar /opt/tomee/bin/
+  returnCode=$?
+  echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_log4j) cp /opt/tier-support/log4j_fix/*.jar /opt/tomee/bin/ , result: $returnCode"
+  if [ $returnCode != 0 ]; then exit $returnCode; fi
+
+}
+
 setupFilesTomcat_supervisor() {
 
   if [ "$GROUPER_RUN_TOMEE" = "true" ] && [ "$GROUPER_RUN_TOMCAT_NOT_SUPERVISOR" != "true" ]
@@ -274,6 +289,7 @@ setupFilesTomcat_unsetAll() {
   unset -f setupFilesTomcat_unsetAll
   unset -f setupFilesTomcat_accessLogs
   unset -f setupFilesTomcat_loggingSlf4j
+  unset -f setupFilesTomcat_log4j
   unset -f setupFilesTomcat_sessionTimeout
   unset -f setupFilesTomcat_turnOnAjp
 
@@ -290,6 +306,7 @@ setupFilesTomcat_exportAll() {
   export -f setupFilesTomcat_unsetAll
   export -f setupFilesTomcat_accessLogs
   export -f setupFilesTomcat_loggingSlf4j
+  export -f setupFilesTomcat_log4j
   export -f setupFilesTomcat_sessionTimeout
   export -f setupFilesTomcat_turnOnAjp
 }
