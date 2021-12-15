@@ -96,6 +96,13 @@ setupFiles_storeEnvVars() {
   echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_storeEnvVars) sed -i \"s|^declare -x |export |\" /opt/grouper/grouperEnv.sh, result: $returnCode"
   if [ $returnCode != 0 ]; then exit $returnCode; fi
 
+  echo "" >> /opt/grouper/grouperEnv.sh
+
+  echo "export JAVA_HOME=$GROUPER_JAVA_HOME" >> /opt/grouper/grouperEnv.sh
+  returnCode=$?
+  echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_storeEnvVars) echo \"export JAVA_HOME=$GROUPER_JAVA_HOME\" >> /opt/grouper/grouperEnv.sh, result: $returnCode"
+  if [ $returnCode != 0 ]; then exit $returnCode; fi
+
   if [ ! -f /home/tomcat/.bashrc ]
     then
       echo "grouperContainer; ERROR: (librarySetupFiles.sh-setupFiles_storeEnvVars) Why doesnt /home/tomcat/.bashrc exist????"
