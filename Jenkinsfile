@@ -55,7 +55,7 @@ pipeline {
                       docker.withRegistry('https://registry.hub.docker.com/',   "dockerhub-tier") {
                          script {
                            sh """
-                              docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 $maintainer/$imagename --build-arg GROUPER_CONTAINER_VERSION=$tag --no-cache .
+                              docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t $maintainer/$imagename --build-arg GROUPER_CONTAINER_VERSION=$tag --no-cache .
                              """
                             }
                         //baseImg = docker.build("$maintainer/$imagename", "--build-arg GROUPER_CONTAINER_VERSION=$tag --no-cache .")
