@@ -53,7 +53,12 @@ pipeline {
                   try{
                       // statically defining jenkins credential value dockerhub-tier
                       docker.withRegistry('https://registry.hub.docker.com/',   "dockerhub-tier") {
-                        baseImg = docker.build("$maintainer/$imagename", "--build-arg GROUPER_CONTAINER_VERSION=$tag --no-cache .")
+                         script {
+                           sh """
+                              docker build buildx $maintainer/$imagename --build-arg GROUPER_CONTAINER_VERSION=$tag --no-cache .
+                             """
+                            }
+                        //baseImg = docker.build("$maintainer/$imagename", "--build-arg GROUPER_CONTAINER_VERSION=$tag --no-cache .")
                       }
                       // test the environment 
                       // sh 'cd test-compose && ./compose.sh'
