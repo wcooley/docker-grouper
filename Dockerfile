@@ -1,5 +1,6 @@
 FROM centos:centos7 as installing
-RUN yum update -y \
+RUN cd /etc/yum.repos.d && wget https://repo.codeit.guru/codeit.el`rpm -q --qf "%{VERSION}" $(rpm -q --whatprovides redhat-release)`.repo \
+    && yum update -y \
     && yum install -y wget tar unzip dos2unix patch \
     && yum clean all
    
