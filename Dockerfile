@@ -1,5 +1,6 @@
 FROM centos:centos7 as installing
-RUN yum update -y \
+RUN cd /etc/yum.repos.d && wget https://repo.codeit.guru/codeit.el`rpm -q --qf "%{VERSION}" $(rpm -q --whatprovides redhat-release)`.repo \
+    && yum update -y \
     && yum install -y wget tar unzip dos2unix patch \
     && yum clean all
    
@@ -93,7 +94,10 @@ COPY container_files/usr-local-bin/ /usr/local/bin/
 RUN chmod +x /usr/local/bin/*.sh
 COPY container_files/httpd/* /etc/httpd/conf.d/
 COPY container_files/shibboleth/* /etc/shibboleth/
-RUN cp /dev/null /etc/httpd/conf.d/ssl.conf 
+RUN cp /dev/null /etc/httpd/conf.d/ssl.conf
+RUN rm -f /opt/tomee/bin/log4j-*
+COPY container_files/tier-support/log4j_fix/* /opt/tomee/bin/
+
 
 # this is to improve openshift
 RUN touch /opt/grouper/grouperEnv.sh \
