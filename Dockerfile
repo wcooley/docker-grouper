@@ -6,7 +6,7 @@ RUN yum update -y \
 RUN yum install -y wget tar unzip dos2unix patch
     
 ARG GROUPER_CONTAINER_VERSION
-ENV GROUPER_VERSION=2.5.59 \
+ENV GROUPER_VERSION=2.5.60 \
      GROUPER_CONTAINER_VERSION=$GROUPER_CONTAINER_VERSION
 
 # Install Corretto Java JDK
@@ -32,7 +32,7 @@ RUN echo 'Installing Grouper'; \
     cd /opt/grouper/$GROUPER_VERSION/ \
     && $JAVA_HOME/bin/java -cp :grouperInstaller.jar edu.internet2.middleware.grouperInstaller.GrouperInstaller
 FROM centos:centos7 as cleanup
-ENV GROUPER_VERSION=2.5.59 \
+ENV GROUPER_VERSION=2.5.60 \
     TOMEE_VERSION=7.0.0
 RUN mkdir -p /opt/grouper/grouperWebapp/
 RUN mkdir -p /opt/tomee/
@@ -95,6 +95,9 @@ RUN chmod +x /usr/local/bin/*.sh
 COPY container_files/httpd/* /etc/httpd/conf.d/
 COPY container_files/shibboleth/* /etc/shibboleth/
 RUN cp /dev/null /etc/httpd/conf.d/ssl.conf 
+RUN rm -f /opt/tomee/bin/log4j-*
+COPY container_files/tier-support/log4j_fix/* /opt/tomee/bin/
+
 
 # this is to improve openshift
 RUN touch /opt/grouper/grouperEnv.sh \
