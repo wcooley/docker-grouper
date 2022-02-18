@@ -99,7 +99,7 @@ COPY container_files/tier-support/log4j_fix/tomeeBin/log4j-* /opt/tomee/bin/
 RUN rm -f /opt/tomee/lib/slf4j-*
 COPY container_files/tier-support/log4j_fix/tomeeLib/slf4j-* /opt/tomee/lib/
 RUN rm -f /opt/grouper/grouperWebapp/WEB-INF/lib/slf4j-api-*
-COPY container_files/tier-support/log4j_fix/webinfLib/* /opt/grouper/grouperWebapp/WEB-INF/lib
+COPY container_files/tier-support/log4j_fix/webinfLib/* /opt/grouper/grouperWebapp/WEB-INF/lib/
 
 
 # this is to improve openshift
