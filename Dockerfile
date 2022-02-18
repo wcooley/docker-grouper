@@ -95,9 +95,10 @@ COPY container_files/httpd/* /etc/httpd/conf.d/
 COPY container_files/shibboleth/* /etc/shibboleth/
 RUN cp /dev/null /etc/httpd/conf.d/ssl.conf
 RUN rm -f /opt/tomee/bin/log4j-*
-COPY container_files/tier-support/log4j_fix/log4j-* /opt/tomee/bin/
+COPY container_files/tier-support/log4j_fix/tomeeBin/log4j-* /opt/tomee/bin/
 RUN rm -f /opt/tomee/lib/slf4j-*
-COPY container_files/tier-support/log4j_fix/slf4j-* /opt/tomee/lib/
+COPY container_files/tier-support/log4j_fix/tomeeLib/slf4j-* /opt/tomee/lib/
+COPY container_files/tier-support/log4j_fix/webinfLib/log4j-* /opt/grouper/grouperWebapp/WEB-INF/lib
 
 
 # this is to improve openshift
