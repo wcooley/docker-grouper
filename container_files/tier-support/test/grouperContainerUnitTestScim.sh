@@ -37,7 +37,7 @@ testContainerScim() {
   assertFileNotContains /etc/httpd/conf.d/ssl-enabled.conf cachain.pem
   assertFileContains /etc/httpd/conf.d/ssl-enabled.conf /etc/pki/tls/certs/localhost.crt
 
-  assertFileContains /opt/grouper/grouperWebapp/WEB-INF/classes/log4j.properties "grouper-scim;"
+  assertFileContains /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml "grouper-scim;"
 
   assertFileContains /etc/httpd/conf.d/grouper-www.conf "3600"
   assertFileNotContains /etc/httpd/conf.d/grouper-www.conf "__"

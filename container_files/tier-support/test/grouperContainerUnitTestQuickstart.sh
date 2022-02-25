@@ -42,7 +42,7 @@ testContainerQuickstart() {
 
   assertFileContains /opt/grouper/grouperWebapp/WEB-INF/classes/grouper.hibernate.properties GROUPERSYSTEM_QUICKSTART_PASS
 
-  assertFileContains /opt/grouper/grouperWebapp/WEB-INF/classes/log4j.properties "grouper;"
+  assertFileContains /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml "grouper;"
 
   assertFileContains /etc/httpd/conf.d/grouper-www.conf "3600"
   assertFileNotContains /etc/httpd/conf.d/grouper-www.conf "__"

@@ -40,29 +40,32 @@ setupFiles_rsyncSlashRoot() {
 }
 
 setupFiles_localLogging() {
-  if [ "$GROUPER_LOG_TO_HOST" = "true" ]
-    then
-      if [ "$GROUPER_ORIGFILE_LOG4J_PROPERTIES" = "true" ]; then
-        cp /opt/grouper/grouperWebapp/WEB-INF/classes/log4j.grouperContainerHost.properties /opt/grouper/grouperWebapp/WEB-INF/classes/log4j.properties
-        echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_localLogging) cp /opt/grouper/grouperWebapp/WEB-INF/classes/log4j.grouperContainerHost.properties /opt/grouper/grouperWebapp/WEB-INF/classes/log4j.properties, result: $?"
-      else
-        echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_localLogging) /opt/grouper/grouperWebapp/WEB-INF/classes/log4j.properties is not the original file so will not be edited"
-      fi
+  if [ "$GROUPER_LOG_TO_HOST" = "true" ]; then
+    sed -i "s|__FILE__||g" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml
+    echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_localLogging) sed -i \"s|__FILE__||g\" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml, result: $?"
+  else 
+    sed -i "s|__LOGPIPE__||g" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml
+    echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_localLogging) sed -i \"s|__LOGPIPE__||g\" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml, result: $?"
   fi
-  if [ -f /opt/grouper/grouperWebapp/WEB-INF/classes/log4j_additional.properties ]; then
-    echo >> /opt/grouper/grouperWebapp/WEB-INF/classes/log4j.properties
-    cat /opt/grouper/grouperWebapp/WEB-INF/classes/log4j_additional.properties >> /opt/grouper/grouperWebapp/WEB-INF/classes/log4j.properties
+  
+  if [ -f /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.additionalLoggers.xml.txt ]; then
+    additionalLoggersFile=`cat /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.additionalLoggers.xml.txt`
+    # replace quote, but then double escape the result for some reason.  this replaces quote with slash quote
+    additionalLoggersFile="$(sed s/\"/\\\\\\\"/g <<<$additionalLoggersFile)"
+    sed -i "s|<!--MORELOGGERS-->|$additionalLoggersFile|g" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml
     returnCode=$?
-    echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_localLogging) cat /opt/grouper/grouperWebapp/WEB-INF/classes/log4j_additional.properties >> /opt/grouper/grouperWebapp/WEB-INF/classes/log4j.properties, result: $returnCode"
+    echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_localLogging) sed -i \"s|<!--MORELOGGERS-->|$additionalLoggersFile|g\" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml, result: $returnCode"
     if [ $returnCode != 0 ]; then exit $returnCode; fi
-    
   fi
 
 }
 
 setupFiles_loggingPrefix() {
-    sed -i "s|__GROUPER_LOG_PREFIX__|$GROUPER_LOG_PREFIX|g" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j.properties
-    echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_loggingPrefix) Changing log prefix to $GROUPER_LOG_PREFIX in log4j.properties, result: $?"
+    sed -i "s|__GROUPER_LOG_PREFIX__|$GROUPER_LOG_PREFIX|g" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml
+    echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_loggingPrefix) Changing log prefix to $GROUPER_LOG_PREFIX in log4j2.xml, result: $?"
+
+    cp /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml /opt/tomee/conf/log4j2.xml
+    echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_loggingPrefix) cp /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml /opt/tomee/conf/log4j2.xml, result: $?"
 }
 
 setupFiles_chownDirs() {
@@ -194,7 +197,7 @@ setupFiles_analyzeOriginalFiles() {
       export GROUPER_ORIGFILE_SERVER_XML=false
     fi
 
-    setupFiles_originalFile /opt/grouper/grouperWebapp/WEB-INF/classes/log4j.properties
+    setupFiles_originalFile /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml
     original_file=$?
     if [ -z "$GROUPER_ORIGFILE_LOG4J_PROPERTIES" ] && [[ $original_file -eq 0 ]]
       then 

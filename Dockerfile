@@ -110,7 +110,7 @@ RUN touch /opt/grouper/grouperEnv.sh \
 
 # keep backup of files
 RUN mkdir -p /opt/tier-support/originalFiles ; \
-  cp /opt/grouper/grouperWebapp/WEB-INF/classes/log4j.properties /opt/tier-support/originalFiles 2>/dev/null ; \
+  cp /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml /opt/tier-support/originalFiles 2>/dev/null ; \
   cp /etc/httpd/conf/httpd.conf /opt/tier-support/originalFiles 2>/dev/null ; \
   cp /etc/httpd/conf.d/ssl-enabled.conf /opt/tier-support/originalFiles 2>/dev/null ; \
   cp /etc/httpd/conf.d/httpd-shib.conf /opt/tier-support/originalFiles 2>/dev/null ; \

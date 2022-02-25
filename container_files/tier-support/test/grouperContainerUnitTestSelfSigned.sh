@@ -42,8 +42,6 @@ testContainerSelfSigned() {
   assertFileContains /etc/httpd/conf.d/grouper-www.conf "RemoteIPTrustedProxy 10.0.2.16/28"
   
 
-  assertFileNotContains /opt/grouper/grouperWebapp/WEB-INF/classes/log4j.properties "/tmp/logpipe"
-
   assertEnvVar GROUPERSCIM_PROXY_PASS "#"
   assertEnvVar GROUPERSCIM_URL_CONTEXT "grouper-ws-scim"
   assertEnvVar GROUPERWS_PROXY_PASS "#"

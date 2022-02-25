@@ -44,7 +44,7 @@ testContainerWs() {
   assertFileContains /opt/tomee/conf/Catalina/localhost/grouper-ws.xml 'cookies="false"'
   assertFileContains /opt/tomee/conf/web.xml "<session-timeout>1</session-timeout>"
 
-  assertFileContains /opt/grouper/grouperWebapp/WEB-INF/classes/log4j.properties "grouper-ws;"
+  assertFileContains /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml "grouper-ws;"
 
   assertFileContains /etc/httpd/conf.d/grouper-www.conf "3600"
   assertFileNotContains /etc/httpd/conf.d/grouper-www.conf "__"
