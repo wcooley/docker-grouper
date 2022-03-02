@@ -22,6 +22,7 @@ testContainerSlashRoot() {
   echo 'whatever' > someDir/tmp/temp.txt
   mkdir -p someDir/opt/grouper/grouperWebapp/WEB-INF/classes
   echo 'someSettings' > someDir/opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.additionalLoggers.xml.txt
+  echo 'otherSettings' > someDir/opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.additionalAppenders.xml.txt
 
   docker run --detach --name $containerName --mount type=bind,src=$someDir,dst=/opt/grouper/slashRoot --publish 443:443 $imageName ui
   sleep $globalSleepSecondsAfterRun
@@ -29,6 +30,7 @@ testContainerSlashRoot() {
   assertFileExists /tmp/temp.txt
 
   assertFileContains /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml "someSettings"
+  assertFileContains /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml "otherSettings"
 
 
   #rm -rf someDir

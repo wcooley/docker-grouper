@@ -121,6 +121,16 @@ setupFilesApache_remoteip() {
       echo "grouperContainer; INFO: (librarySetupFilesApache.sh-setupFilesApache_remoteip) echo \"RemoteIPTrustedProxy $GROUPER_APACHE_REMOTE_IP_TRUSTED_PROXY\" >> /etc/httpd/conf.d/grouper-www.conf , result: $?"
       if [ $returnCode != 0 ]; then exit $returnCode; fi
   fi
+  if [ "$GROUPER_RUN_APACHE" = "true" ] && [ ! -z "$GROUPER_APACHE_REMOTE_IP_INTERNAL_PROXY" ] && [ "$GROUPER_APACHE_REMOTE_IP_INTERNAL_PROXY" != "" ] && [ -f /etc/httpd/conf.d/grouper-www.conf ]
+    then
+      echo "grouperContainer; INFO: (librarySetupFilesApache.sh-setupFilesApache_remoteip) Appending RemoteIPInternalProxy to grouper-www.conf"
+      echo >> /etc/httpd/conf.d/grouper-www.conf
+      echo "RemoteIPInternalProxy $GROUPER_APACHE_REMOTE_IP_INTERNAL_PROXY" >> /etc/httpd/conf.d/grouper-www.conf
+      returnCode=$?
+      echo >> /etc/httpd/conf.d/grouper-www.conf
+      echo "grouperContainer; INFO: (librarySetupFilesApache.sh-setupFilesApache_remoteip) echo \"RemoteIPInternalProxy $GROUPER_APACHE_REMOTE_IP_INTERNAL_PROXY\" >> /etc/httpd/conf.d/grouper-www.conf , result: $?"
+      if [ $returnCode != 0 ]; then exit $returnCode; fi
+  fi
 
 }
 

@@ -58,6 +58,16 @@ setupFiles_localLogging() {
     if [ $returnCode != 0 ]; then exit $returnCode; fi
   fi
 
+  if [ -f /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.additionalAppenders.xml.txt ]; then
+    additionalAppendersFile=`cat /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.additionalAppenders.xml.txt`
+    # replace quote, but then double escape the result for some reason.  this replaces quote with slash quote
+    additionalAppendersFile="$(sed s/\"/\\\\\\\"/g <<<$additionalAppendersFile)"
+    sed -i "s|<!--MOREAPPENDERS-->|$additionalAppendersFile|g" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml
+    returnCode=$?
+    echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_localLogging) sed -i \"s|<!--MOREAPPENDERS-->|$additionalAppendersFile|g\" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml, result: $returnCode"
+    if [ $returnCode != 0 ]; then exit $returnCode; fi
+  fi
+
 }
 
 setupFiles_loggingPrefix() {

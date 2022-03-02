@@ -50,7 +50,31 @@
             </Policies>
             <DefaultRolloverStrategy max="30" />
         </RollingFile>
-    
+
+        <File name="__LOGPIPE__grouper_ws" fileName="/tmp/logpipe">
+            <PatternLayout pattern="__GROUPER_LOG_PREFIX__;grouper_ws.log;${ENV};${USERTOKEN};${layout}"/>
+        </File>
+        <RollingFile name="__FILE__grouper_ws" fileName="/opt/grouper/logs/grouper_ws.log" filePattern="/opt/grouper/logs/grouper_ws.log.%d{yyyy-MM-dd}" >
+            <PatternLayout pattern="__GROUPER_LOG_PREFIX__;grouper_ws.log;${ENV};${USERTOKEN};${layout}"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1"/>
+            </Policies>
+            <DefaultRolloverStrategy max="30" />
+        </RollingFile>
+
+        <File name="__LOGPIPE__grouper_ws_longRunning" fileName="/tmp/logpipe">
+            <PatternLayout pattern="__GROUPER_LOG_PREFIX__;grouper_ws_longRunning.log;${ENV};${USERTOKEN};${layout}"/>
+        </File>
+        <RollingFile name="__FILE__grouper_ws_longRunning" fileName="/opt/grouper/logs/grouper_ws_longRunning.log" filePattern="/opt/grouper/logs/grouper_ws_longRunning.log.%d{yyyy-MM-dd}" >
+            <PatternLayout pattern="__GROUPER_LOG_PREFIX__;grouper_ws_longRunning.log;${ENV};${USERTOKEN};${layout}"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1"/>
+            </Policies>
+            <DefaultRolloverStrategy max="30" />
+        </RollingFile>
+        
+         <!--MOREAPPENDERS-->
+ 
     </Appenders>
     <Loggers>
         <Root level="error">
@@ -89,6 +113,14 @@
         <Logger name="edu.internet2.middleware.grouper.util.PerformanceLogger" level="info" additivity="false">
             <AppenderRef ref="grouper_error"/>
         </Logger>
+        
+        <Logger name="edu.internet2.middleware.grouper.ws.util.GrouperWsLog" level="off" additivity="false">
+            <AppenderRef ref="grouper_ws"/>
+        </Logger>
+        <Logger name="edu.internet2.middleware.grouper.ws.util.GrouperWsLongRunningLog" level="off" additivity="false">
+            <AppenderRef ref="grouper_ws_longRunning"/>
+        </Logger>
+        
         <!--MORELOGGERS-->
     </Loggers>
 </Configuration>
