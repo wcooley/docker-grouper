@@ -9,6 +9,7 @@ setupFilesTomcat() {
   setupFilesTomcat_accessLogs
   setupFilesTomcat_sessionTimeout
   setupFilesTomcat_ssl
+  setupFilesTomcat_sslCertsAnchors
 }
 
 
@@ -235,6 +236,37 @@ setupFilesTomcat_ssl() {
   fi
 }
 
+setupFilesTomcat_sslCertsAnchors() {
+
+    # the container user (we arent sure who this is) should be able to update root certs
+    # echo 'ALL ALL=NOPASSWD: /bin/update-ca-trust' | sudo EDITOR='tee -n' visudo
+
+    
+    if [ -n "$(ls -A /opt/grouper/certs/anchors/ 2>/dev/null)" ]; then
+  
+      amiroot=`whoami`
+      if [ "$amiroot" = "root" ]; then
+    
+        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_sslCertsAnchors) There are anchor certs in /opt/grouper/certs/anchors/ to process"
+        /bin/update-ca-trust
+        returnCode=$?
+        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_sslCertsAnchors) /bin/update-ca-trust , result=$returnCode"
+        if [ $returnCode != 0 ]
+        then
+          exit $returnCode
+        fi  
+        
+      else
+        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_sslCertsAnchors) There are anchor certs in /opt/grouper/certs/anchors/ to process but not running as root so run this in subimage: /bin/update-ca-trust"
+      fi
+      
+    else
+      echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_sslCertsAnchors) There are no anchor certs in /opt/grouper/certs/anchors/ to process"
+    fi
+    
+  fi
+}
+
 
 setupFilesTomcat_unsetAll() {
 
@@ -243,6 +275,7 @@ setupFilesTomcat_unsetAll() {
   unset -f setupFilesTomcat_context
   unset -f setupFilesTomcat_ports
   unset -f setupFilesTomcat_ssl
+  unset -f setupFilesTomcat_sslCertsAnchors
   unset -f setupFilesTomcat_supervisor
   unset -f setupFilesTomcat_unsetAll
   unset -f setupFilesTomcat_accessLogs
@@ -258,6 +291,7 @@ setupFilesTomcat_exportAll() {
   export -f setupFilesTomcat_context
   export -f setupFilesTomcat_ports
   export -f setupFilesTomcat_ssl
+  export -f setupFilesTomcat_sslCertsAnchors
   export -f setupFilesTomcat_supervisor
   export -f setupFilesTomcat_unsetAll
   export -f setupFilesTomcat_accessLogs

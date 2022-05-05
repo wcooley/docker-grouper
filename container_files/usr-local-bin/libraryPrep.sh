@@ -441,6 +441,11 @@ prep_finishBegin() {
       echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_APACHE_STATUS_PATH=/status_grouper/status"
       export GROUPER_APACHE_STATUS_PATH=/status_grouper/status
     fi
+
+    if [ -z "$GROUPER_GSH_JVMARGS" ] ; then 
+      echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_GSH_JVMARGS=\"-Djavax.net.ssl.trustStore=/etc/pki/java/cacerts\""
+      export GROUPER_GSH_JVMARGS="-Djavax.net.ssl.trustStore=/etc/pki/java/cacerts"
+    fi
     
     #Replace web.xml session timeout with env variable
     if [[ -z "$GROUPER_TOMCAT_SESSION_TIMEOUT_MINUTES" ]]; then

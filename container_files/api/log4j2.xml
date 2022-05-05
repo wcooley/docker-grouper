@@ -2,125 +2,174 @@
 <Configuration status="info">
     <Properties>
         <Property name="layout">%d{ISO8601}: [%t] %-5p %C{1}.%M(%L) - %x - %m%n</Property>
+        <Property name="env">__ENV__</Property>
+        <Property name="usertoken">__USERTOKEN__</Property>
+        <Property name="grouplogprefix">__GROUPER_LOG_PREFIX__</Property>
     </Properties>
     <Appenders>
-        <File name="CATALINA" fileName="/tmp/logpipe">
-            <PatternLayout pattern="tomee;catalina.out;${env:ENV};${env:USERTOKEN};${layout}"/>
-        </File>
         <Console name="stderr" target="SYSTEM_ERR">
-          <PatternLayout pattern="__GROUPER_LOG_PREFIX__;${ENV};${USERTOKEN};${layout}"/>
+          <PatternLayout pattern="${grouplogprefix};${env}${usertoken}${layout}"/>
         </Console>
-        <File name="__LOGPIPE__grouper_error" fileName="/tmp/logpipe">
-            <PatternLayout pattern="__GROUPER_LOG_PREFIX__;grouper_error.log;${ENV};${USERTOKEN};${layout}"/>
-        </File>
-        <RollingFile name="__FILE__grouper_error" fileName="/opt/grouper/logs/grouper.log" filePattern="/opt/grouper/logs/grouper.log.%d{yyyy-MM-dd}" >
-            <PatternLayout pattern="__GROUPER_LOG_PREFIX__;grouper_error.log;${ENV};${USERTOKEN};${layout}"/>
+        <RollingFile name="file_catalina" fileName="/opt/grouper/logs/catalina.out" filePattern="/opt/grouper/logs/catalina.out.%d{yyyy-MM-dd}" >
+            <PatternLayout pattern="${grouplogprefix};catalina.out;${env}${usertoken}${layout}"/>
             <Policies>
                 <TimeBasedTriggeringPolicy interval="1"/>
             </Policies>
             <DefaultRolloverStrategy max="30" />
         </RollingFile>
-        <File name="__LOGPIPE__grouper_daemon" fileName="/tmp/logpipe">
-            <PatternLayout pattern="__GROUPER_LOG_PREFIX__;grouperDaemon.log;${ENV};${USERTOKEN};${layout}"/>
-        </File>
-        <RollingFile name="__FILE__grouper_daemon" fileName="/opt/grouper/logs/grouperDaemon.log" filePattern="/opt/grouper/logs/grouperDaemon.log.%d{yyyy-MM-dd}" >
-            <PatternLayout pattern="__GROUPER_LOG_PREFIX__;grouperDaemon.log;${ENV};${USERTOKEN};${layout}"/>
+        <RollingFile name="file_grouper_error" fileName="/opt/grouper/logs/grouper.log" filePattern="/opt/grouper/logs/grouper.log.%d{yyyy-MM-dd}" >
+            <PatternLayout pattern="${grouplogprefix};grouper_error.log;${env}${usertoken}${layout}"/>
             <Policies>
                 <TimeBasedTriggeringPolicy interval="1"/>
             </Policies>
             <DefaultRolloverStrategy max="30" />
         </RollingFile>
-        <File name="__LOGPIPE__grouper_pspng" fileName="/tmp/logpipe">
-            <PatternLayout pattern="__GROUPER_LOG_PREFIX__;pspng.log;${ENV};${USERTOKEN};${layout}"/>
-        </File>
-        <RollingFile name="__FILE__grouper_pspng" fileName="/opt/grouper/logs/pspng.log" filePattern="/opt/grouper/logs/pspng.log.%d{yyyy-MM-dd}" >
-            <PatternLayout pattern="__GROUPER_LOG_PREFIX__;pspng.log;${ENV};${USERTOKEN};${layout}"/>
+        <RollingFile name="file_grouper_daemon" fileName="/opt/grouper/logs/grouperDaemon.log" filePattern="/opt/grouper/logs/grouperDaemon.log.%d{yyyy-MM-dd}" >
+            <PatternLayout pattern="${grouplogprefix};grouperDaemon.log;${env}${usertoken}${layout}"/>
             <Policies>
                 <TimeBasedTriggeringPolicy interval="1"/>
             </Policies>
             <DefaultRolloverStrategy max="30" />
         </RollingFile>
-        <File name="__LOGPIPE__grouper_provisioning" fileName="/tmp/logpipe">
-            <PatternLayout pattern="__GROUPER_LOG_PREFIX__;provisioning.log;${ENV};${USERTOKEN};${layout}"/>
-        </File>
-        <RollingFile name="__FILE__grouper_provisioning" fileName="/opt/grouper/logs/provisioning.log" filePattern="/opt/grouper/logs/provisioning.log.%d{yyyy-MM-dd}" >
-            <PatternLayout pattern="__GROUPER_LOG_PREFIX__;provisioning.log;${ENV};${USERTOKEN};${layout}"/>
+        <RollingFile name="file_grouper_pspng" fileName="/opt/grouper/logs/pspng.log" filePattern="/opt/grouper/logs/pspng.log.%d{yyyy-MM-dd}" >
+            <PatternLayout pattern="${grouplogprefix};pspng.log;${env}${usertoken}${layout}"/>
             <Policies>
                 <TimeBasedTriggeringPolicy interval="1"/>
             </Policies>
             <DefaultRolloverStrategy max="30" />
         </RollingFile>
-
-        <File name="__LOGPIPE__grouper_ws" fileName="/tmp/logpipe">
-            <PatternLayout pattern="__GROUPER_LOG_PREFIX__;grouper_ws.log;${ENV};${USERTOKEN};${layout}"/>
-        </File>
-        <RollingFile name="__FILE__grouper_ws" fileName="/opt/grouper/logs/grouper_ws.log" filePattern="/opt/grouper/logs/grouper_ws.log.%d{yyyy-MM-dd}" >
-            <PatternLayout pattern="__GROUPER_LOG_PREFIX__;grouper_ws.log;${ENV};${USERTOKEN};${layout}"/>
+        <RollingFile name="file_grouper_provisioning" fileName="/opt/grouper/logs/provisioning.log" filePattern="/opt/grouper/logs/provisioning.log.%d{yyyy-MM-dd}" >
+            <PatternLayout pattern="${grouplogprefix};provisioning.log;${env}${usertoken}${layout}"/>
             <Policies>
                 <TimeBasedTriggeringPolicy interval="1"/>
             </Policies>
             <DefaultRolloverStrategy max="30" />
         </RollingFile>
-
-        <File name="__LOGPIPE__grouper_ws_longRunning" fileName="/tmp/logpipe">
-            <PatternLayout pattern="__GROUPER_LOG_PREFIX__;grouper_ws_longRunning.log;${ENV};${USERTOKEN};${layout}"/>
-        </File>
-        <RollingFile name="__FILE__grouper_ws_longRunning" fileName="/opt/grouper/logs/grouper_ws_longRunning.log" filePattern="/opt/grouper/logs/grouper_ws_longRunning.log.%d{yyyy-MM-dd}" >
-            <PatternLayout pattern="__GROUPER_LOG_PREFIX__;grouper_ws_longRunning.log;${ENV};${USERTOKEN};${layout}"/>
+        <RollingFile name="file_grouper_ws" fileName="/opt/grouper/logs/grouper_ws.log" filePattern="/opt/grouper/logs/grouper_ws.log.%d{yyyy-MM-dd}" >
+            <PatternLayout pattern="${grouplogprefix};grouper_ws.log;${env}${usertoken}${layout}"/>
             <Policies>
                 <TimeBasedTriggeringPolicy interval="1"/>
             </Policies>
             <DefaultRolloverStrategy max="30" />
         </RollingFile>
+        <RollingFile name="file_grouper_ws_longRunning" fileName="/opt/grouper/logs/grouper_ws_longRunning.log" filePattern="/opt/grouper/logs/grouper_ws_longRunning.log.%d{yyyy-MM-dd}" >
+            <PatternLayout pattern="${grouplogprefix};grouper_ws_longRunning.log;${env}${usertoken}${layout}"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1"/>
+            </Policies>
+            <DefaultRolloverStrategy max="30" />
+        </RollingFile>
+        <File name="logpipe_catalina" fileName="/tmp/logpipe">
+            <PatternLayout pattern="tomee;catalina.out;${sys:ENV}${sys:USERTOKEN}${layout}"/>
+        </File>
+        <File name="logpipe_grouper_error" fileName="/tmp/logpipe">
+            <PatternLayout pattern="${grouplogprefix};grouper_error.log;${env}${usertoken}${layout}"/>
+        </File>
+        <File name="logpipe_grouper_daemon" fileName="/tmp/logpipe">
+            <PatternLayout pattern="${grouplogprefix};grouperDaemon.log;${env}${usertoken}${layout}"/>
+        </File>
+        <File name="logpipe_grouper_pspng" fileName="/tmp/logpipe">
+            <PatternLayout pattern="${grouplogprefix};pspng.log;${env}${usertoken}${layout}"/>
+        </File>
+        <File name="logpipe_grouper_provisioning" fileName="/tmp/logpipe">
+            <PatternLayout pattern="${grouplogprefix};provisioning.log;${env}${usertoken}${layout}"/>
+        </File>
+        <File name="logpipe_grouper_ws" fileName="/tmp/logpipe">
+            <PatternLayout pattern="${grouplogprefix};grouper_ws.log;${env}${usertoken}${layout}"/>
+        </File>
+        <File name="logpipe_grouper_ws_longRunning" fileName="/tmp/logpipe">
+            <PatternLayout pattern="${grouplogprefix};grouper_ws_longRunning.log;${env}${usertoken}${layout}"/>
+        </File>
         
          <!--MOREAPPENDERS-->
  
     </Appenders>
     <Loggers>
         <Root level="error">
-            <AppenderRef ref="grouper_error"/>
+            <AppenderRef ref="logpipe_grouper_error"/>
+            <AppenderRef ref="file_grouper_error"/>
         </Root>
         <Logger name="org.apache.catalina" level="info" additivity="false">
-            <AppenderRef ref="CATALINA"/>
+            <AppenderRef ref="logpipe_catalina" />
+            <AppenderRef ref="file_catalina"/>
         </Logger>
         <Logger name="edu.internet2.middleware" level="warn" additivity="false">
-            <AppenderRef ref="grouper_error"/>
+            <AppenderRef ref="logpipe_grouper_error"/>
+            <AppenderRef ref="file_grouper_error"/>
         </Logger>
         <Logger name="edu.internet2.middleware.grouper.app.loader.GrouperLoaderLog" level="debug" additivity="false">
-            <AppenderRef ref="grouper_daemon"/>
+            <AppenderRef ref="logpipe_grouper_daemon"/>
+            <AppenderRef ref="file_grouper_daemon"/>
         </Logger>
-        <Logger name="edu.internet2.middleware.grouper.pspng" level="info" additivity="false">
-            <AppenderRef ref="grouper_pspng"/>
+        <Logger name="edu.internet2.middleware.grouper.pspng" level="warn" additivity="false">
+            <AppenderRef ref="logpipe_grouper_pspng"/>
+            <AppenderRef ref="file_grouper_pspng"/>
         </Logger>
         <Logger name="edu.internet2.middleware.grouper.app.provisioning.GrouperProvisioningObjectLog" level="debug" additivity="false">
-            <AppenderRef ref="grouper_provisioning"/>
+            <AppenderRef ref="logpipe_grouper_provisioning"/>
+            <AppenderRef ref="file_grouper_provisioning"/>
         </Logger>
         <Logger name="edu.internet2.middleware.grouper.app.syncToGrouper.SyncToGrouperFromSqlDaemon" level="debug" additivity="false">
-            <AppenderRef ref="grouper_error"/>
+            <AppenderRef ref="logpipe_grouper_error"/>
+            <AppenderRef ref="file_grouper_error"/>
         </Logger>
         <Logger name="edu.internet2.middleware.grouper.app.provisioning.GrouperProvisioningLogCommands" level="debug" additivity="false">
-            <AppenderRef ref="grouper_error"/>
+            <AppenderRef ref="logpipe_grouper_error"/>
+            <AppenderRef ref="file_grouper_error"/>
         </Logger>
         <Logger name="edu.internet2.middleware.grouper.stem.StemViewPrivilegeEsbListener" level="debug" additivity="false">
-            <AppenderRef ref="grouper_error"/>
+            <AppenderRef ref="logpipe_grouper_error"/>
+            <AppenderRef ref="file_grouper_error"/>
         </Logger>
         <Logger name="edu.internet2.middleware.grouper.stem.StemViewPrivilegeFullDaemonLogic" level="debug" additivity="false">
-            <AppenderRef ref="grouper_error"/>
+            <AppenderRef ref="logpipe_grouper_error"/>
+            <AppenderRef ref="file_grouper_error"/>
         </Logger>
         <Logger name="org.apache.tools.ant" level="warn" additivity="false">
-            <AppenderRef ref="grouper_error"/>
+            <AppenderRef ref="logpipe_grouper_error"/>
+            <AppenderRef ref="file_grouper_error"/>
         </Logger>
         <Logger name="edu.internet2.middleware.grouper.util.PerformanceLogger" level="info" additivity="false">
-            <AppenderRef ref="grouper_error"/>
+            <AppenderRef ref="logpipe_grouper_error"/>
+            <AppenderRef ref="file_grouper_error"/>
         </Logger>
-        
         <Logger name="edu.internet2.middleware.grouper.ws.util.GrouperWsLog" level="off" additivity="false">
-            <AppenderRef ref="grouper_ws"/>
+            <AppenderRef ref="logpipe_grouper_ws"/>
+            <AppenderRef ref="file_grouper_ws"/>
         </Logger>
         <Logger name="edu.internet2.middleware.grouper.ws.util.GrouperWsLongRunningLog" level="off" additivity="false">
-            <AppenderRef ref="grouper_ws_longRunning"/>
+            <AppenderRef ref="logpipe_grouper_ws_longRunning"/>
+            <AppenderRef ref="file_grouper_ws_longRunning"/>
         </Logger>
-        
+        <Logger name="edu.internet2.middleware.grouper.ui.customUi.CustomUiEngine" level="debug" additivity="false">
+            <AppenderRef ref="logpipe_grouper_error"/>
+            <AppenderRef ref="file_grouper_error"/>
+        </Logger>
+        <Logger name="edu.upenn.isc.pennGrouper.o365" level="debug" additivity="false">
+            <AppenderRef ref="logpipe_grouper_error"/>
+            <AppenderRef ref="file_grouper_error"/>
+        </Logger>
+        <Logger name="edu.internet2.middleware.grouper.app.remedy.GrouperRemedyLog" level="debug" additivity="false">
+            <AppenderRef ref="logpipe_grouper_provisioning"/>
+            <AppenderRef ref="file_grouper_provisioning"/>
+        </Logger>
+        <Logger name="edu.internet2.middleware.grouper.app.remedy.digitalMarketplace.GrouperDigitalMarketplaceLog" level="debug" additivity="false">
+            <AppenderRef ref="logpipe_grouper_provisioning"/>
+            <AppenderRef ref="file_grouper_provisioning"/>
+        </Logger>
+        <Logger name="edu.internet2.middleware.grouperBox.GrouperBoxLog" level="debug" additivity="false">
+            <AppenderRef ref="logpipe_grouper_provisioning"/>
+            <AppenderRef ref="file_grouper_provisioning"/>
+        </Logger>
+        <Logger name="edu.internet2.middleware.grouperClient.jdbc.tableSync.GcTableSyncLog" level="debug" additivity="false">
+            <AppenderRef ref="logpipe_grouper_error"/>
+            <AppenderRef ref="file_grouper_error"/>
+        </Logger>
+        <Logger name="edu.internet2.middleware.grouper.app.zoom" level="debug" additivity="false">
+            <AppenderRef ref="logpipe_grouper_provisioning"/>
+            <AppenderRef ref="file_grouper_provisioning"/>
+        </Logger>
+
         <!--MORELOGGERS-->
     </Loggers>
 </Configuration>
