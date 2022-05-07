@@ -10,6 +10,7 @@ setupFilesTomcat() {
   setupFilesTomcat_sessionTimeout
   setupFilesTomcat_ssl
   setupFilesTomcat_sslCertsAnchors
+  setupFilesTomcat_sslCertsClient
 }
 
 
@@ -267,6 +268,49 @@ setupFilesTomcat_sslCertsAnchors() {
   fi
 }
 
+setupFilesTomcat_sslCertsClient() {
+
+    if [ -n "$(ls -A /opt/grouper/certs/client/*.pem 2>/dev/null)" ]; then
+
+      chmod +w /usr/lib/jvm/java/jre/lib/security/cacerts
+      returnCode=$?
+      echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_sslCertsAnchors) chmod +w /usr/lib/jvm/java/jre/lib/security/cacerts , result=$returnCode"
+      if [ $returnCode != 0 ]
+      then
+        exit $returnCode
+      fi  
+  
+      for fileName in /opt/grouper/certs/client/*.pem; do
+        [ -f "$fileName" ] || break
+
+        fileNameNoExtension=$(basename -- "$fileName")
+        fileNameNoExtension="${fileNameNoExtension%.*}"
+        /usr/lib/jvm/java/bin/keytool -import -noprompt -keystore /usr/lib/jvm/java/jre/lib/security/cacerts -storepass changeit -alias "$fileNameNoExtension" -file "$fileName"
+
+        returnCode=$?
+        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_sslCertsAnchors) /usr/lib/jvm/java/bin/keytool -import -noprompt -keystore /usr/lib/jvm/java/jre/lib/security/cacerts -storepass changeit -alias \"$fileNameNoExtension\" -file \"$fileName\" , result=$returnCode"
+        if [ $returnCode != 0 ]
+        then
+          exit $returnCode
+        fi  
+        
+      done
+
+      chmod -w /usr/lib/jvm/java/jre/lib/security/cacerts        
+      returnCode=$?
+      echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_sslCertsAnchors) chmod -w /usr/lib/jvm/java/jre/lib/security/cacerts , result=$returnCode"
+      if [ $returnCode != 0 ]
+      then
+        exit $returnCode
+      fi  
+      
+    else
+      echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_sslCertsClient) There are no client certs in /opt/grouper/certs/client/*.pem to process"
+    fi
+    
+  fi
+}
+
 
 setupFilesTomcat_unsetAll() {
 
@@ -276,6 +320,7 @@ setupFilesTomcat_unsetAll() {
   unset -f setupFilesTomcat_ports
   unset -f setupFilesTomcat_ssl
   unset -f setupFilesTomcat_sslCertsAnchors
+  unset -f setupFilesTomcat_sslCertsClient
   unset -f setupFilesTomcat_supervisor
   unset -f setupFilesTomcat_unsetAll
   unset -f setupFilesTomcat_accessLogs
@@ -292,6 +337,7 @@ setupFilesTomcat_exportAll() {
   export -f setupFilesTomcat_ports
   export -f setupFilesTomcat_ssl
   export -f setupFilesTomcat_sslCertsAnchors
+  export -f setupFilesTomcat_sslCertsClient
   export -f setupFilesTomcat_supervisor
   export -f setupFilesTomcat_unsetAll
   export -f setupFilesTomcat_accessLogs

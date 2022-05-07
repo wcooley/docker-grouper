@@ -105,8 +105,10 @@ COPY container_files/tier-support/log4j_fix/webinfLib/* /opt/grouper/grouperWeba
 # this is to improve openshift
 RUN touch /opt/grouper/grouperEnv.sh \
     && mkdir -p /opt/tomee/work/Catalina/localhost/ \
-    && chown -R tomcat:root  /opt/grouper/ /etc/httpd/conf/ /home/tomcat/ /opt/tomee/ /usr/local/bin /etc/httpd/conf.d/ /opt/tier-support/ \
-    && chmod -R g+rwx /opt/grouper/ /etc/httpd/conf/ /home/tomcat/ /opt/tomee/ /usr/local/bin /etc/httpd/conf.d/ /opt/tier-support/
+    && mkdir -p /opt/grouper/certs/client \
+    && mkdir -p /opt/grouper/certs/anchors \
+    && chown -R tomcat:root  /opt/grouper/ /etc/httpd/conf/ /home/tomcat/ /opt/tomee/ /usr/local/bin /etc/httpd/conf.d/ /opt/tier-support/ /usr/lib/jvm/java/jre/lib/security/cacerts \
+    && chmod -R g+rwx /opt/grouper/ /etc/httpd/conf/ /home/tomcat/ /opt/tomee/ /usr/local/bin /etc/httpd/conf.d/ /opt/tier-support/ /usr/lib/jvm/java/jre/lib/security/cacerts
 
 # keep backup of files
 RUN mkdir -p /opt/tier-support/originalFiles ; \
