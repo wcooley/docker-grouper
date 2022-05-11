@@ -17,7 +17,7 @@ pipeline {
                     } else if (env.BRANCH_NAME == "2.6.9") {
                        // skip it for now
                        currentBuild.setResult("SUCCESS")
-                       sh 'exit 1'       
+                       sh 'exit 0'       
                     } else {
                        tag = env.BRANCH_NAME
                     }
