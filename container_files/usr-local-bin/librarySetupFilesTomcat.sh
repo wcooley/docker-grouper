@@ -307,7 +307,6 @@ setupFilesTomcat_sslCertsClient() {
       echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_sslCertsClient) There are no client certs in /opt/grouper/certs/client/*.pem to process"
     fi
     
-  fi
 }
 
 
