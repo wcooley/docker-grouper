@@ -265,7 +265,6 @@ setupFilesTomcat_sslCertsAnchors() {
       echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_sslCertsAnchors) There are no anchor certs in /opt/grouper/certs/anchors/ to process"
     fi
     
-  fi
 }
 
 setupFilesTomcat_sslCertsClient() {
