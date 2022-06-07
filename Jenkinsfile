@@ -14,9 +14,9 @@ pipeline {
                     imagename = imagename()
                     if(env.BRANCH_NAME == "main") {
                        tag = "latest"
-                    } else if (env.BRANCH_NAME == "2.6.9") {
-                       // skip it for now
-                       sh 'exit -1'       
+    //                } else if (env.BRANCH_NAME == "2.6.9") {
+    //                   // skip it for now
+    //                   sh 'exit -1'       
                     } else {
                        tag = env.BRANCH_NAME
                     }
