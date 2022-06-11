@@ -249,6 +249,15 @@ setupFilesTomcat_sslCertsAnchors() {
       if [ "$amiroot" = "root" ]; then
     
         echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_sslCertsAnchors) There are anchor certs in /opt/grouper/certs/anchors/ to process"
+        
+        /usr/bin/cp -v /opt/grouper/certs/anchors/* /etc/pki/ca-trust/source/anchors
+        returnCode=$?
+        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_sslCertsAnchors) /usr/bin/cp -v /opt/grouper/certs/anchors/* /etc/pki/ca-trust/source/anchors , result=$returnCode"
+        if [ $returnCode != 0 ]
+        then
+          exit $returnCode
+        fi  
+        
         /bin/update-ca-trust
         returnCode=$?
         echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_sslCertsAnchors) /bin/update-ca-trust , result=$returnCode"
@@ -271,9 +280,9 @@ setupFilesTomcat_sslCertsClient() {
 
     if [ -n "$(ls -A /opt/grouper/certs/client/*.pem 2>/dev/null)" ]; then
 
-      chmod +w /usr/lib/jvm/java/jre/lib/security/cacerts
+      chmod u+w /usr/lib/jvm/java/jre/lib/security/cacerts
       returnCode=$?
-      echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_sslCertsAnchors) chmod +w /usr/lib/jvm/java/jre/lib/security/cacerts , result=$returnCode"
+      echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_sslCertsAnchors) chmod u+w /usr/lib/jvm/java/jre/lib/security/cacerts , result=$returnCode"
       if [ $returnCode != 0 ]
       then
         exit $returnCode
@@ -295,9 +304,9 @@ setupFilesTomcat_sslCertsClient() {
         
       done
 
-      chmod -w /usr/lib/jvm/java/jre/lib/security/cacerts        
+      chmod u-w /usr/lib/jvm/java/jre/lib/security/cacerts        
       returnCode=$?
-      echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_sslCertsAnchors) chmod -w /usr/lib/jvm/java/jre/lib/security/cacerts , result=$returnCode"
+      echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_sslCertsAnchors) chmod u-w /usr/lib/jvm/java/jre/lib/security/cacerts , result=$returnCode"
       if [ $returnCode != 0 ]
       then
         exit $returnCode
