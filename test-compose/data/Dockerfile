@@ -7,10 +7,12 @@ COPY container_files/conf/ /opt/grouper/grouperWebapp/WEB-INF/classes/
 
 RUN yum install -y epel-release \
     && yum update -y \    
-    && yum install -y 389-ds-base mariadb-server mariadb \
+    && yum install -y mariadb-server mariadb \
 #    && yum install -y 389-ds-base 389-admin 389-adminutil mariadb-server mariadb \
     && yum clean all \
     && rm -rf /var/cache/yum
+    
+RUN dnf install 389-ds-base
 
 RUN mysql_install_db --force \
     && chown -R mysql:mysql /var/lib/mysql/ \
