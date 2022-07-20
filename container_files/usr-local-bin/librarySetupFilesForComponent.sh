@@ -5,7 +5,7 @@ setupFilesForComponent_ws() {
   # copy files to their appropriate locations based on passed in flags
   if [ "$GROUPER_WS" = "true" ]
      then
-       cp -r /opt/grouper/grouperWebapp/WEB-INF/libWs/* /opt/grouper/grouperWebapp/WEB-INF/lib/
+       cp -ra /opt/grouper/grouperWebapp/WEB-INF/libWs/* /opt/grouper/grouperWebapp/WEB-INF/lib/
        returnCode=$?
        echo "grouperContainer; INFO: (librarySetupFilesForComponent.sh-setupFilesForComponent_ws) cp -r /opt/grouper/grouperWebapp/WEB-INF/libWs/* /opt/grouper/grouperWebapp/WEB-INF/lib/ , result: $returnCode"
        if [ $returnCode != 0 ]; then exit $returnCode; fi
@@ -17,7 +17,7 @@ setupFilesForComponent_scim() {
 
   if [ "$GROUPER_SCIM" = "true" ]
      then
-       cp -r /opt/grouper/grouperWebapp/WEB-INF/libScim/* /opt/grouper/grouperWebapp/WEB-INF/lib/
+       cp -ra /opt/grouper/grouperWebapp/WEB-INF/libScim/* /opt/grouper/grouperWebapp/WEB-INF/lib/
        returnCode=$?
        echo "grouperContainer; INFO: (librarySetupFilesForComponent.sh-setupFilesForComponent_scim) cp -r /opt/grouper/grouperWebapp/WEB-INF/libScim/* /opt/grouper/grouperWebapp/WEB-INF/lib/ , result: $returnCode"
        if [ $returnCode != 0 ]; then exit $returnCode; fi
@@ -29,7 +29,7 @@ setupFilesForComponent_ui() {
 
   if [ "$GROUPER_UI" = "true" ] || [ "$GROUPER_DAEMON" = "true" ]
      then
-       cp -r /opt/grouper/grouperWebapp/WEB-INF/libUiAndDaemon/* /opt/grouper/grouperWebapp/WEB-INF/lib/
+       cp -ra /opt/grouper/grouperWebapp/WEB-INF/libUiAndDaemon/* /opt/grouper/grouperWebapp/WEB-INF/lib/
        returnCode=$?
        echo "grouperContainer; INFO: (librarySetupFilesForComponent.sh-setupFilesForComponent_ui) cp -r /opt/grouper/grouperWebapp/WEB-INF/libUiAndDaemon/* /opt/grouper/grouperWebapp/WEB-INF/lib/ , result: $returnCode"
        if [ $returnCode != 0 ]; then exit $returnCode; fi
