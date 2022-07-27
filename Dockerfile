@@ -1,4 +1,4 @@
-FROM centos:centos7 as installing
+FROM rockylinux/rockylinux:8 as installing
 RUN yum update -y \
     && yum install -y wget tar unzip dos2unix patch \
     && yum clean all
@@ -51,12 +51,12 @@ RUN cd /opt/tomee/; \
 COPY container_files/api/* /opt/grouper/grouperWebapp/WEB-INF/classes/
 COPY container_files/tomee/ /opt/tomee/
 
-FROM tier/shibboleth_sp:3.1.0_04172020
+FROM tier/shibboleth_sp:3.2.3_08092021_rocky
 LABEL author="tier-packaging@internet2.edu <tier-packaging@internet2.edu>" \
       Vendor="TIER" \
       ImageType="Grouper" \
       ImageName=$imagename \
-      ImageOS=centos7
+      ImageOS=rocky8
       
 ARG GROUPER_CONTAINER_VERSION
 
