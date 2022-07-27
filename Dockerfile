@@ -65,7 +65,7 @@ ENV PATH=$PATH:$JAVA_HOME/bin \
     GROUPER_CONTAINER_VERSION=$GROUPER_CONTAINER_VERSION
 RUN ln -sf /usr/share/zoneinfo/UTC /etc/localtime
 RUN yum update -y \
-    && yum install -y cron logrotate python3-pip rsync sudo patch supervisor \
+    && yum install -y logrotate python3-pip rsync sudo patch supervisor \
     && pip3 install --upgrade setuptools \
     && yum clean -y all
 #COPY --from=installing $JAVA_HOME $JAVA_HOME
