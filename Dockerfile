@@ -1,10 +1,8 @@
 FROM rockylinux/rockylinux:8 as installing
-RUN yum update -y \
-    && yum install -y wget tar unzip dos2unix patch \
-    && yum clean all
-   
-RUN yum install -y wget tar unzip dos2unix patch
-    
+RUN dnf upgrade -y \
+    && dnf install -y wget tar unzip dos2unix patch \
+    && dnf clean all
+       
 ARG GROUPER_CONTAINER_VERSION
 ENV GROUPER_VERSION=2.6.13 \
      GROUPER_CONTAINER_VERSION=$GROUPER_CONTAINER_VERSION
@@ -64,10 +62,10 @@ ENV PATH=$PATH:$JAVA_HOME/bin \
     GROUPER_HOME=/opt/grouper/grouperWebapp/WEB-INF \
     GROUPER_CONTAINER_VERSION=$GROUPER_CONTAINER_VERSION
 RUN ln -sf /usr/share/zoneinfo/UTC /etc/localtime
-RUN yum update -y \
-    && yum install -y logrotate python3-pip rsync sudo patch supervisor \
+RUN dnf upgrade -y \
+    && dnf install -y logrotate python3-pip rsync sudo patch supervisor \
     && pip3 install --upgrade setuptools \
-    && yum clean -y all
+    && dnf clean -y all
 #COPY --from=installing $JAVA_HOME $JAVA_HOME
 # do this again so its in rpm history
 ARG CORRETTO_URL_PERM=https://corretto.aws/downloads/latest/amazon-corretto-8-x64-linux-jdk.rpm
