@@ -101,7 +101,8 @@ COPY container_files/tier-support/log4j_fix/tomeeLib/slf4j-* /opt/tomee/lib/
 RUN rm -f /opt/grouper/grouperWebapp/WEB-INF/lib/slf4j-api-*
 COPY container_files/tier-support/log4j_fix/webinfLib/* /opt/grouper/grouperWebapp/WEB-INF/lib/
 COPY container_files/certs/* /opt/grouper/certs/
-
+RUN rm -f /opt/grouper/grouperWebapp/WEB-INF/grouperUi2/index/index.jsp
+COPY container_files/index.jsp /opt/grouper/grouperWebapp/WEB-INF/grouperUi2/index/
 
 # this is to improve openshift
 RUN touch /opt/grouper/grouperEnv.sh \
