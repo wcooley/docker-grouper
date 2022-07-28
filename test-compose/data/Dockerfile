@@ -30,7 +30,7 @@ RUN mysql_install_db --force \
     && mysql grouper < /seed-data/sisData.sql
 
 RUN useradd ldapadmin \
-    && rm -fr /var/lock /usr/lib/systemd/system \
+    # && rm -fr /var/lock /usr/lib/systemd/system \
     # The 389-ds setup will fail because the hostname can't reliable be determined, so we'll bypass it and then install. \
     && sed -i 's/checkHostname {/checkHostname {\nreturn();/g' /usr/lib64/dirsrv/perl/DSUtil.pm \
     # Not doing SELinux \
