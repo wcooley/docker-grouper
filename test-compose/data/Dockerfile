@@ -10,7 +10,7 @@ RUN dnf install -y epel-release \
     && dnf clean all 
 
 RUN dnf -y module enable 389-ds \
-    && dnf -y install 389-ds-base 389-ds-base-legacy-tools
+    && dnf -y install 389-ds-base 389-ds-base-legacy-tools mariadb-server mariadb
     
 RUN mysql_install_db --force \
     && chown -R mysql:mysql /var/lib/mysql/ \
