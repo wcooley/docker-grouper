@@ -37,7 +37,7 @@ RUN useradd ldapadmin \
     # && sed -i 's/updateSelinuxPolicy($inf);//g' /usr/lib64/dirsrv/perl/* \
     # Do not restart at the end \
     # && sed -i '/if (@errs = startServer($inf))/,/}/d' /usr/lib64/dirsrv/perl/* \
-    && setup-ds.pl --file /seed-data/ds-setup.inf \
+    && setup-ds.pl --silent --file /seed-data/ds-setup.inf \
     && /usr/sbin/ns-slapd -D /etc/dirsrv/slapd-dir \ 
     && while ! curl -s ldap://localhost:389 > /dev/null; do echo waiting for ldap to start; sleep 1; done; \
     ldapadd -H ldap:/// -f /seed-data/users.ldif -x -D "cn=Directory Manager" -w password
