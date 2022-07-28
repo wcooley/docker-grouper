@@ -6,7 +6,7 @@ COPY container_files/seed-data/ /seed-data/
 COPY container_files/conf/ /opt/grouper/grouperWebapp/WEB-INF/classes/
 
 RUN dnf install -y epel-release \
-    && dnf update -y 
+    && dnf update -y \
     && dnf clean all 
 
 RUN dnf -y module enable 389-ds \
