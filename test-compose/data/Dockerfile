@@ -10,7 +10,7 @@ RUN dnf install -y epel-release \
     && dnf clean all 
 
 RUN dnf -y module enable 389-ds \
-    && dnf -y install 389-ds-base 389-ds-base-legacy-tools mariadb-server mariadb
+    && dnf -y install 389-ds-base 389-ds-base-legacy-tools mariadb-server mariadb nc
     
 RUN mysql_install_db --force \
     && chown -R mysql:mysql /var/lib/mysql/ \
@@ -30,8 +30,7 @@ RUN mysql_install_db --force \
     && mysql grouper < /seed-data/sisData.sql
 
 RUN useradd ldapadmin \
-    && rm -fr /var/lock \
-    # /usr/lib/systemd/system \
+    && rm -fr /var/lock /usr/lib/systemd/system \
     # The 389-ds setup will fail because the hostname can't reliable be determined, so we'll bypass it and then install. \
     && sed -i 's/checkHostname {/checkHostname {\nreturn();/g' /usr/lib64/dirsrv/perl/DSUtil.pm \
     # Not doing SELinux \
@@ -40,13 +39,13 @@ RUN useradd ldapadmin \
     && sed -i '/if (@errs = startServer($inf))/,/}/d' /usr/lib64/dirsrv/perl/* \
     && setup-ds.pl --silent --file /seed-data/ds-setup.inf \
     && /usr/sbin/ns-slapd -D /etc/dirsrv/slapd-dir \ 
-    && while ! curl -s ldap://localhost:389 > /dev/null; do echo waiting for ldap to start; sleep 1; done; \
+    && while ! nc -z -v 127.0.0.1 389 > /dev/null; do echo waiting for ldap to start; sleep 1; done; \
     ldapadd -H ldap:/// -f /seed-data/users.ldif -x -D "cn=Directory Manager" -w password
 
 RUN (/usr/sbin/ns-slapd -D /etc/dirsrv/slapd-dir &) \
-    && while ! curl -s ldap://localhost:389 > /dev/null; do echo waiting for ldap to start; sleep 1; done; \
+    && while ! nc -z -v 127.0.0.1 389 > /dev/null; do echo waiting for ldap to start; sleep 1; done; \
     (mysqld_safe & ) \
-    && while ! curl -s localhost:3306 > /dev/null; do echo waiting for mysqld to start; sleep 1; done; \
+    && while ! nc -z -v 127.0.0.1 3306 > /dev/null; do echo waiting for mysqld to start; sleep 1; done; \
     /opt/grouper/grouperWebapp/WEB-INF/bin/gsh.sh -registry -check -runscript -noprompt \
     &&  /opt/grouper/grouperWebapp/WEB-INF/bin/gsh.sh /seed-data/bootstrap.gsh
 
