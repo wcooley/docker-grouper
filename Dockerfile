@@ -6,7 +6,7 @@ RUN yum update -y \
 RUN yum install -y wget tar unzip dos2unix patch
     
 ARG GROUPER_CONTAINER_VERSION
-ENV GROUPER_VERSION=2.6.13 \
+ENV GROUPER_VERSION=2.6.14 \
      GROUPER_CONTAINER_VERSION=$GROUPER_CONTAINER_VERSION
 
 # Install Corretto Java JDK
@@ -32,7 +32,7 @@ RUN echo 'Installing Grouper'; \
     cd /opt/grouper/$GROUPER_VERSION/ \
     && $JAVA_HOME/bin/java -cp :grouperInstaller.jar edu.internet2.middleware.grouperInstaller.GrouperInstaller
 FROM centos:centos7 as cleanup
-ENV GROUPER_VERSION=2.6.13 \
+ENV GROUPER_VERSION=2.6.14 \
     TOMEE_VERSION=7.0.0
 RUN mkdir -p /opt/grouper/grouperWebapp/
 RUN mkdir -p /opt/tomee/
@@ -101,8 +101,8 @@ COPY container_files/tier-support/log4j_fix/tomeeLib/slf4j-* /opt/tomee/lib/
 RUN rm -f /opt/grouper/grouperWebapp/WEB-INF/lib/slf4j-api-*
 COPY container_files/tier-support/log4j_fix/webinfLib/* /opt/grouper/grouperWebapp/WEB-INF/lib/
 COPY container_files/certs/* /opt/grouper/certs/
-RUN rm -f /opt/grouper/grouperWebapp/WEB-INF/grouperUi2/index/index.jsp
-COPY container_files/index.jsp /opt/grouper/grouperWebapp/WEB-INF/grouperUi2/index/
+#RUN rm -f /opt/grouper/grouperWebapp/WEB-INF/grouperUi2/index/index.jsp
+#COPY container_files/index.jsp /opt/grouper/grouperWebapp/WEB-INF/grouperUi2/index/
 
 # this is to improve openshift
 RUN touch /opt/grouper/grouperEnv.sh \
