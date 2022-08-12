@@ -109,8 +109,10 @@ RUN touch /opt/grouper/grouperEnv.sh \
     && mkdir -p /opt/tomee/work/Catalina/localhost/ \
     && mkdir -p /opt/grouper/certs/client \
     && mkdir -p /opt/grouper/certs/anchors \
-    && chown -R tomcat:root  /opt/grouper/ /etc/httpd/conf/ /home/tomcat/ /opt/tomee/ /usr/local/bin /etc/httpd/conf.d/ /opt/tier-support/ /usr/lib/jvm/java/jre/lib/security/cacerts \
-    && chmod -R g+rwx /opt/grouper/ /etc/httpd/conf/ /home/tomcat/ /opt/tomee/ /usr/local/bin /etc/httpd/conf.d/ /opt/tier-support/ /usr/lib/jvm/java/jre/lib/security/cacerts
+    && chown tomcat:root  /opt/grouper/ /etc/httpd/conf/ /home/tomcat/ /opt/tomee/ /usr/local/bin /etc/httpd/conf.d/ /opt/tier-support/ /usr/lib/jvm/java/jre/lib/security/cacerts \
+    && chown -R tomcat:root $(find /opt/grouper/ /etc/httpd/conf/ /home/tomcat/ /opt/tomee/ /usr/local/bin /etc/httpd/conf.d/ /opt/tier-support/ ! -user tomcat -o ! -group root -print) \
+    && chmod g+rwx /opt/grouper/ /etc/httpd/conf/ /home/tomcat/ /opt/tomee/ /usr/local/bin /etc/httpd/conf.d/ /opt/tier-support/ /usr/lib/jvm/java/jre/lib/security/cacerts \
+    && chmod -R g+rwx $(find /opt/grouper/ /etc/httpd/conf/ /home/tomcat/ /opt/tomee/ /usr/local/bin /etc/httpd/conf.d/ /opt/tier-support/ ! -perm -g+rwx )
 
 # keep backup of files
 RUN mkdir -p /opt/tier-support/originalFiles ; \
