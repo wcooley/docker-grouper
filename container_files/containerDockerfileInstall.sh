@@ -215,7 +215,7 @@ if [ $lines -ne 0 ]; then
   echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) chmod -R g+rw \$(find /opt/ /etc/httpd/conf/ /home/tomcat/ /usr/local/bin /etc/httpd/conf.d/ -type f ! -perm -g+rw ), result: $returnCode"
 fi
 
-#rm -rf /opt/container_files
-#returnCode=$?
-#echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) rm -rf /opt/container_files, result: $returnCode"
+rm -rf /opt/container_files
+returnCode=$?
+echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) rm -rf /opt/container_files, result: $returnCode"
 

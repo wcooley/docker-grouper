@@ -20,11 +20,7 @@ ENV GROUPER_VERSION=2.6.14 \
     PATH=$PATH:$JAVA_HOME/bin \
     GROUPER_HOME=/opt/grouper/grouperWebapp/WEB-INF
 
-# use this one when building the container for real.
-COPY --chown=tomcat:root --chmod=664 container_files/ /opt/container_files/
-
-# use this one when viewing output with buildkit disabled
-#COPY container_files/ /opt/container_files/
+COPY container_files/ /opt/container_files/
 
 # only needed if not building grouper (testing container)
 #RUN mkdir -p /opt/grouper/$GROUPER_VERSION/container/tomee
