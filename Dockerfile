@@ -112,7 +112,8 @@ RUN touch /opt/grouper/grouperEnv.sh \
     && chown tomcat:root  /opt/grouper/ /etc/httpd/conf/ /home/tomcat/ /opt/tomee/ /usr/local/bin /etc/httpd/conf.d/ /opt/tier-support/ /usr/lib/jvm/java/jre/lib/security/cacerts \
     && chown -R tomcat:root $(find /opt/grouper/ /etc/httpd/conf/ /home/tomcat/ /opt/tomee/ /usr/local/bin /etc/httpd/conf.d/ /opt/tier-support/ ! -user tomcat -o ! -group root -print) \
     && chmod g+rwx /opt/grouper/ /etc/httpd/conf/ /home/tomcat/ /opt/tomee/ /usr/local/bin /etc/httpd/conf.d/ /opt/tier-support/ /usr/lib/jvm/java/jre/lib/security/cacerts \
-    && chmod -R g+rwx $(find /opt/grouper/ /etc/httpd/conf/ /home/tomcat/ /opt/tomee/ /usr/local/bin /etc/httpd/conf.d/ /opt/tier-support/ ! -perm -g+rwx )
+    && chmod -R g+rwx $(find /opt/grouper/ /etc/httpd/conf/ /home/tomcat/ /opt/tomee/ /usr/local/bin /etc/httpd/conf.d/ /opt/tier-support/ ! -perm -g+rwx ) \
+    && chmod a+x chmod +x /opt/grouper/*.sh 
 
 # keep backup of files
 RUN mkdir -p /opt/tier-support/originalFiles ; \
