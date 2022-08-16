@@ -48,23 +48,19 @@ setupFiles_localLogging() {
     echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_localLogging) sed -i \"s|__LOGPIPE__||g\" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml, result: $?"
   fi
   
-  if [ -f /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.additionalLoggers.xml.txt ]; then
-    additionalLoggersFile=`cat /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.additionalLoggers.xml.txt`
-    # replace quote, but then double escape the result for some reason.  this replaces quote with slash quote
-    additionalLoggersFile="$(sed s/\"/\\\\\\\"/g <<<$additionalLoggersFile)"
-    sed -i "s|<!--MORELOGGERS-->|$additionalLoggersFile|g" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml
+  additionalLoggersFile=/opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.additionalLoggers.xml.txt
+  if [ -f $additionalLoggersFile ]; then
+    sed -i "/<!--MORELOGGERS-->/r $additionalLoggersFile" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml
     returnCode=$?
-    echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_localLogging) sed -i \"s|<!--MORELOGGERS-->|$additionalLoggersFile|g\" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml, result: $returnCode"
+    echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_localLogging) sed -i '/<!--MORELOGGERS-->/r $additionalLoggersFile' /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml, result: $returnCode"
     if [ $returnCode != 0 ]; then exit $returnCode; fi
   fi
 
-  if [ -f /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.additionalAppenders.xml.txt ]; then
-    additionalAppendersFile=`cat /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.additionalAppenders.xml.txt`
-    # replace quote, but then double escape the result for some reason.  this replaces quote with slash quote
-    additionalAppendersFile="$(sed s/\"/\\\\\\\"/g <<<$additionalAppendersFile)"
-    sed -i "s|<!--MOREAPPENDERS-->|$additionalAppendersFile|g" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml
+  additionalAppendersFile=/opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.additionalAppenders.xml.txt
+  if [ -f $additionalAppendersFile ]; then
+    sed -i "/<!--MOREAPPENDERS-->/r $additionalAppendersFile" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml
     returnCode=$?
-    echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_localLogging) sed -i \"s|<!--MOREAPPENDERS-->|$additionalAppendersFile|g\" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml, result: $returnCode"
+    echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_localLogging) sed -i '/<!--MOREAPPENDERS-->/r $additionalAppendersFile' /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml, result: $returnCode"
     if [ $returnCode != 0 ]; then exit $returnCode; fi
   fi
 
