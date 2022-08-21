@@ -12,12 +12,14 @@ testContainerQuickstart() {
   echo
   echo '################'
   echo Running container as quickstart
-  echo "docker run --detach --name $containerName --publish 443:443 -e GROUPER_MORPHSTRING_ENCRYPT_KEY=abcdefg12345dontUseThis \ "
-  echo "-e GROUPERSYSTEM_QUICKSTART_PASS=thisPassIsCopyrightedDontUse $imageName quickstart"
+  echo "docker-compose up"
   echo '################'
   echo
 
-  docker run --detach --name $containerName --publish 443:443 -e GROUPER_MORPHSTRING_ENCRYPT_KEY=abcdefg12345dontUseThis -e GROUPERSYSTEM_QUICKSTART_PASS=thisPassIsCopyrightedDontUse $imageName quickstart
+  cp docker-compose.yaml.txt docker-compose.yaml
+  sed -i "s|IMAGE_VERSION|$imageName|g" docker-compose.yaml
+  
+  docker-compose up
   sleep $globalSleepSecondsAfterRun
 
   assertFileExists /opt/grouper/grouperWebapp/WEB-INF/libWs/axis2-kernel-1.6.4.jar
@@ -145,5 +147,7 @@ testContainerQuickstart() {
   containerCommandResultEquals "ps -ef | grep root | grep awk | grep httpd | wc -l" 1
   containerCommandResultEquals "ps -ef | grep root | grep awk | grep tomee | wc -l" 1
 
+  docker-compose down
+  rm docker-compose.yaml
 }
 export -f testContainerQuickstart

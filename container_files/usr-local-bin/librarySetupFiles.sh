@@ -78,15 +78,10 @@ setupFiles_chownDirs() {
     # do this last
     if [ "$GROUPER_CHOWN_DIRS" = "true" ]
       then
-        chown tomcat:root /opt/grouper /opt/tomee
+        /opt/container_files/containerDockerfileInstallPermissions.sh tomcat root
         returnCode=$?
-        echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_chownDirs) chown tomcat:root /opt/grouper /opt/tomee, result: $returnCode"
-        
-        chown -R tomcat:root $(find /opt/grouper /opt/tomee ! -user tomcat -o ! -group root -print)
-        returnCode=$?
-        echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_chownDirs) chown -R tomcat:root \$(find /opt/grouper /opt/tomee ! -user tomcat -o ! -group root -print), result: $returnCode"
-        # dont fail on chown
-        #if [ $returnCode != 0 ]; then exit $returnCode; fi
+        echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_chownDirs) /opt/container_files/containerDockerfileInstallPermissions.sh tomcat root, result: $returnCode"
+        if [ $returnCode != 0 ]; then exit $returnCode; fi
     fi
 }
 
