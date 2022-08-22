@@ -15,7 +15,7 @@ ENV GROUPER_VERSION=2.6.15 \
     GROUPER_HOME=/opt/grouper/grouperWebapp/WEB-INF
 
 RUN yum update -y \
-    && yum install -y cron logrotate python3-pip rsync sudo patch supervisor wget tar unzip dos2unix \
+    && yum install -y logrotate python3-pip rsync sudo patch supervisor wget tar unzip dos2unix \
     && pip3 install --upgrade setuptools \
     && yum clean -y all \
     && groupadd -r tomcat \
