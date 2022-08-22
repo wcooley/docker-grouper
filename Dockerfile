@@ -1,10 +1,10 @@
-FROM tier/shibboleth_sp:3.1.0_04172020
+FROM tier/shibboleth_sp:3.2.3_08092021_rocky
 
 LABEL author="tier-packaging@internet2.edu <tier-packaging@internet2.edu>" \
       Vendor="TIER" \
       ImageType="Grouper" \
       ImageName=$imagename \
-      ImageOS=centos7
+      ImageOS=rocky8
       
 ARG GROUPER_CONTAINER_VERSION
 
