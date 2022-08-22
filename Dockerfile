@@ -28,23 +28,30 @@ ARG CORRETTO_URL_PERM=https://corretto.aws/downloads/latest/amazon-corretto-8-x6
 ARG CORRETTO_RPM=amazon-corretto-8-x64-linux-jdk.rpm
 
 # if we are doing layers for caching while developing the container, can call run from here and not from containreDockerfileInstall.sh...
-COPY container_files/containerDockerfileInstallJava.sh /opt/container_files/
-COPY container_files/morphString.properties /opt/container_files/
-COPY container_files/grouper.installer.properties /opt/container_files/
-COPY container_files/containerDockerfileInstallGrouper.sh /opt/container_files/
+#COPY container_files/containerDockerfileInstallJava.sh /opt/container_files/
+#COPY container_files/morphString.properties /opt/container_files/
+#COPY container_files/grouper.installer.properties /opt/container_files/
+#COPY container_files/containerDockerfileInstallGrouper.sh /opt/container_files/
+
+#RUN cd /tmp \
+#    && chmod +x /opt/container_files/*.sh \
+#    && find /opt/container_files/ -type f -name "*.sh" -print0 | xargs -0 dos2unix \
+#    && /opt/container_files/containerDockerfileInstallJava.sh $CORRETTO_URL_PERM $CORRETTO_RPM $JAVA_HOME $GROUPER_VERSION \
+#    && /opt/container_files/containerDockerfileInstallGrouper.sh $CORRETTO_URL_PERM $CORRETTO_RPM $JAVA_HOME $GROUPER_VERSION 
+
+# real copy command (if not caching), uncomment this and change comments of COPY above to work on install script
+COPY container_files/ /opt/container_files/
+
+#RUN cd /tmp \
+#    && chmod +x /opt/container_files/*.sh \
+#    && find /opt/container_files/ -type f -name "*.sh" -print0 | xargs -0 dos2unix \
+#    && /opt/container_files/containerDockerfileInstall.sh $CORRETTO_URL_PERM $CORRETTO_RPM $JAVA_HOME $GROUPER_VERSION
 
 RUN cd /tmp \
     && chmod +x /opt/container_files/*.sh \
     && find /opt/container_files/ -type f -name "*.sh" -print0 | xargs -0 dos2unix \
     && /opt/container_files/containerDockerfileInstallJava.sh $CORRETTO_URL_PERM $CORRETTO_RPM $JAVA_HOME $GROUPER_VERSION \
-    && /opt/container_files/containerDockerfileInstallGrouper.sh $CORRETTO_URL_PERM $CORRETTO_RPM $JAVA_HOME $GROUPER_VERSION
-
-# real copy command (if not caching), uncomment this and change comments of COPY above to work on install script
-COPY container_files/ /opt/container_files/
-
-RUN cd /tmp \
-    && chmod +x /opt/container_files/*.sh \
-    && find /opt/container_files/ -type f -name "*.sh" -print0 | xargs -0 dos2unix \
+    && /opt/container_files/containerDockerfileInstallGrouper.sh $CORRETTO_URL_PERM $CORRETTO_RPM $JAVA_HOME $GROUPER_VERSION \
     && /opt/container_files/containerDockerfileInstall.sh $CORRETTO_URL_PERM $CORRETTO_RPM $JAVA_HOME $GROUPER_VERSION
 
 
@@ -58,7 +65,7 @@ WORKDIR /opt/grouper/grouperWebapp/WEB-INF/
 EXPOSE 80 443
 HEALTHCHECK NONE
 
- ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 ## uncomment ping, and comment out other entrypoint to just have a simple runnable container
 #ENTRYPOINT ["ping"]
 #CMD ["google.com"]
