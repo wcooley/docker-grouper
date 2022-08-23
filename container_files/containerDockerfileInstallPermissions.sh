@@ -64,12 +64,9 @@ if [ $lines -ne 0 ]; then
   echo "grouperDockerfile; INFO: (containerDockerfileInstallPermissions.sh) chmod +x \$(find /opt/container_files/ /opt/grouper/ /opt/tier/ /opt/tier-support/ /opt/tomee/ /etc/httpd/conf/ /home/tomcat/ /etc/httpd/conf.d/ -type f -name \"*.sh\" ! -perm -o+x), result: $returnCode"
 fi
 
-lines=$(find /usr/local/bin -type f -name "*.sh" -exec file "{}" ";"   | grep CRLF | cut -d: -f1 | wc -l)
-if [ $lines -ne 0 ]; then 
-  dos2unix $(find /usr/local/bin -type f -name "*.sh" -exec file "{}" ";"   | grep CRLF | cut -d: -f1)
-  returnCode=$?
-  echo "grouperDockerfile; INFO: (containerDockerfileInstallPermissions.sh) dos2unix \$(find /usr/local/bin -type f -name \"*.sh\" -exec file \"{}\" \";\"   | grep CRLF | cut -d: -f1), result: $returnCode"
-fi
+/opt/container_files/containerDockerfileInstallDos2unix.sh /usr/local/bin
+returnCode=$?
+echo "grouperDockerfile; INFO: (containerDockerfileInstallPermissions.sh) /opt/container_files/containerDockerfileInstallDos2unix.sh /usr/local/bin, result: $returnCode"
 
 find /usr/local/bin/ -type f -print0 | xargs -0 dos2unix
 returnCode=$?

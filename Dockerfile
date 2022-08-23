@@ -35,7 +35,7 @@ ARG CORRETTO_RPM=amazon-corretto-8-x64-linux-jdk.rpm
 
 #RUN cd /tmp \
 #    && chmod +x /opt/container_files/*.sh \
-#    && if [ $(find /opt/container_files -type f -name "*.sh" -exec file "{}" ";"   | grep CRLF | cut -d: -f1 | wc -l) -ne 0 ]; then dos2unix $(find /opt/container_files -type f -name "*.sh" -exec file "{}" ";"   | grep CRLF | cut -d: -f1)  ; fi; \
+#    && /opt/container_files/containerDockerfileInstallDos2unix.sh /opt/container_files \
 #    && /opt/container_files/containerDockerfileInstallJava.sh $CORRETTO_URL_PERM $CORRETTO_RPM $JAVA_HOME $GROUPER_VERSION \
 #    && /opt/container_files/containerDockerfileInstallGrouper.sh $CORRETTO_URL_PERM $CORRETTO_RPM $JAVA_HOME $GROUPER_VERSION 
 
@@ -44,12 +44,12 @@ COPY container_files/ /opt/container_files/
 
 #RUN cd /tmp \
 #    && chmod +x /opt/container_files/*.sh \
-#    && if [ $(find /opt/container_files -type f -name "*.sh" -exec file "{}" ";"   | grep CRLF | cut -d: -f1 | wc -l) -ne 0 ]; then dos2unix $(find /opt/container_files -type f -name "*.sh" -exec file "{}" ";"   | grep CRLF | cut -d: -f1)  ; fi; \
+#    && /opt/container_files/containerDockerfileInstallDos2unix.sh /opt/container_files \
 #    && /opt/container_files/containerDockerfileInstall.sh $CORRETTO_URL_PERM $CORRETTO_RPM $JAVA_HOME $GROUPER_VERSION
 
 RUN cd /tmp \
     && chmod +x /opt/container_files/*.sh \
-    && if [ $(find /opt/container_files -type f -name "*.sh" -exec file "{}" ";"   | grep CRLF | cut -d: -f1 | wc -l) -ne 0 ]; then dos2unix $(find /opt/container_files -type f -name "*.sh" -exec file "{}" ";"   | grep CRLF | cut -d: -f1)  ; fi; \
+    && /opt/container_files/containerDockerfileInstallDos2unix.sh /opt/container_files \
     && /opt/container_files/containerDockerfileInstallJava.sh $CORRETTO_URL_PERM $CORRETTO_RPM $JAVA_HOME $GROUPER_VERSION \
     && /opt/container_files/containerDockerfileInstallGrouper.sh $CORRETTO_URL_PERM $CORRETTO_RPM $JAVA_HOME $GROUPER_VERSION \
     && /opt/container_files/containerDockerfileInstall.sh $CORRETTO_URL_PERM $CORRETTO_RPM $JAVA_HOME $GROUPER_VERSION
