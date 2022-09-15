@@ -1,4 +1,4 @@
-FROM rockylinux/rockylinux:8 as installing
+FROM --platform=$TARGETPLATFORM rockylinux:8 as installing
 RUN dnf upgrade -y \
     && dnf install -y wget tar unzip dos2unix patch \
     && dnf clean all
@@ -9,14 +9,21 @@ ENV GROUPER_VERSION=2.6.15 \
 
 # Install Corretto Java JDK
 #Corretto download page: https://docs.aws.amazon.com/corretto/latest/corretto-8-ug/downloads-list.html
-ARG CORRETTO_URL_PERM=https://corretto.aws/downloads/latest/amazon-corretto-8-x64-linux-jdk.rpm
-ARG CORRETTO_RPM=amazon-corretto-8-x64-linux-jdk.rpm
-COPY container_files/java-corretto/corretto-signing-key.pub .
-RUN curl -O -L $CORRETTO_URL_PERM \
-    && rpm --import corretto-signing-key.pub \
-    && rpm -K $CORRETTO_RPM \
-    && rpm -i $CORRETTO_RPM \
-    && rm -r corretto-signing-key.pub $CORRETTO_RPM
+
+
+RUN rpm --import https://yum.corretto.aws/corretto.key \
+    && curl -L -o /etc/yum.repos.d/corretto.repo https://yum.corretto.aws/corretto.repo \
+    && yum install -y java-1.8.0-amazon-corretto-devel
+
+### old way of installing
+###### ARG CORRETTO_URL_PERM=https://corretto.aws/downloads/latest/amazon-corretto-8-x64-linux-jdk.rpm
+###### ARG CORRETTO_RPM=amazon-corretto-8-x64-linux-jdk.rpm
+###### COPY container_files/java-corretto/corretto-signing-key.pub .
+###### RUN curl -O -L $CORRETTO_URL_PERM \
+######     && rpm --import corretto-signing-key.pub \
+######     && rpm -K $CORRETTO_RPM \
+######     && rpm -i $CORRETTO_RPM \
+######     && rm -r corretto-signing-key.pub $CORRETTO_RPM
 ENV JAVA_HOME=/usr/lib/jvm/java-1.8.0-amazon-corretto
 
 RUN echo 'Downloading Grouper Installer...' \
@@ -29,7 +36,7 @@ RUN echo 'Installing Grouper'; \
     PATH=$PATH:$JAVA_HOME/bin; \
     cd /opt/grouper/$GROUPER_VERSION/ \
     && $JAVA_HOME/bin/java -cp :grouperInstaller.jar edu.internet2.middleware.grouperInstaller.GrouperInstaller
-FROM centos:centos7 as cleanup
+FROM --platform=$TARGETPLATFORM rockylinux:8 as cleanup
 ENV GROUPER_VERSION=2.6.15 \
     TOMEE_VERSION=7.0.0
 RUN mkdir -p /opt/grouper/grouperWebapp/
@@ -49,7 +56,7 @@ RUN cd /opt/tomee/; \
 COPY container_files/api/* /opt/grouper/grouperWebapp/WEB-INF/classes/
 COPY container_files/tomee/ /opt/tomee/
 
-FROM tier/shibboleth_sp:3.2.3_08092021_rocky
+FROM --platform=$TARGETPLATFORM rockylinux:8 
 LABEL author="tier-packaging@internet2.edu <tier-packaging@internet2.edu>" \
       Vendor="TIER" \
       ImageType="Grouper" \
@@ -62,20 +69,39 @@ ENV PATH=$PATH:$JAVA_HOME/bin \
     GROUPER_HOME=/opt/grouper/grouperWebapp/WEB-INF \
     GROUPER_CONTAINER_VERSION=$GROUPER_CONTAINER_VERSION
 RUN ln -sf /usr/share/zoneinfo/UTC /etc/localtime
-RUN dnf upgrade -y \
-    && dnf install -y logrotate python3-pip rsync sudo patch supervisor \
-    && pip3 install --upgrade setuptools \
+RUN dnf upgrade -y 
+
+RUN dnf install -y logrotate rsync sudo patch 
+RUN dnf install -y python3-pip
+RUN pip3 install --upgrade setuptools \
     && dnf clean -y all
+
+
+
+# Note: the following commands are temporary, taken from the SP container until it has arm support
+RUN rm -fr /var/cache/yum/* && yum clean all && yum -y install --setopt=tsflags=nodocs epel-release && yum -y update && \
+    yum -y install net-tools wget curl tar unzip mlocate logrotate strace telnet man vim rsyslog cronie httpd mod_ssl dos2unix supervisor && \
+    yum clean all
+
+# end SP 
+
+
+
 #COPY --from=installing $JAVA_HOME $JAVA_HOME
 # do this again so its in rpm history
-ARG CORRETTO_URL_PERM=https://corretto.aws/downloads/latest/amazon-corretto-8-x64-linux-jdk.rpm
-ARG CORRETTO_RPM=amazon-corretto-8-x64-linux-jdk.rpm
-COPY container_files/java-corretto/corretto-signing-key.pub .
-RUN curl -O -L $CORRETTO_URL_PERM \
-    && rpm --import corretto-signing-key.pub \
-    && rpm -K $CORRETTO_RPM \
-    && rpm -i $CORRETTO_RPM \
-    && rm -r corretto-signing-key.pub $CORRETTO_RPM
+##### old way 
+##### ARG CORRETTO_URL_PERM=https://corretto.aws/downloads/latest/amazon-corretto-8-x64-linux-jdk.rpm
+##### ARG CORRETTO_RPM=amazon-corretto-8-x64-linux-jdk.rpm
+##### COPY container_files/java-corretto/corretto-signing-key.pub .
+##### RUN curl -O -L $CORRETTO_URL_PERM \
+#####     && rpm --import corretto-signing-key.pub \
+#####     && rpm -K $CORRETTO_RPM \
+#####     && rpm -i $CORRETTO_RPM \
+#####     && rm -r corretto-signing-key.pub $CORRETTO_RPM
+
+RUN rpm --import https://yum.corretto.aws/corretto.key \
+    && curl -L -o /etc/yum.repos.d/corretto.repo https://yum.corretto.aws/corretto.repo \
+    && yum install -y java-1.8.0-amazon-corretto-devel
 ENV JAVA_HOME=/usr/lib/jvm/java-1.8.0-amazon-corretto
 
 COPY --from=cleanup /opt/tomee/ /opt/tomee/
