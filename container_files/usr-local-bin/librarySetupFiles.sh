@@ -40,14 +40,6 @@ setupFiles_rsyncSlashRoot() {
 }
 
 setupFiles_localLogging() {
-  if [ "$GROUPER_LOG_TO_HOST" = "true" ]; then
-    sed -i "s|__FILE__||g" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml
-    echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_localLogging) sed -i \"s|__FILE__||g\" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml, result: $?"
-  else 
-    sed -i "s|__LOGPIPE__||g" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml
-    echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_localLogging) sed -i \"s|__LOGPIPE__||g\" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml, result: $?"
-  fi
-  
   additionalLoggersFile=/opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.additionalLoggers.xml.txt
   if [ -f $additionalLoggersFile ]; then
     sed -i "/<!--MORELOGGERS-->/r $additionalLoggersFile" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml
@@ -64,6 +56,80 @@ setupFiles_localLogging() {
     if [ $returnCode != 0 ]; then exit $returnCode; fi
   fi
 
+  if [ "$GROUPER_LOG_TO_HOST" = "true" ]; then
+    sed -i "s|__FILESTART__||g" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml
+    returnCode=$?
+    echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_localLogging) sed -i \"s|__FILESTART__||g\" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml, result: $?"
+    if [ $returnCode != 0 ]; then exit $returnCode; fi
+
+    sed -i "s|__FILEEND__||g" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml
+    returnCode=$?
+    echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_localLogging) sed -i \"s|__FILEEND__||g\" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml, result: $?"
+    if [ $returnCode != 0 ]; then exit $returnCode; fi
+  else
+    sed -i "s|__FILESTART__|<!--|g" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml
+    returnCode=$?
+    echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_localLogging) sed -i \"s|__FILESTART__|<!--|g\" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml, result: $?"
+    if [ $returnCode != 0 ]; then exit $returnCode; fi
+
+    sed -i "s|__FILEEND__|-->|g" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml
+    returnCode=$?
+    echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_localLogging) sed -i \"s|__FILEEND__|-->|g\" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml, result: $?"
+    if [ $returnCode != 0 ]; then exit $returnCode; fi
+  fi
+  if  [ "$GROUPER_LOG_TO_PIPE" = "true" ]; then
+    sed -i "s|__LOGPIPESTART__||g" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml
+    returnCode=$?
+    echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_localLogging) sed -i \"s|__LOGPIPESTART__||g\" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml, result: $?"
+    if [ $returnCode != 0 ]; then exit $returnCode; fi
+
+    sed -i "s|__LOGPIPEEND__||g" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml
+    returnCode=$?
+    echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_localLogging) sed -i \"s|__LOGPIPEEND__||g\" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml, result: $?"
+    if [ $returnCode != 0 ]; then exit $returnCode; fi
+  else
+    sed -i "s|__LOGPIPESTART__|<!--|g" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml
+    returnCode=$?
+    echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_localLogging) sed -i \"s|__LOGPIPESTART__|<!--|g\" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml, result: $?"
+    if [ $returnCode != 0 ]; then exit $returnCode; fi
+
+    sed -i "s|__LOGPIPEEND__|-->|g" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml
+    returnCode=$?
+    echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_localLogging) sed -i \"s|__LOGPIPEEND__|-->|g\" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml, result: $?"
+    if [ $returnCode != 0 ]; then exit $returnCode; fi
+  fi
+
+  # add semicolons
+  LOCAL_ENV=
+  if [ ! -z "$ENV" ] ; then 
+    LOCAL_ENV="$ENV;"
+  fi
+
+  LOCAL_USERTOKEN=
+  if [ ! -z "$USERTOKEN" ] ; then 
+    LOCAL_USERTOKEN="$USERTOKEN;"
+  fi
+
+  LOCAL_GROUPER_LOG_PREFIX=
+  if [ ! -z "$GROUPER_LOG_PREFIX" ] ; then 
+    LOCAL_GROUPER_LOG_PREFIX="$GROUPER_LOG_PREFIX;"
+  fi
+
+  sed -i "s|__ENV__|$LOCAL_ENV|g" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml
+  returnCode=$?
+  echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_localLogging) sed -i \"s|__ENV__|$LOCAL_ENV|g\" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml, result: $?"
+  if [ $returnCode != 0 ]; then exit $returnCode; fi
+
+  sed -i "s|__USERTOKEN__|$LOCAL_USERTOKEN|g" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml
+  returnCode=$?
+  echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_localLogging) sed -i \"s|__USERTOKEN__|$LOCAL_USERTOKEN|g\" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml, result: $?"
+  if [ $returnCode != 0 ]; then exit $returnCode; fi
+
+  sed -i "s|__GROUPER_LOG_PREFIX__|$LOCAL_GROUPER_LOG_PREFIX|g" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml
+  returnCode=$?
+  echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_localLogging) sed -i \"s|__GROUPER_LOG_PREFIX__|$LOCAL_GROUPER_LOG_PREFIX|g\" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml, result: $?"
+  if [ $returnCode != 0 ]; then exit $returnCode; fi
+  
 }
 
 setupFiles_loggingPrefix() {
@@ -78,9 +144,9 @@ setupFiles_chownDirs() {
     # do this last
     if [ "$GROUPER_CHOWN_DIRS" = "true" ]
       then
-        /opt/container_files/containerDockerfileInstallPermissions.sh tomcat root
+        /opt/container_files/docker-build-bin/containerDockerfileInstallPermissions.sh tomcat root
         returnCode=$?
-        echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_chownDirs) /opt/container_files/containerDockerfileInstallPermissions.sh tomcat root, result: $returnCode"
+        echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_chownDirs) /opt/container_files/docker-build-bin/containerDockerfileInstallPermissions.sh tomcat root, result: $returnCode"
         if [ $returnCode != 0 ]; then exit $returnCode; fi
     fi
 }
@@ -91,7 +157,7 @@ setupFiles_storeEnvVars() {
 
   echo "#!/bin/sh" > /opt/grouper/grouperEnv.sh
   echo "" >> /opt/grouper/grouperEnv.sh
-
+  echo "UMASK=002" >> /opt/grouper/grouperEnv.sh
   # go through env vars, should start with GROUPER*; this handles quoting but not multiline
   export -p | grep "^declare -x GROUPER" | sort >> /opt/grouper/grouperEnv.sh
   returnCode=$?
@@ -285,6 +351,7 @@ setupFiles_analyzeOriginalFiles() {
       echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_analyzeOriginalFiles) export GROUPER_ORIGFILE_WEBAPP_WEB_XML=false"
       export GROUPER_ORIGFILE_WEBAPP_WEB_XML=false
     fi
+    
 
 }
 

@@ -7,4 +7,4 @@ FROM i2incommon/grouper:__BASE_CONTAINER__
 # this will overlay all the files from /opt/grouperContainer/slashRoot on to /
 COPY slashRoot /
  
-RUN /opt/container_files/containerDockerfileInstallPermissions.sh tomcat root
+RUN /opt/container_files/docker-build-bin/containerDockerfileInstallPermissions.sh tomcat root

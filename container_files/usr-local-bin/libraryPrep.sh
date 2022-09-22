@@ -458,6 +458,22 @@ prep_finishBegin() {
       
       fi
     fi
+    
+    if [ -z "$GROUPER_LOG_TO_HOST" ] ; then 
+      echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_analyzeOriginalFiles) export GROUPER_LOG_TO_HOST=false"
+      export GROUPER_LOG_TO_HOST=false
+    fi
+    
+    if [ -z "$GROUPER_LOG_TO_PIPE" ] ; then 
+      if [ "$GROUPER_LOG_TO_HOST" = "true" ]; then
+        echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_analyzeOriginalFiles) export GROUPER_LOG_TO_PIPE=false"
+        export GROUPER_LOG_TO_PIPE=false
+      else
+        echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_analyzeOriginalFiles) export GROUPER_LOG_TO_PIPE=true"
+        export GROUPER_LOG_TO_PIPE=true
+      fi
+    fi
+
 }
 
 prep_finishEnd() {
