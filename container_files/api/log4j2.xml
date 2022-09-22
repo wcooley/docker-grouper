@@ -96,7 +96,7 @@
             __LOGPIPESTART__<AppenderRef ref="logpipe_catalina" />__LOGPIPEEND__
             __FILESTART__<AppenderRef ref="file_catalina"/>__FILEEND__
         </Logger>
-        <Logger name="edu.internet2.middleware" level="info" additivity="false">
+        <Logger name="edu.internet2.middleware" level="warn" additivity="false">
             __LOGPIPESTART__<AppenderRef ref="logpipe_grouper_error"/>__LOGPIPEEND__
             __FILESTART__<AppenderRef ref="file_grouper_error"/>__FILEEND__
         </Logger>
