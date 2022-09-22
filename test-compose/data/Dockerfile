@@ -5,14 +5,16 @@ LABEL author="tier-packaging@internet2.edu <tier-packaging@internet2.edu>"
 COPY container_files/seed-data/ /seed-data/
 COPY container_files/conf/ /opt/grouper/grouperWebapp/WEB-INF/classes/
 
-RUN yum install -y epel-release \
-    && yum update -y \
-    && yum install -y 389-ds-base 389-admin 389-adminutil mariadb-server mariadb \
-    && yum clean all \
-    && rm -rf /var/cache/yum
+RUN dnf install -y epel-release \
+    && dnf update -y \
+    && dnf clean all 
 
+RUN dnf -y module enable 389-ds \
+    && dnf -y install 389-ds-base 389-ds-base-legacy-tools mariadb-server mariadb nc
+    
 RUN mysql_install_db --force \
     && chown -R mysql:mysql /var/lib/mysql/ \
+    && chown -R mysql:mysql /var/log/mariadb \
     && sed -i 's/^\(bind-address\s.*\)/# \1/' /etc/my.cnf \
     && sed -i 's/^\(log_error\s.*\)/# \1/' /etc/my.cnf \
     && sed -i 's/\[mysqld\]/\[mysqld\]\ncharacter_set_server = utf8/' /etc/my.cnf \
@@ -32,18 +34,18 @@ RUN useradd ldapadmin \
     # The 389-ds setup will fail because the hostname can't reliable be determined, so we'll bypass it and then install. \
     && sed -i 's/checkHostname {/checkHostname {\nreturn();/g' /usr/lib64/dirsrv/perl/DSUtil.pm \
     # Not doing SELinux \
-    && sed -i 's/updateSelinuxPolicy($inf);//g' /usr/lib64/dirsrv/perl/* \
+    # && sed -i 's/updateSelinuxPolicy($inf);//g' /usr/lib64/dirsrv/perl/* \
     # Do not restart at the end \
     && sed -i '/if (@errs = startServer($inf))/,/}/d' /usr/lib64/dirsrv/perl/* \
     && setup-ds.pl --silent --file /seed-data/ds-setup.inf \
     && /usr/sbin/ns-slapd -D /etc/dirsrv/slapd-dir \ 
-    && while ! curl -s ldap://localhost:389 > /dev/null; do echo waiting for ldap to start; sleep 1; done; \
+    && while ! nc -z -v 127.0.0.1 389 > /dev/null; do echo waiting for ldap to start; sleep 1; done; \
     ldapadd -H ldap:/// -f /seed-data/users.ldif -x -D "cn=Directory Manager" -w password
 
 RUN (/usr/sbin/ns-slapd -D /etc/dirsrv/slapd-dir &) \
-    && while ! curl -s ldap://localhost:389 > /dev/null; do echo waiting for ldap to start; sleep 1; done; \
+    && while ! nc -z -v 127.0.0.1 389 > /dev/null; do echo waiting for ldap to start; sleep 1; done; \
     (mysqld_safe & ) \
-    && while ! curl -s localhost:3306 > /dev/null; do echo waiting for mysqld to start; sleep 1; done; \
+    && while ! nc -z -v 127.0.0.1 3306 > /dev/null; do echo waiting for mysqld to start; sleep 1; done; \
     /opt/grouper/grouperWebapp/WEB-INF/bin/gsh.sh -registry -check -runscript -noprompt \
     &&  /opt/grouper/grouperWebapp/WEB-INF/bin/gsh.sh /seed-data/bootstrap.gsh
 

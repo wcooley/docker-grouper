@@ -1,7 +1,7 @@
 [General]
 AdminDomain = internet2.edu
 ConfigDirectoryAdminID = admin
-ConfigDirectoryAdminPwd = admin
+ConfigDirectoryAdminPwd = adminadmin
 ConfigDirectoryLdapURL = ldap://localhost:389/o=NetscapeRoot
 FullMachineName = localhost
 ServerRoot = /usr/lib64/dirsrv
@@ -11,7 +11,7 @@ SuiteSpotUserID = nobody
 [admin]
 Port = 9830
 ServerAdminID = admin
-ServerAdminPwd = admin
+ServerAdminPwd = adminadmin
 ServerIpAddress = 0.0.0.0
 SysUser = nobody
 
