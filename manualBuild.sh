@@ -3,9 +3,9 @@ docker buildx inspect --bootstrap
 
 
 
-docker login
+#docker login
 #docker buildx build --platform linux/amd64,linux/arm64 --pull . 
-#docker buildx build --platform linux/amd64 -t grouper  . 
+docker buildx build --platform linux/amd64 -t grouper  . 
 docker buildx build --platform linux/arm64 -t grouper:arm64 . 
 docker buildx build --push --platform linux/arm64 -t i2incommon/grouper:rocky8-multi-arch-test .
 
@@ -20,7 +20,3 @@ docker buildx build --push --platform linux/arm64 -t i2incommon/grouper:rocky8-m
 
 # works docker buildx build --platform linux/amd64 --pull --tag=itap/grouper:latest . \
 #docker buildx build --platform linux/arm64/v8 --pull --tag=itap/grouper:latest . \
-
-if [[ "$OSTYPE" == "darwin"* ]]; then
-  say build complete
-fi
