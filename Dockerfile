@@ -11,7 +11,7 @@ ENV GROUPER_VERSION=2.5.65 \
 
 # Install Corretto Java JDK
 #Corretto download page: https://docs.aws.amazon.com/corretto/latest/corretto-8-ug/downloads-list.html
-ARG CORRETTO_URL_PERM=https://corretto.aws/downloads/latest/amazon-corretto-8- x64-linux-jdk.rpm
+ARG CORRETTO_URL_PERM=https://corretto.aws/downloads/latest/amazon-corretto-8-x64-linux-jdk.rpm
 ARG CORRETTO_RPM=amazon-corretto-8-x64-linux-jdk.rpm
 COPY container_files/java-corretto/corretto-signing-key.pub .
 RUN curl -O -L $CORRETTO_URL_PERM \
