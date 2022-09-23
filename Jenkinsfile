@@ -1,6 +1,6 @@
 
 pipeline {
-    agent docker-multi-arch
+    label 'docker-multi-arch'
     environment { 
         maintainer = "t"
         imagename = 'g'
