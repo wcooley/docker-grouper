@@ -54,6 +54,8 @@ RUN cd /tmp \
 COPY container_files/ /opt/container_files/
 
 RUN cd /tmp \
+    && mkdir /etc/shibboleth \
+    && chmod +x /opt/container_files/docker-build-bin/*.sh \
     && /opt/container_files/docker-build-bin/containerDockerfileInstallDos2unix.sh /opt/container_files \
     && /opt/container_files/docker-build-bin/containerDockerfileInstall.sh $CORRETTO_URL_PERM $CORRETTO_RPM $JAVA_HOME $GROUPER_VERSION
 
