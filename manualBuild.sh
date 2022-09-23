@@ -3,7 +3,7 @@ docker buildx inspect --bootstrap
 
 
 
-
+docker login
 #docker buildx build --platform linux/amd64,linux/arm64 --pull . 
 #docker buildx build --platform linux/amd64 -t grouper  . 
 docker buildx build --platform linux/arm64 -t grouper:arm64 . 
