@@ -4,11 +4,12 @@ docker buildx inspect --bootstrap
 
 
 
-docker buildx build --platform linux/amd64,linux/arm64 --pull . 
-docker buildx build --platform linux/amd64 -t grouper  . 
+#docker buildx build --platform linux/amd64,linux/arm64 --pull . 
+#docker buildx build --platform linux/amd64 -t grouper  . 
 docker buildx build --platform linux/arm64 -t grouper:arm64 . 
+docker buildx build --push --platform linux/arm64 -t i2incommon/grouper:rocky8-multi-arch-test .
 
-docker buildx build --push --platform linux/arm64,linux/amd64 -t i2incommon/grouper:rocky8-multi-arch-test .
+#docker buildx build --push --platform linux/arm64,linux/amd64 -t i2incommon/grouper:rocky8-multi-arch-test .
 
 
 

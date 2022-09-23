@@ -56,7 +56,7 @@ RUN cd /opt/tomee/; \
 COPY container_files/api/* /opt/grouper/grouperWebapp/WEB-INF/classes/
 COPY container_files/tomee/ /opt/tomee/
 
-FROM --platform=$TARGETPLATFORM rockylinux:8 
+FROM --platform=$TARGETPLATFORM i2incommon/shib-sp:3.3.0_09152022-rocky8-multi-arch-test
 LABEL author="tier-packaging@internet2.edu <tier-packaging@internet2.edu>" \
       Vendor="TIER" \
       ImageType="Grouper" \
