@@ -1,6 +1,6 @@
 
 pipeline {
-    agent any
+    agent { node { label 'docker' } }
     environment { 
         maintainer = "t"
         imagename = 'g'
