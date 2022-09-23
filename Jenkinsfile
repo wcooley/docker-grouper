@@ -51,7 +51,9 @@ pipeline {
             steps {
                 script {
                   try{
-                      sh './manualBuild.sh'
+                      docker.withRegistry('https://registry.hub.docker.com/',   "dockerhub-tier") {
+                        sh './manualBuild.sh'
+                      }
                       // // statically defining jenkins credential value dockerhub-tier
                       // docker.withRegistry('https://registry.hub.docker.com/',   "dockerhub-tier") {
                       //   baseImg = docker.build("$maintainer/$imagename", "--build-arg GROUPER_CONTAINER_VERSION=$tag .")
