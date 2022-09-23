@@ -1,6 +1,6 @@
 
 pipeline {
-    label 'docker-multi-arch'
+    node 'docker-multi-arch'
     environment { 
         maintainer = "t"
         imagename = 'g'
