@@ -50,7 +50,7 @@ if [ $lines -ne 0 ]; then
   if [ $returnCode != 0 ]; then exit $returnCode; fi
 fi
 
-lines=$(find /home/$user /opt/container_files/ /opt/grouper/ /opt/tier/ /opt/tier-support/ /opt/tomee/ /etc/httpd/conf/ /home/tomcat/ /etc/httpd/conf.d/ -type f -name "*.sh" ! -perm -g+x -path /opt/grouper/slashRoot -prune -o -print | wc -l)
+lines=$(find /home/$user /opt/container_files /opt/grouper /opt/tier /opt/tier-support /opt/tomee /etc/httpd/conf /home/tomcat /etc/httpd/conf.d -type f -name "*.sh" -path /opt/grouper/slashRoot -prune -o ! -perm -g+x -print | wc -l)
 if [ $lines -ne 0 ]; then
   chmod +x $(find /home/$user /opt/container_files /opt/grouper /opt/tier /opt/tier-support /opt/tomee /etc/httpd/conf /home/tomcat /etc/httpd/conf.d -type f -name "*.sh" -path /opt/grouper/slashRoot -prune -o ! -perm -g+x)
   returnCode=$?
