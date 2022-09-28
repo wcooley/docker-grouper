@@ -5,6 +5,7 @@ pipeline {
         maintainer = "t"
         imagename = 'g'
         tag = 'l'
+        DOCKERHUBPW=credentials('dockerhub-tier')
     }
     stages {
         stage('Setting build context') {
@@ -53,10 +54,7 @@ pipeline {
                   try{
 
                       docker.withRegistry('https://registry.hub.docker.com/',   "dockerhub-tier") {
-                        sh 'docker buildx ls'
-                        sh 'docker buildx build --platform linux/amd64 -t grouper  .'
-                        sh 'docker buildx build --platform linux/arm64 -t grouper:arm64 .'
-                        sh 'docker buildx build --push --platform linux/arm64 -t i2incommon/grouper:rocky8-multi-arch-test .'
+                        sh 'docker login -u tieradmin -p $DOCKERHUBPW; docker buildx ls; docker buildx build --platform linux/amd64 -t grouper  . ; docker buildx build --platform linux/arm64 -t grouper:arm64 . ; docker buildx build --push --platform linux/arm64 -t i2incommon/grouper:rocky8-multi-arch-test .'
                         //sh './manualBuild.sh'
                       }
                       // // statically defining jenkins credential value dockerhub-tier
