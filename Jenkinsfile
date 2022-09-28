@@ -5,11 +5,6 @@ pipeline {
         maintainer = "t"
         imagename = 'g'
         DOCKERHUBPW=credentials('tieradmin-dockerhub-pw')
-        if(env.BRANCH_NAME == "main") {
-                       tag = "latest"   
-        } else {
-                       tag = env.BRANCH_NAME
-        }
     }
     stages {
         stage('Setting build context') {
@@ -51,6 +46,11 @@ pipeline {
         stage('Build') {
             steps {
                 script {
+                  if(env.BRANCH_NAME == "main") {
+                    tag = "latest"   
+                  } else {
+                    tag = env.BRANCH_NAME
+                  }
                   try{
 
                       docker.withRegistry('https://registry.hub.docker.com/',   "dockerhub-tier") {
