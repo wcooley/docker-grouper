@@ -55,6 +55,8 @@ pipeline {
 
                       docker.withRegistry('https://registry.hub.docker.com/',   "dockerhub-tier") {
                         sh 'docker login -u tieradmin -p $DOCKERHUBPW'
+                        sh 'docker buildx create --use --name multiarch'
+                        sh 'docker buildx inspect --bootstrap'
                         sh 'docker buildx ls'
                         sh 'docker buildx build --platform linux/amd64 -t grouper  .'
                         sh 'docker buildx build --platform linux/arm64 -t grouper:arm64 .'
