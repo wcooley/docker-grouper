@@ -4,8 +4,12 @@ pipeline {
     environment { 
         maintainer = "t"
         imagename = 'g'
-        tag = 'l'
         DOCKERHUBPW=credentials('tieradmin-dockerhub-pw')
+        if(env.BRANCH_NAME == "main") {
+                       tag = "latest"   
+        } else {
+                       tag = env.BRANCH_NAME
+        }
     }
     stages {
         stage('Setting build context') {
@@ -13,11 +17,7 @@ pipeline {
                 script {
                     maintainer = maintain()
                     imagename = imagename()
-                    if(env.BRANCH_NAME == "main") {
-                       tag = "latest"   
-                    } else {
-                       tag = env.BRANCH_NAME
-                    }
+                    
                     if(!imagename){
                         echo "You must define an imagename in common.bash"
                         currentBuild.result = 'FAILURE'
@@ -30,7 +30,7 @@ pipeline {
                     }
                     // Build and test scripts expect that 'tag' is present in common.bash. This is necessary for both Jenkins and standalone testing.
                     // We don't care if there are more 'tag' assignments there. The latest one wins.
-                    sh "echo >> common.bash ; echo \"tag=\\\"${tag}\\\"\" >> common.bash ; echo common.bash ; cat common.bash"
+                    //sh "echo >> common.bash ; echo \"tag=\\\"${tag}\\\"\" >> common.bash ; echo common.bash ; cat common.bash"
                 }  
              }
         }    
@@ -58,7 +58,7 @@ pipeline {
                         sh 'docker buildx ls'
                         sh 'docker buildx build --platform linux/amd64 -t grouper  .'
                         sh 'docker buildx build --platform linux/arm64 -t grouper:arm64 .'
-                        sh 'docker buildx build --push --platform linux/arm64 -t i2incommon/grouper:$tag .'
+                        sh 'docker buildx build --push --platform linux/arm64,linux/amd64 -t i2incommon/grouper:$tag .'
                         //sh './manualBuild.sh'
                       }
                       // // statically defining jenkins credential value dockerhub-tier
