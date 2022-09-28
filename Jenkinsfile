@@ -5,7 +5,7 @@ pipeline {
         maintainer = "t"
         imagename = 'g'
         tag = 'l'
-        DOCKERHUBPW=credentials('dockerhub-tier')
+        DOCKERHUBPW=credentials('tieradmin-dockerhub-pw')
     }
     stages {
         stage('Setting build context') {
