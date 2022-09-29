@@ -5,6 +5,8 @@ pipeline {
         maintainer = "t"
         imagename = 'g'
         tag = 'l'
+        DOCKERHUBPW=credentials('tieradmin-dockerhub-pw')
+
     }
     stages {
         stage('Setting build context') {
@@ -54,10 +56,13 @@ pipeline {
             steps {
                 script {
                   try{
-                      // statically defining jenkins credential value dockerhub-tier
-                      docker.withRegistry('https://registry.hub.docker.com/',   "dockerhub-tier") {
-                        baseImg = docker.build("$maintainer/$imagename", "--build-arg GROUPER_CONTAINER_VERSION=$tag --no-cache .")
-                      }
+                        sh 'docker login -u tieradmin -p $DOCKERHUBPW'
+                        sh 'docker buildx create --use --name multiarch'
+                        sh 'docker buildx inspect --bootstrap'
+                        sh 'docker buildx ls'
+                        sh 'docker buildx build --platform linux/amd64 -t grouper  .'
+                        sh 'docker buildx build --platform linux/arm64 -t grouper:arm64 -f Dockerfile.arm .'
+                        sh "docker buildx build --push --platform linux/arm64,linux/amd64 -t i2incommon/grouper:$tag ."
                       // test the environment 
                       // sh 'cd test-compose && ./compose.sh'
                       // bring down after testing
