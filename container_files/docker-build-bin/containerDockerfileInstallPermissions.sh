@@ -13,7 +13,8 @@ mkdir -p /opt/tier
 
 lines=$(find /home/$user /opt/container_files /opt/grouper /opt/tier /opt/tier-support /opt/tomee /etc/httpd/conf /home/tomcat /usr/local/bin /etc/httpd/conf.d /usr/lib/jvm/java/jre/lib/security/cacerts -path /opt/grouper/slashRoot -prune -o -path /opt/grouper/logs -prune -o ! -user $user -print | wc -l)
 if [ $lines -ne 0 ]; then
-  chown $user:$group $(find /home/$user /opt/container_files /opt/grouper /opt/tier /opt/tier-support /opt/tomee /etc/httpd/conf /home/tomcat /usr/local/bin /etc/httpd/conf.d /usr/lib/jvm/java/jre/lib/security/cacerts -path /opt/grouper/slashRoot -prune -o -path /opt/grouper/logs -prune -o ! -user $user -print)  returnCode=$?
+  chown $user:$group $(find /home/$user /opt/container_files /opt/grouper /opt/tier /opt/tier-support /opt/tomee /etc/httpd/conf /home/tomcat /usr/local/bin /etc/httpd/conf.d /usr/lib/jvm/java/jre/lib/security/cacerts -path /opt/grouper/slashRoot -prune -o -path /opt/grouper/logs -prune -o ! -user $user -print)
+  returnCode=$?
   echo "grouperDockerfile; INFO: ($0) chown $user:$group \$(find /home/$user /opt/container_files /opt/grouper /opt/tier /opt/tier-support /opt/tomee /etc/httpd/conf /home/tomcat /usr/local/bin /etc/httpd/conf.d /usr/lib/jvm/java/jre/lib/security/cacerts -path /opt/grouper/slashRoot -prune -o -path /opt/grouper/logs -prune -o ! -user $user -print), result: $returnCode"
   if [ $returnCode != 0 ]; then exit $returnCode; fi
 fi
