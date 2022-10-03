@@ -30,12 +30,12 @@ returnCode=$?
 echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) mkdir -p /opt/grouper/logs/, result: $returnCode"
 if [ $returnCode != 0 ]; then exit $returnCode; fi
 
-chown tomcat.root /opt/grouper/logs/
+chown -R tomcat.root /opt/grouper/logs/
 returnCode=$?
 echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) chown tomcat.root /opt/grouper/logs/, result: $returnCode"
 if [ $returnCode != 0 ]; then exit $returnCode; fi
 
-chmod g+rwxs /opt/grouper/logs/
+chmod -R g+rwxs /opt/grouper/logs/
 returnCode=$?
 echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) chmod g+rwxs /opt/grouper/logs/, result: $returnCode"
 if [ $returnCode != 0 ]; then exit $returnCode; fi
