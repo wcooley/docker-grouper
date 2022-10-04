@@ -61,7 +61,7 @@ pipeline {
                         sh 'docker buildx inspect --bootstrap'
                         sh 'docker buildx ls'
                         sh 'docker buildx build --platform linux/amd64 -t grouper  .'
-                        sh 'docker buildx build --platform linux/arm64 -t grouper:arm64 -f Dockerfile.arm .'
+                        sh 'docker buildx build --platform linux/arm64 -t grouper:arm64 .'
                         sh "docker buildx build --push --platform linux/arm64,linux/amd64 -t i2incommon/grouper:$tag ."
                       // test the environment 
                       // sh 'cd test-compose && ./compose.sh'
