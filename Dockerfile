@@ -41,11 +41,11 @@ COPY container_files/ /opt/container_files/
 RUN cd /tmp \
     && chmod +x /opt/container_files/docker-build-bin/*.sh \
     && /opt/container_files/docker-build-bin/containerDockerfileInstallDos2unix.sh /opt/container_files \
-    // old way of installing, hard-coded arch and URL
-    // && /opt/container_files/docker-build-bin/containerDockerfileInstallJava.sh $CORRETTO_URL_PERM $CORRETTO_RPM $JAVA_HOME $GROUPER_VERSION \
     && /opt/container_files/docker-build-bin/containerDockerfileInstallGrouper.sh $CORRETTO_URL_PERM $CORRETTO_RPM $JAVA_HOME $GROUPER_VERSION \
     && /opt/container_files/docker-build-bin/containerDockerfileInstall.sh $CORRETTO_URL_PERM $CORRETTO_RPM $JAVA_HOME $GROUPER_VERSION
 
+#    // old way of installing java, hard-coded arch and URL
+#    // && /opt/container_files/docker-build-bin/containerDockerfileInstallJava.sh $CORRETTO_URL_PERM $CORRETTO_RPM $JAVA_HOME $GROUPER_VERSION \
 
 # testing container
 # see output with  docker build . --tag my:grouper
