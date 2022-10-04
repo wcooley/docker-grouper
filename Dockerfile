@@ -30,16 +30,15 @@ RUN rpm --import https://yum.corretto.aws/corretto.key \
 
 # Old way to install 
 #Corretto download page: https://docs.aws.amazon.com/corretto/latest/corretto-8-ug/downloads-list.html
-# ARG CORRETTO_URL_PERM=https://corretto.aws/downloads/latest/amazon-corretto-8-x64-linux-jdk.rpm
-# ARG CORRETTO_RPM=amazon-corretto-8-x64-linux-jdk.rpm
+ARG CORRETTO_URL_PERM=https://corretto.aws/downloads/latest/amazon-corretto-8-x64-linux-jdk.rpm
+ARG CORRETTO_RPM=amazon-corretto-8-x64-linux-jdk.rpm
 
 
 
 # real copy command (if not caching), uncomment this and change comments of COPY above to work on install script
 COPY container_files/ /opt/container_files/
 
-RUN cd /tmp \
-    && chmod +x /opt/container_files/docker-build-bin/*.sh \
+RUN cd /tmp && chmod +x /opt/container_files/docker-build-bin/*.sh \
     && /opt/container_files/docker-build-bin/containerDockerfileInstallDos2unix.sh /opt/container_files \
     && /opt/container_files/docker-build-bin/containerDockerfileInstallGrouper.sh $CORRETTO_URL_PERM $CORRETTO_RPM $JAVA_HOME $GROUPER_VERSION \
     && /opt/container_files/docker-build-bin/containerDockerfileInstall.sh $CORRETTO_URL_PERM $CORRETTO_RPM $JAVA_HOME $GROUPER_VERSION
