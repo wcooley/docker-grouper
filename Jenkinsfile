@@ -57,7 +57,8 @@ pipeline {
                 script {
                   try{
                         sh 'docker login -u tieradmin -p $DOCKERHUBPW'
-                        sh 'docker buildx create --use --name multiarch --append'
+                        // fails if already exists
+                        // sh 'docker buildx create --use --name multiarch --append'
                         sh 'docker buildx inspect --bootstrap'
                         sh 'docker buildx ls'
                         sh 'docker buildx build --platform linux/amd64 -t grouper  .'
