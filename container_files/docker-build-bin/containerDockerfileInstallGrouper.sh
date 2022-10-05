@@ -41,3 +41,7 @@ returnCode=$?
 echo "grouperDockerfile; INFO: (containerDockerfileInstallGrouper.sh) $JAVA_HOME/bin/java -cp :grouperInstaller.jar edu.internet2.middleware.grouperInstaller.GrouperInstaller, result: $returnCode"
 if [ $returnCode != 0 ]; then exit $returnCode; fi
 
+rm -rf /root/.m2
+returnCode=$?
+echo "grouperDockerfile; INFO: (containerDockerfileInstallGrouper.sh) rm -rf /root/.m2, result: $returnCode"
+if [ $returnCode != 0 ]; then exit $returnCode; fi
