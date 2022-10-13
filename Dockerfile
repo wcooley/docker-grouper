@@ -11,7 +11,8 @@ ARG GROUPER_CONTAINER_VERSION
 ENV GROUPER_VERSION=2.6.16 \
     GROUPER_CONTAINER_VERSION=$GROUPER_CONTAINER_VERSION \
     PATH=$PATH:$JAVA_HOME/bin \
-    GROUPER_HOME=/opt/grouper/grouperWebapp/WEB-INF
+    GROUPER_HOME=/opt/grouper/grouperWebapp/WEB-INF \
+    JAVA_HOME=/usr/lib/jvm
 
 # net-tools curl mlocate strace telnet man vim rsyslog cron httpd mod_ssl cronie
 RUN yum update -y \
@@ -25,10 +26,10 @@ RUN yum update -y \
 # Install Corretto Java JDK (newer more arch independent way)
 RUN rpm --import https://yum.corretto.aws/corretto.key \
     && curl -L -o /etc/yum.repos.d/corretto.repo https://yum.corretto.aws/corretto.repo \
-    && yum install -y java-17-amazon-corretto
+    && yum install -y java-17-amazon-corretto-devel
     
-RUN echo usr lib jvm && ls -l /usr/lib/jvm/*
-RUN echo usr lib && ls -l /usr/lib/*
+RUN echo usr lib jvm java && ls -l /usr/lib/jvm/java
+
 # Old way to install 
 #Corretto download page: https://docs.aws.amazon.com/corretto/latest/corretto-8-ug/downloads-list.html
 ARG CORRETTO_URL_PERM=https://corretto.aws/downloads/latest/amazon-corretto-8-x64-linux-jdk.rpm
