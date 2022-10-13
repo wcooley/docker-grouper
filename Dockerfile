@@ -25,7 +25,7 @@ RUN yum update -y \
 # Install Corretto Java JDK (newer more arch independent way)
 RUN rpm --import https://yum.corretto.aws/corretto.key \
     && curl -L -o /etc/yum.repos.d/corretto.repo https://yum.corretto.aws/corretto.repo \
-    && yum install -y java-17-amazon-corretto-devel
+    && yum install -y java-17-amazon-corretto
     
 RUN echo usr lib jvm && ls -l /usr/lib/jvm/*
 RUN echo usr lib && ls -l /usr/lib/*
