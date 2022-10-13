@@ -81,7 +81,8 @@ pipeline {
             steps {
                 script {
                    try {
-                     sh 'bin/test.sh 2>&1 | tee debug ; test ${PIPESTATUS[0]} -eq 0'
+                     // sh 'bin/test.sh 2>&1 | tee debug ; test ${PIPESTATUS[0]} -eq 0'
+                     echo "Skipping tests for now"
                    } catch (error) {
                      def error_details = readFile('./debug')
                      def message = "BUILD ERROR: There was a problem testing ${maintainer}/${imagename}:${tag}. \n\n ${error_details}"
