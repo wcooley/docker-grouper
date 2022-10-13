@@ -28,7 +28,7 @@ RUN rpm --import https://yum.corretto.aws/corretto.key \
     && curl -L -o /etc/yum.repos.d/corretto.repo https://yum.corretto.aws/corretto.repo \
     && yum install -y java-17-amazon-corretto-devel
     
-RUN echo usr lib jvm java && ls -l /usr/lib/jvm/java
+RUN echo usr lib jvm java && ls -l /usr/lib/jvm/java/*
 
 # Old way to install 
 #Corretto download page: https://docs.aws.amazon.com/corretto/latest/corretto-8-ug/downloads-list.html
