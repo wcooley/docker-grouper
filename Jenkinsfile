@@ -98,8 +98,9 @@ pipeline {
                 script {
                         // statically defining jenkins credential value dockerhub-tier
                         docker.withRegistry('https://registry.hub.docker.com/',   "dockerhub-tier") {
-                        baseImg.push("$tag")
-                      }
+                          // baseImg.push("$tag")
+                        echo "already pushed to Dockerhub"
+                        }
                   }
             }
         }
