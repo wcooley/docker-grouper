@@ -64,10 +64,10 @@ pipeline {
                         sh 'docker buildx build --platform linux/amd64 -t grouper  .'
                         sh 'docker buildx build --platform linux/arm64 -t grouper:arm64 .'
                         sh "docker buildx build --push --platform linux/arm64,linux/amd64 -t i2incommon/grouper:$tag ."
-                      // test the environment 
-                      // sh 'cd test-compose && ./compose.sh'
-                      // bring down after testing
-                      // sh 'cd test-compose && docker-compose down'
+                        // test the environment 
+                        // sh 'cd test-compose && ./compose.sh'
+                        // bring down after testing
+                        // sh 'cd test-compose && docker-compose down'
                   } catch(error) {
                      def error_details = readFile('./debug');
                       def message = "BUILD ERROR: There was a problem building ${maintainer}/${imagename}:${tag}. \n\n ${error_details}"
@@ -99,7 +99,7 @@ pipeline {
                         // statically defining jenkins credential value dockerhub-tier
                         docker.withRegistry('https://registry.hub.docker.com/',   "dockerhub-tier") {
                           // baseImg.push("$tag")
-                        echo "already pushed to Dockerhub"
+                          echo "already pushed to Dockerhub"
                         }
                   }
             }
