@@ -2,7 +2,7 @@ Documentation for this container is located at the following URL:
 https://spaces.at.internet2.edu/pages/viewpage.action?pageId=163119272
 
 
-[![Build Status](https://jenkins.testbed.tier.internet2.edu/buildStatus/icon?job=docker/grouper/2.5.22)](https://jenkins.testbed.tier.internet2.edu/buildStatus/icon?job=docker/grouper/2.5.22)
+[![Build Status](https://jenkins.testbed.tier.internet2.edu/buildStatus/icon?job=docker/grouper/2.6.16.2-rocky-multi-arch-test)](https://jenkins.testbed.tier.internet2.edu/buildStatus/icon?job=docker/grouper/2.6.16.2-rocky-multi-arch-test)
 
 # License
 
