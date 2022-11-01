@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# $1 ARG CORRETTO_URL_PERM=https://corretto.aws/downloads/latest/amazon-corretto-8-x64-linux-jdk.rpm
-# $2 ARG CORRETTO_RPM=amazon-corretto-8-x64-linux-jdk.rpm
-# $3 ARG JAVA_HOME=/usr/lib/jvm/java-1.8.0-amazon-corretto
-# $4 ARG GROUPER_VERSION=2.6.14
+# $1 ARG JAVA_HOME=/usr/lib/jvm/java-1.8.0-amazon-corretto
+# $2 ARG GROUPER_VERSION=2.6.14
+JAVA_HOME=$1
+GROUPER_VERSION=$2
 
 chmod 775 $(find /opt/container_files -type d)
 returnCode=$?
@@ -45,14 +45,14 @@ returnCode=$?
 echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) mkdir -p /opt/tomee/, result: $returnCode"
 if [ $returnCode != 0 ]; then exit $returnCode; fi
 
-mv /opt/grouper/$4/grouperInstaller.jar /opt/grouper/
+mv /opt/grouper/$GROUPER_VERSION/grouperInstaller.jar /opt/grouper/
 returnCode=$?
-echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) mv /opt/grouper/$4/grouperInstaller.jar /opt/grouper/, result: $returnCode"
+echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) mv /opt/grouper/$GROUPER_VERSION/grouperInstaller.jar /opt/grouper/, result: $returnCode"
 if [ $returnCode != 0 ]; then exit $returnCode; fi
 
-mv /opt/grouper/$4/container/tomee/* /opt/tomee/
+mv /opt/grouper/$GROUPER_VERSION/container/tomee/* /opt/tomee/
 returnCode=$?
-echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) mv /opt/grouper/$4/container/tomee/* /opt/tomee/, result: $returnCode"
+echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) mv /opt/grouper/$GROUPER_VERSION/container/tomee/* /opt/tomee/, result: $returnCode"
 if [ $returnCode != 0 ]; then exit $returnCode; fi
 
 mkdir -p /opt/tomee/temp
@@ -65,19 +65,24 @@ returnCode=$?
 echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) mkdir -p /opt/tomee/work, result: $returnCode"
 if [ $returnCode != 0 ]; then exit $returnCode; fi
 
-mv /opt/grouper/$4/container/webapp/* /opt/grouper/grouperWebapp/
+mv /opt/grouper/$GROUPER_VERSION/container/webapp/* /opt/grouper/grouperWebapp/
 returnCode=$?
-echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) mv /opt/grouper/$4/container/webapp/* /opt/grouper/grouperWebapp/, result: $returnCode"
+echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) mv /opt/grouper/$GROUPER_VERSION/container/webapp/* /opt/grouper/grouperWebapp/, result: $returnCode"
 if [ $returnCode != 0 ]; then exit $returnCode; fi
 
-rm -rf /opt/grouper/$4
+rm -rf /opt/grouper/$GROUPER_VERSION
 returnCode=$?
-echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) rm -rf /opt/grouper/$4, result: $returnCode"
+echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) rm -rf /opt/grouper/$GROUPER_VERSION, result: $returnCode"
 if [ $returnCode != 0 ]; then exit $returnCode; fi
 
 rm -rf /opt/tomee/webapps/docs/ /opt/tomee/webapps/host-manager/ /opt/tomee/webapps/manager/ /opt/tomee/logs/* /opt/tomee/temp/* /opt/tomee/work/* /opt/tomee/conf/logging.properties
 returnCode=$?
 echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) rm -rf /opt/tomee/webapps/docs/ /opt/tomee/webapps/host-manager/ /opt/tomee/webapps/manager/ /opt/tomee/logs/* /opt/tomee/temp/* /opt/tomee/work/*\ /opt/tomee/conf/logging.properties, result: $returnCode"
+if [ $returnCode != 0 ]; then exit $returnCode; fi
+
+cp -R /opt/container_files/grouperWebapp/* /opt/grouper/grouperWebapp
+returnCode=$?
+echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) cp -R /opt/container_files/grouperWebapp/* /opt/grouper/grouperWebapp, result: $returnCode"
 if [ $returnCode != 0 ]; then exit $returnCode; fi
 
 cp -R /opt/container_files/api/* /opt/grouper/grouperWebapp/WEB-INF/classes/
@@ -105,9 +110,9 @@ returnCode=$?
 echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) rm -f /etc/alternatives/java, result: $returnCode"
 if [ $returnCode != 0 ]; then exit $returnCode; fi
 
-ln -s $3/bin/java /etc/alternatives/java
+ln -s $JAVA_HOME/bin/java /etc/alternatives/java
 returnCode=$?
-echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) ln -s $3/bin/java /etc/alternatives/java, result: $returnCode"
+echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) ln -s $JAVA_HOME/bin/java /etc/alternatives/java, result: $returnCode"
 if [ $returnCode != 0 ]; then exit $returnCode; fi
 
 mv /opt/container_files/usr-local-bin/* /usr/local/bin/

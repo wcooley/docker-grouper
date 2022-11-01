@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# $1 ARG CORRETTO_URL_PERM=https://corretto.aws/downloads/latest/amazon-corretto-8-x64-linux-jdk.rpm
-# $2 ARG CORRETTO_RPM=amazon-corretto-8-x64-linux-jdk.rpm
-# $3 ARG JAVA_HOME=/usr/lib/jvm/java-1.8.0-amazon-corretto
-# $4 ARG GROUPER_VERSION=2.6.14
+# $1 ARG JAVA_HOME=/usr/lib/jvm/java-1.8.0-amazon-corretto
+# $2 ARG GROUPER_VERSION=2.6.14
+JAVA_HOME=$1
+GROUPER_VERSION=$2
 
 mv /opt/container_files/tier-support /opt
 returnCode=$?
