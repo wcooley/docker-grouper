@@ -1,37 +1,20 @@
 #!/bin/bash
 
-# $1 ARG CORRETTO_URL_PERM=https://corretto.aws/downloads/latest/amazon-corretto-8-x64-linux-jdk.rpm
-# $1 ARG CORRETTO_URL_PERM=https://corretto.aws/downloads/latest/amazon-corretto-8-aarch64-linux-jdk.rpm
-# $2 ARG CORRETTO_RPM=amazon-corretto-8-x64-linux-jdk.rpm
-# $3 ARG JAVA_HOME=/usr/lib/jvm/java-1.8.0-amazon-corretto
-# $4 ARG GROUPER_VERSION=2.6.14
+# $1 ARG JAVA_VERSION=1.8.0
+JAVA_VERSION=$1
 
-CORRETTO_URL_PERM=$1
-CORRETTO_RPM=$2
-JAVA_HOME=$3
-GROUPER_VERSION=$4
 
-curl -O -L $CORRETTO_URL_PERM
+rpm --import https://yum.corretto.aws/corretto.key
 returnCode=$?
-echo "grouperDockerfile; INFO: (containerDockerfileInstallJava.sh) curl -O -L $CORRETTO_URL_PERM, result: $returnCode"
+echo "grouperDockerfile; INFO: (containerDockerfileInstallJava.sh) rpm --import https://yum.corretto.aws/corretto.key, result: $returnCode"
 if [ $returnCode != 0 ]; then exit $returnCode; fi
 
-rpm --import /opt/container_files/java-corretto/corretto-signing-key.pub
+curl -L -o /etc/yum.repos.d/corretto.repo https://yum.corretto.aws/corretto.repo
 returnCode=$?
-echo "grouperDockerfile; INFO: (containerDockerfileInstallJava.sh) rpm --import /opt/container_files/java-corretto/corretto-signing-key.pub corretto-signing-key.pub, result: $returnCode"
+echo "grouperDockerfile; INFO: (containerDockerfileInstallJava.sh) curl -L -o /etc/yum.repos.d/corretto.repo https://yum.corretto.aws/corretto.repo, result: $returnCode"
 if [ $returnCode != 0 ]; then exit $returnCode; fi
 
-rpm -K $CORRETTO_RPM
+yum install -y java-$JAVA_VERSION-amazon-corretto-devel
 returnCode=$?
-echo "grouperDockerfile; INFO: (containerDockerfileInstallJava.sh) rpm -K $CORRETTO_RPM, result: $returnCode"
-if [ $returnCode != 0 ]; then exit $returnCode; fi
-
-rpm -i $CORRETTO_RPM
-returnCode=$?
-echo "grouperDockerfile; INFO: (containerDockerfileInstallJava.sh) rpm -i $CORRETTO_RPM, result: $returnCode"
-if [ $returnCode != 0 ]; then exit $returnCode; fi
-
-rm -r $CORRETTO_RPM
-returnCode=$?
-echo "grouperDockerfile; INFO: (containerDockerfileInstallJava.sh) rm -r $CORRETTO_RPM, result: $returnCode"
+echo "grouperDockerfile; INFO: (containerDockerfileInstallJava.sh) yum install -y java-$JAVA_VERSION-amazon-corretto-devel, result: $returnCode"
 if [ $returnCode != 0 ]; then exit $returnCode; fi

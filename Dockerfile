@@ -8,7 +8,7 @@ LABEL author="tier-packaging@internet2.edu <tier-packaging@internet2.edu>" \
 
 ARG GROUPER_CONTAINER_VERSION
 
-ENV GROUPER_VERSION=2.6.16 \
+ENV GROUPER_VERSION=2.6.17 \
     GROUPER_CONTAINER_VERSION=$GROUPER_CONTAINER_VERSION \
     JAVA_HOME=/usr/lib/jvm/java-1.8.0-amazon-corretto \
     PATH=$PATH:$JAVA_HOME/bin \
@@ -26,9 +26,7 @@ RUN yum update -y \
 # Install Corretto Java JDK
 #Corretto download page: https://docs.aws.amazon.com/corretto/latest/corretto-8-ug/downloads-list.html
 
-ARG CORRETTO_URL_PERM=https://corretto.aws/downloads/latest/amazon-corretto-8-x64-linux-jdk.rpm
-ARG CORRETTO_RPM=amazon-corretto-8-x64-linux-jdk.rpm
-
+ARG JAVA_VERSION=1.8.0
 
 # real copy command (if not caching), uncomment this and change comments of COPY above to work on install script
 COPY container_files/ /opt/container_files/
@@ -36,7 +34,7 @@ COPY container_files/ /opt/container_files/
 RUN cd /tmp \
     && chmod +x /opt/container_files/docker-build-bin/*.sh \
     && /opt/container_files/docker-build-bin/containerDockerfileInstallDos2unix.sh /opt/container_files \
-    && /opt/container_files/docker-build-bin/containerDockerfileInstallJava.sh $CORRETTO_URL_PERM $CORRETTO_RPM $JAVA_HOME $GROUPER_VERSION \
+    && /opt/container_files/docker-build-bin/containerDockerfileInstallJava.sh $JAVA_VERSION \
     && /opt/container_files/docker-build-bin/containerDockerfileInstallGrouper.sh $CORRETTO_URL_PERM $CORRETTO_RPM $JAVA_HOME $GROUPER_VERSION \
     && /opt/container_files/docker-build-bin/containerDockerfileInstall.sh $CORRETTO_URL_PERM $CORRETTO_RPM $JAVA_HOME $GROUPER_VERSION
 

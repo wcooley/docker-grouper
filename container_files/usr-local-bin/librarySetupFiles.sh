@@ -5,12 +5,7 @@ setupFiles_linkGrouperSecrets() {
         local label_file=`basename $filepath`
         local file=$(echo $label_file| cut -d'_' -f 2)
 
-        if [[ $label_file == grouper_* ]]; then
-            ln -sf /run/secrets/$label_file /opt/grouper/grouperWebapp/WEB-INF/classes/$file
-            returnCode=$?
-            echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_linkGrouperSecrets) ln -sf /run/secrets/$label_file /opt/grouper/grouperWebapp/WEB-INF/classes/$file, result: $returnCode"
-            if [ $returnCode != 0 ]; then exit $returnCode; fi
-        elif [[ $label_file == shib_* ]]; then
+        if [[ $label_file == shib_* ]]; then
             ln -sf /run/secrets/$label_file /etc/shibboleth/$file
             returnCode=$?
             echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_linkGrouperSecrets) ln -sf /run/secrets/$label_file /etc/shibboleth/$file, result: $returnCode"
