@@ -120,10 +120,10 @@ pipeline {
                           ]
                          // Scan again and fail on CRITICAL vulns
                          //below can be temporarily commented to prevent build from failing
-                         echo "Scanning for CRITICAL vulnerabilities only (fatal)..."
-                         sh "trivy image --ignore-unfixed --vuln-type os,library --exit-code 1 --severity CRITICAL ${imagename}"
-                         sh "trivy image --ignore-unfixed --vuln-type os,library --exit-code 1 --severity CRITICAL ${imagename}:arm64"
-                         //echo "Skipping scan for CRITICAL vulnerabilities (temporary)..."
+                         //echo "Scanning for CRITICAL vulnerabilities only (fatal)..."
+                         //sh "trivy image --ignore-unfixed --vuln-type os,library --exit-code 1 --severity CRITICAL ${imagename}"
+                         //sh "trivy image --ignore-unfixed --vuln-type os,library --exit-code 1 --severity CRITICAL ${imagename}:arm64"
+                         echo "Skipping scan for CRITICAL vulnerabilities (temporary)..."
                    } catch(error) {
                            def error_details = readFile('./debug');
                            def message = "BUILD ERROR: There was a problem scanning ${imagename}:${tag}. \n\n ${error_details}"
