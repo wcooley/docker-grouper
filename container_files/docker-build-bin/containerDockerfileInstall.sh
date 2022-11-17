@@ -85,11 +85,6 @@ returnCode=$?
 echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) cp -R /opt/container_files/grouperWebapp/* /opt/grouper/grouperWebapp, result: $returnCode"
 if [ $returnCode != 0 ]; then exit $returnCode; fi
 
-cp -R /opt/container_files/api/* /opt/grouper/grouperWebapp/WEB-INF/classes/
-returnCode=$?
-echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) cp -R /opt/container_files/api/* /opt/grouper/grouperWebapp/WEB-INF/classes/, result: $returnCode"
-if [ $returnCode != 0 ]; then exit $returnCode; fi
-
 cp -R /opt/container_files/tomee/* /opt/tomee/
 returnCode=$?
 echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) cp -R /opt/container_files/tomee/* /opt/tomee/, result: $returnCode"
