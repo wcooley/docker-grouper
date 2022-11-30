@@ -51,7 +51,7 @@ RUN cd /opt/tomee/; \
 COPY container_files/api/* /opt/grouper/grouperWebapp/WEB-INF/classes/
 COPY container_files/tomee/ /opt/tomee/
 
-FROM tier/shibboleth_sp:3.1.0_04172020
+FROM i2incommon/shibboleth_sp:3.4.0_11032022
 LABEL author="tier-packaging@internet2.edu <tier-packaging@internet2.edu>" \
       Vendor="TIER" \
       ImageType="Grouper" \
