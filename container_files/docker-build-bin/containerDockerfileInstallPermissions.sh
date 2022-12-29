@@ -27,51 +27,51 @@ if [ $lines -ne 0 ]; then
   if [ $returnCode != 0 ]; then exit $returnCode; fi
 fi
 
-lines=$(find /home/$user /opt/container_files /opt/grouper /opt/tier /opt/tier-support /opt/tomee /etc/httpd/conf /home/tomcat /usr/local/bin /etc/httpd/conf.d -type d -path /opt/grouper/slashRoot -prune -o -path /opt/grouper/logs -prune -o ! -perm -g+rwxs | wc -l)
+lines=$(find /home/$user /opt/container_files /opt/grouper /opt/tier /opt/tier-support /opt/tomee /etc/httpd/conf /home/tomcat /usr/local/bin /etc/httpd/conf.d -path /opt/grouper/slashRoot -prune -o -path /opt/grouper/logs -prune -o -type d ! -perm -g+rwxs -print | wc -l)
 if [ $lines -ne 0 ]; then
-  chmod g+rwxs $(find /home/$user /opt/container_files /opt/grouper /opt/tier /opt/tier-support /opt/tomee /etc/httpd/conf /home/tomcat /usr/local/bin /etc/httpd/conf.d -type d -path /opt/grouper/slashRoot -prune -o -path /opt/grouper/logs -prune -o ! -perm -g+rwxs)
+  chmod g+rwxs $(find /home/$user /opt/container_files /opt/grouper /opt/tier /opt/tier-support /opt/tomee /etc/httpd/conf /home/tomcat /usr/local/bin /etc/httpd/conf.d -path /opt/grouper/slashRoot -prune -o -path /opt/grouper/logs -prune -o -type d ! -perm -g+rwxs -print)
   returnCode=$?
-  echo "grouperDockerfile; INFO: ($0) chmod g+rwxs \$(find /home/$user /opt/container_files /opt/grouper /opt/tier /opt/tier-support /opt/tomee /etc/httpd/conf /home/tomcat /usr/local/bin /etc/httpd/conf.d -type d -path /opt/grouper/slashRoot -prune -o -path /opt/grouper/logs -prune -o ! -perm -g+rwxs ), result: $returnCode"
+  echo "grouperDockerfile; INFO: ($0) chmod g+rwxs \$(find /home/$user /opt/container_files /opt/grouper /opt/tier /opt/tier-support /opt/tomee /etc/httpd/conf /home/tomcat /usr/local/bin /etc/httpd/conf.d -path /opt/grouper/slashRoot -prune -o -path /opt/grouper/logs -prune -o -type d ! -perm -g+rwxs -print), result: $returnCode"
   if [ $returnCode != 0 ]; then exit $returnCode; fi
 fi
 
-lines=$(find /home/$user /opt/container_files /opt/grouper /opt/tier /opt/tier-support /opt/tomee /etc/httpd/conf /home/tomcat /usr/local/bin /etc/httpd/conf.d /usr/lib/jvm/java/jre/lib/security/cacerts -type f -path /opt/grouper/slashRoot -prune -o -path /opt/grouper/logs -prune -o ! -perm -g+rw | wc -l)
+lines=$(find /home/$user /opt/container_files /opt/grouper /opt/tier /opt/tier-support /opt/tomee /etc/httpd/conf /home/tomcat /usr/local/bin /etc/httpd/conf.d /usr/lib/jvm/java/jre/lib/security/cacerts -path /opt/grouper/slashRoot -prune -o -path /opt/grouper/logs -prune -o -type f ! -perm -g+rw -print | wc -l)
 if [ $lines -ne 0 ]; then
-  chmod g+rw $(find /home/$user /opt/container_files /opt/grouper /opt/tier /opt/tier-support /opt/tomee /etc/httpd/conf /home/tomcat /usr/local/bin /etc/httpd/conf.d /usr/lib/jvm/java/jre/lib/security/cacerts -type f -path /opt/grouper/slashRoot -prune -o -path /opt/grouper/logs -prune -o ! -perm -g+rw)
+  chmod g+rw $(find /home/$user /opt/container_files /opt/grouper /opt/tier /opt/tier-support /opt/tomee /etc/httpd/conf /home/tomcat /usr/local/bin /etc/httpd/conf.d /usr/lib/jvm/java/jre/lib/security/cacerts -path /opt/grouper/slashRoot -prune -o -path /opt/grouper/logs -prune -o -type f ! -perm -g+rw -print)
   returnCode=$?
-  echo "grouperDockerfile; INFO: ($0) chmod g+rw \$(find /home/$user /opt/container_files /opt/grouper /opt/tier /opt/tier-support /opt/tomee /etc/httpd/conf /home/tomcat /usr/local/bin /etc/httpd/conf.d /usr/lib/jvm/java/jre/lib/security/cacerts -type f -path /opt/grouper/slashRoot -prune -o -path /opt/grouper/logs -prune -o ! -perm -g+rw ), result: $returnCode"
+  echo "grouperDockerfile; INFO: ($0) chmod g+rw \$(find /home/$user /opt/container_files /opt/grouper /opt/tier /opt/tier-support /opt/tomee /etc/httpd/conf /home/tomcat /usr/local/bin /etc/httpd/conf.d /usr/lib/jvm/java/jre/lib/security/cacerts -path /opt/grouper/slashRoot -prune -o -path /opt/grouper/logs -prune -o -type f ! -perm -g+rw -print), result: $returnCode"
   if [ $returnCode != 0 ]; then exit $returnCode; fi
 fi
 
-lines=$(find /home/$user /opt/container_files /opt/grouper /opt/tier /opt/tier-support /opt/tomee /etc/httpd/conf /home/tomcat /usr/local/bin /etc/httpd/conf.d /usr/lib/jvm/java/jre/lib/security/cacerts -perm -o+w -path /opt/grouper/slashRoot -prune -o -path /opt/grouper/logs -prune -o -print | wc -l)
+lines=$(find /home/$user /opt/container_files /opt/grouper /opt/tier /opt/tier-support /opt/tomee /etc/httpd/conf /home/tomcat /usr/local/bin /etc/httpd/conf.d /usr/lib/jvm/java/jre/lib/security/cacerts -path /opt/grouper/slashRoot -prune -o -path /opt/grouper/logs -prune -o -perm -o+w -print | wc -l)
 if [ $lines -ne 0 ]; then
-  chmod o-w $(find /home/$user /opt/container_files /opt/grouper /opt/tier /opt/tier-support /opt/tomee /etc/httpd/conf /home/tomcat /usr/local/bin /etc/httpd/conf.d /usr/lib/jvm/java/jre/lib/security/cacerts -perm -o+w -path /opt/grouper/slashRoot -prune -o -path /opt/grouper/logs -prune -o -print)
+  chmod o-w $(find /home/$user /opt/container_files /opt/grouper /opt/tier /opt/tier-support /opt/tomee /etc/httpd/conf /home/tomcat /usr/local/bin /etc/httpd/conf.d /usr/lib/jvm/java/jre/lib/security/cacerts -path /opt/grouper/slashRoot -prune -o -path /opt/grouper/logs -prune -o -perm -o+w -print)
   returnCode=$?
-  echo "grouperDockerfile; INFO: ($0) chmod o-w \$(find /home/$user /opt/container_files /opt/grouper /opt/tier /opt/tier-support /opt/tomee /etc/httpd/conf /home/tomcat /usr/local/bin /etc/httpd/conf.d /usr/lib/jvm/java/jre/lib/security/cacerts -perm -o+w -path /opt/grouper/slashRoot -prune -o -path /opt/grouper/logs -prune -o -print ), result: $returnCode"
+  echo "grouperDockerfile; INFO: ($0) chmod o-w \$(find /home/$user /opt/container_files /opt/grouper /opt/tier /opt/tier-support /opt/tomee /etc/httpd/conf /home/tomcat /usr/local/bin /etc/httpd/conf.d /usr/lib/jvm/java/jre/lib/security/cacerts -path /opt/grouper/slashRoot -prune -o -path /opt/grouper/logs -prune -o -perm -o+w -print), result: $returnCode"
   if [ $returnCode != 0 ]; then exit $returnCode; fi
 fi
 
-lines=$(find /home/$user /opt/container_files /opt/grouper /opt/tier /opt/tier-support /opt/tomee /etc/httpd/conf /home/tomcat /etc/httpd/conf.d -type f -name "*.sh" -path /opt/grouper/slashRoot -prune -o -path /opt/grouper/logs -prune -o ! -perm -g+x -print | wc -l)
+lines=$(find /home/$user /opt/container_files /opt/grouper /opt/tier /opt/tier-support /opt/tomee /etc/httpd/conf /home/tomcat /etc/httpd/conf.d -path /opt/grouper/slashRoot -prune -o -path /opt/grouper/logs -prune -o -type f -name "*.sh" ! -perm -g+x -print -print | wc -l)
 if [ $lines -ne 0 ]; then
-  chmod +x $(find /home/$user /opt/container_files /opt/grouper /opt/tier /opt/tier-support /opt/tomee /etc/httpd/conf /home/tomcat /etc/httpd/conf.d -type f -name "*.sh" -path /opt/grouper/slashRoot -prune -o -path /opt/grouper/logs -prune -o ! -perm -g+x)
+  chmod +x $(find /home/$user /opt/container_files /opt/grouper /opt/tier /opt/tier-support /opt/tomee /etc/httpd/conf /home/tomcat /etc/httpd/conf.d -path /opt/grouper/slashRoot -prune -o -path /opt/grouper/logs -prune -o -type f -name "*.sh" ! -perm -g+x -print)
   returnCode=$?
-  echo "grouperDockerfile; INFO: ($0) chmod +x \$(find /home/$user /opt/container_files /opt/grouper /opt/tier /opt/tier-support /opt/tomee /etc/httpd/conf /home/tomcat /etc/httpd/conf.d -type f -name \"*.sh\" -path /opt/grouper/slashRoot -prune -o -path /opt/grouper/logs -prune -o ! -perm -g+x), result: $returnCode"
+  echo "grouperDockerfile; INFO: ($0) chmod +x \$(find /home/$user /opt/container_files /opt/grouper /opt/tier /opt/tier-support /opt/tomee /etc/httpd/conf /home/tomcat /etc/httpd/conf.d -path /opt/grouper/slashRoot -prune -o -path /opt/grouper/logs -prune -o -type f -name \"*.sh\" ! -perm -g+x -print), result: $returnCode"
   if [ $returnCode != 0 ]; then exit $returnCode; fi
 fi
 
-lines=$(find /home/$user /opt/container_files /opt/grouper /opt/tier /opt/tier-support /opt/tomee /etc/httpd/conf /home/tomcat /etc/httpd/conf.d -type f -name "*.sh" -path /opt/grouper/slashRoot -prune -o -path /opt/grouper/logs -prune -o ! -perm -u+x | wc -l)
+lines=$(find /home/$user /opt/container_files /opt/grouper /opt/tier /opt/tier-support /opt/tomee /etc/httpd/conf /home/tomcat /etc/httpd/conf.d -path /opt/grouper/slashRoot -prune -o -path /opt/grouper/logs -prune -o -type f -name "*.sh" ! -perm -u+x -print | wc -l)
 if [ $lines -ne 0 ]; then
-  chmod +x $(find /home/$user /opt/container_files /opt/grouper /opt/tier /opt/tier-support /opt/tomee /etc/httpd/conf /home/tomcat /etc/httpd/conf.d -type f -name "*.sh" -path /opt/grouper/slashRoot -prune -o -path /opt/grouper/logs -prune -o ! -perm -u+x)
+  chmod +x $(find /home/$user /opt/container_files /opt/grouper /opt/tier /opt/tier-support /opt/tomee /etc/httpd/conf /home/tomcat /etc/httpd/conf.d -path /opt/grouper/slashRoot -prune -o -path /opt/grouper/logs -prune -o -type f -name "*.sh" ! -perm -u+x -print)
   returnCode=$?
-  echo "grouperDockerfile; INFO: ($0) chmod +x \$(find /home/$user /opt/container_files /opt/grouper /opt/tier /opt/tier-support /opt/tomee /etc/httpd/conf /home/tomcat /etc/httpd/conf.d -type f -name \"*.sh\" -path /opt/grouper/slashRoot -prune -o -path /opt/grouper/logs -prune -o ! -perm -u+x), result: $returnCode"
+  echo "grouperDockerfile; INFO: ($0) chmod +x \$(find /home/$user /opt/container_files /opt/grouper /opt/tier /opt/tier-support /opt/tomee /etc/httpd/conf /home/tomcat /etc/httpd/conf.d -path /opt/grouper/slashRoot -prune -o -path /opt/grouper/logs -prune -o -type f -name \"*.sh\" ! -perm -u+x -print), result: $returnCode"
   if [ $returnCode != 0 ]; then exit $returnCode; fi
 fi
 
-lines=$(find /home/$user /opt/container_files /opt/grouper /opt/tier /opt/tier-support /opt/tomee /etc/httpd/conf /home/tomcat /etc/httpd/conf.d -type f -name "*.sh" -path /opt/grouper/slashRoot -prune -o -path /opt/grouper/logs -prune -o ! -perm -o+x | wc -l)
+lines=$(find /home/$user /opt/container_files /opt/grouper /opt/tier /opt/tier-support /opt/tomee /etc/httpd/conf /home/tomcat /etc/httpd/conf.d -path /opt/grouper/slashRoot -prune -o -path /opt/grouper/logs -prune -o -type f -name "*.sh" ! -perm -o+x -print | wc -l)
 if [ $lines -ne 0 ]; then
-  chmod +x $(find /home/$user /opt/container_files /opt/grouper /opt/tier /opt/tier-support /opt/tomee /etc/httpd/conf /home/tomcat /etc/httpd/conf.d -type f -name "*.sh" -path /opt/grouper/slashRoot -prune -o -path /opt/grouper/logs -prune -o ! -perm -o+x)
+  chmod +x $(find /home/$user /opt/container_files /opt/grouper /opt/tier /opt/tier-support /opt/tomee /etc/httpd/conf /home/tomcat /etc/httpd/conf.d -path /opt/grouper/slashRoot -prune -o -path /opt/grouper/logs -prune -o -type f -name "*.sh" ! -perm -o+x -print)
   returnCode=$?
-  echo "grouperDockerfile; INFO: ($0) chmod +x \$(find /home/$user /opt/container_files /opt/grouper /opt/tier /opt/tier-support /opt/tomee /etc/httpd/conf /home/tomcat /etc/httpd/conf.d -type f -name \"*.sh\" -path /opt/grouper/slashRoot -prune -o -path /opt/grouper/logs -prune -o ! -perm -o+x), result: $returnCode"
+  echo "grouperDockerfile; INFO: ($0) chmod +x \$(find /home/$user /opt/container_files /opt/grouper /opt/tier /opt/tier-support /opt/tomee /etc/httpd/conf /home/tomcat /etc/httpd/conf.d -path /opt/grouper/slashRoot -prune -o -path /opt/grouper/logs -prune -o -type f -name \"*.sh\" ! -perm -o+x -print), result: $returnCode"
   if [ $returnCode != 0 ]; then exit $returnCode; fi
 fi
 
