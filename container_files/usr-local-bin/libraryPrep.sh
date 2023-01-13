@@ -500,8 +500,8 @@ prep_finishEnd() {
       export GROUPER_PUT_JAVA_HOME_IN_BASHRC=true
     fi
     if [ -z "$GROUPER_JAVA_HOME" ]; then 
-      echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishEnd) export GROUPER_JAVA_HOME=/usr/lib/jvm/java-1.8.0-amazon-corretto"
-      export GROUPER_JAVA_HOME=/usr/lib/jvm/java-1.8.0-amazon-corretto
+      echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishEnd) export GROUPER_JAVA_HOME=/usr/lib/jvm/java-17-amazon-corretto"
+      export GROUPER_JAVA_HOME=/usr/lib/jvm/java-17-amazon-corretto
     fi
     if [ -z "$GROUPER_TOMCAT_LOG_ACCESS" ]; then 
       echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishEnd) export GROUPER_TOMCAT_LOG_ACCESS=false"

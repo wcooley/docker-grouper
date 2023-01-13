@@ -280,9 +280,9 @@ setupFilesTomcat_sslCertsClient() {
 
     if [ -n "$(ls -A /opt/grouper/certs/client/*.pem 2>/dev/null)" ]; then
 
-      chmod u+w /usr/lib/jvm/java/jre/lib/security/cacerts
+      chmod u+w $JAVA_HOME/lib/security/cacerts
       returnCode=$?
-      echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_sslCertsAnchors) chmod u+w /usr/lib/jvm/java/jre/lib/security/cacerts , result=$returnCode"
+      echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_sslCertsAnchors) chmod u+w $JAVA_HOME/lib/security/cacerts , result=$returnCode"
       if [ $returnCode != 0 ]
       then
         exit $returnCode
@@ -293,10 +293,10 @@ setupFilesTomcat_sslCertsClient() {
 
         fileNameNoExtension=$(basename -- "$fileName")
         fileNameNoExtension="${fileNameNoExtension%.*}"
-        /usr/lib/jvm/java/bin/keytool -import -noprompt -keystore /usr/lib/jvm/java/jre/lib/security/cacerts -storepass changeit -alias "$fileNameNoExtension" -file "$fileName"
+        /usr/lib/jvm/java/bin/keytool -import -noprompt -keystore $JAVA_HOME/lib/security/cacerts -storepass changeit -alias "$fileNameNoExtension" -file "$fileName"
 
         returnCode=$?
-        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_sslCertsAnchors) /usr/lib/jvm/java/bin/keytool -import -noprompt -keystore /usr/lib/jvm/java/jre/lib/security/cacerts -storepass changeit -alias \"$fileNameNoExtension\" -file \"$fileName\" , result=$returnCode"
+        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_sslCertsAnchors) /usr/lib/jvm/java/bin/keytool -import -noprompt -keystore $JAVA_HOME/lib/security/cacerts -storepass changeit -alias \"$fileNameNoExtension\" -file \"$fileName\" , result=$returnCode"
         if [ $returnCode != 0 ]
         then
           exit $returnCode
@@ -304,9 +304,9 @@ setupFilesTomcat_sslCertsClient() {
         
       done
 
-      chmod u-w /usr/lib/jvm/java/jre/lib/security/cacerts        
+      chmod u-w $JAVA_HOME/lib/security/cacerts
       returnCode=$?
-      echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_sslCertsAnchors) chmod u-w /usr/lib/jvm/java/jre/lib/security/cacerts , result=$returnCode"
+      echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_sslCertsAnchors) chmod u-w $JAVA_HOME/lib/security/cacerts , result=$returnCode"
       if [ $returnCode != 0 ]
       then
         exit $returnCode

@@ -11,19 +11,19 @@ group=$2
 # this needs to exist
 mkdir -p /opt/tier
 
-lines=$(find /home/$user /opt/container_files /opt/grouper /opt/tier /opt/tier-support /opt/tomee /etc/httpd/conf /home/tomcat /usr/local/bin /etc/httpd/conf.d /usr/lib/jvm/java/jre/lib/security/cacerts -path /opt/grouper/slashRoot -prune -o -path /opt/grouper/logs -prune -o ! -user $user -print | wc -l)
+lines=$(find /home/$user /opt/container_files /opt/grouper /opt/tier /opt/tier-support /opt/tomee /etc/httpd/conf /home/tomcat /usr/local/bin /etc/httpd/conf.d $JAVA_HOME/lib/security/cacerts -path /opt/grouper/slashRoot -prune -o -path /opt/grouper/logs -prune -o ! -user $user -print | wc -l)
 if [ $lines -ne 0 ]; then
-  chown $user:$group $(find /home/$user /opt/container_files /opt/grouper /opt/tier /opt/tier-support /opt/tomee /etc/httpd/conf /home/tomcat /usr/local/bin /etc/httpd/conf.d /usr/lib/jvm/java/jre/lib/security/cacerts -path /opt/grouper/slashRoot -prune -o -path /opt/grouper/logs -prune -o ! -user $user -print)
+  chown $user:$group $(find /home/$user /opt/container_files /opt/grouper /opt/tier /opt/tier-support /opt/tomee /etc/httpd/conf /home/tomcat /usr/local/bin /etc/httpd/conf.d $JAVA_HOME/lib/security/cacerts -path /opt/grouper/slashRoot -prune -o -path /opt/grouper/logs -prune -o ! -user $user -print)
   returnCode=$?
-  echo "grouperDockerfile; INFO: ($0) chown $user:$group \$(find /home/$user /opt/container_files /opt/grouper /opt/tier /opt/tier-support /opt/tomee /etc/httpd/conf /home/tomcat /usr/local/bin /etc/httpd/conf.d /usr/lib/jvm/java/jre/lib/security/cacerts -path /opt/grouper/slashRoot -prune -o -path /opt/grouper/logs -prune -o ! -user $user -print), result: $returnCode"
+  echo "grouperDockerfile; INFO: ($0) chown $user:$group \$(find /home/$user /opt/container_files /opt/grouper /opt/tier /opt/tier-support /opt/tomee /etc/httpd/conf /home/tomcat /usr/local/bin /etc/httpd/conf.d $JAVA_HOME/lib/security/cacerts -path /opt/grouper/slashRoot -prune -o -path /opt/grouper/logs -prune -o ! -user $user -print), result: $returnCode"
   if [ $returnCode != 0 ]; then exit $returnCode; fi
 fi
 
-lines=$(find /home/$user /opt/container_files /opt/grouper /opt/tier /opt/tier-support /opt/tomee /etc/httpd/conf /home/tomcat /usr/local/bin /etc/httpd/conf.d /usr/lib/jvm/java/jre/lib/security/cacerts -path /opt/grouper/slashRoot -prune -o -path /opt/grouper/logs -prune -o ! -group $group -print | wc -l)
+lines=$(find /home/$user /opt/container_files /opt/grouper /opt/tier /opt/tier-support /opt/tomee /etc/httpd/conf /home/tomcat /usr/local/bin /etc/httpd/conf.d $JAVA_HOME/lib/security/cacerts -path /opt/grouper/slashRoot -prune -o -path /opt/grouper/logs -prune -o ! -group $group -print | wc -l)
 if [ $lines -ne 0 ]; then
-  chown $user:$group $(find /home/$user /opt/container_files /opt/grouper /opt/tier /opt/tier-support /opt/tomee /etc/httpd/conf /home/tomcat /usr/local/bin /etc/httpd/conf.d /usr/lib/jvm/java/jre/lib/security/cacerts -path /opt/grouper/slashRoot -prune -o -path /opt/grouper/logs -prune -o ! -group $group -print)
+  chown $user:$group $(find /home/$user /opt/container_files /opt/grouper /opt/tier /opt/tier-support /opt/tomee /etc/httpd/conf /home/tomcat /usr/local/bin /etc/httpd/conf.d $JAVA_HOME/lib/security/cacerts -path /opt/grouper/slashRoot -prune -o -path /opt/grouper/logs -prune -o ! -group $group -print)
   returnCode=$?
-  echo "grouperDockerfile; INFO: ($0) chown $user:$group \$(find /home/$user /opt/container_files /opt/grouper /opt/tier /opt/tier-support /opt/tomee /etc/httpd/conf /home/tomcat /usr/local/bin /etc/httpd/conf.d /usr/lib/jvm/java/jre/lib/security/cacerts -path /opt/grouper/slashRoot -prune -o -path /opt/grouper/logs -prune -o ! -group $group -print), result: $returnCode"
+  echo "grouperDockerfile; INFO: ($0) chown $user:$group \$(find /home/$user /opt/container_files /opt/grouper /opt/tier /opt/tier-support /opt/tomee /etc/httpd/conf /home/tomcat /usr/local/bin /etc/httpd/conf.d $JAVA_HOME/lib/security/cacerts -path /opt/grouper/slashRoot -prune -o -path /opt/grouper/logs -prune -o ! -group $group -print), result: $returnCode"
   if [ $returnCode != 0 ]; then exit $returnCode; fi
 fi
 
@@ -35,19 +35,19 @@ if [ $lines -ne 0 ]; then
   if [ $returnCode != 0 ]; then exit $returnCode; fi
 fi
 
-lines=$(find /home/$user /opt/container_files /opt/grouper /opt/tier /opt/tier-support /opt/tomee /etc/httpd/conf /home/tomcat /usr/local/bin /etc/httpd/conf.d /usr/lib/jvm/java/jre/lib/security/cacerts -path /opt/grouper/slashRoot -prune -o -path /opt/grouper/logs -prune -o -type f ! -perm -g+rw -print | wc -l)
+lines=$(find /home/$user /opt/container_files /opt/grouper /opt/tier /opt/tier-support /opt/tomee /etc/httpd/conf /home/tomcat /usr/local/bin /etc/httpd/conf.d $JAVA_HOME/lib/security/cacerts -path /opt/grouper/slashRoot -prune -o -path /opt/grouper/logs -prune -o -type f ! -perm -g+rw -print | wc -l)
 if [ $lines -ne 0 ]; then
-  chmod g+rw $(find /home/$user /opt/container_files /opt/grouper /opt/tier /opt/tier-support /opt/tomee /etc/httpd/conf /home/tomcat /usr/local/bin /etc/httpd/conf.d /usr/lib/jvm/java/jre/lib/security/cacerts -path /opt/grouper/slashRoot -prune -o -path /opt/grouper/logs -prune -o -type f ! -perm -g+rw -print)
+  chmod g+rw $(find /home/$user /opt/container_files /opt/grouper /opt/tier /opt/tier-support /opt/tomee /etc/httpd/conf /home/tomcat /usr/local/bin /etc/httpd/conf.d $JAVA_HOME/lib/security/cacerts -path /opt/grouper/slashRoot -prune -o -path /opt/grouper/logs -prune -o -type f ! -perm -g+rw -print)
   returnCode=$?
-  echo "grouperDockerfile; INFO: ($0) chmod g+rw \$(find /home/$user /opt/container_files /opt/grouper /opt/tier /opt/tier-support /opt/tomee /etc/httpd/conf /home/tomcat /usr/local/bin /etc/httpd/conf.d /usr/lib/jvm/java/jre/lib/security/cacerts -path /opt/grouper/slashRoot -prune -o -path /opt/grouper/logs -prune -o -type f ! -perm -g+rw -print), result: $returnCode"
+  echo "grouperDockerfile; INFO: ($0) chmod g+rw \$(find /home/$user /opt/container_files /opt/grouper /opt/tier /opt/tier-support /opt/tomee /etc/httpd/conf /home/tomcat /usr/local/bin /etc/httpd/conf.d $JAVA_HOME/lib/security/cacerts -path /opt/grouper/slashRoot -prune -o -path /opt/grouper/logs -prune -o -type f ! -perm -g+rw -print), result: $returnCode"
   if [ $returnCode != 0 ]; then exit $returnCode; fi
 fi
 
-lines=$(find /home/$user /opt/container_files /opt/grouper /opt/tier /opt/tier-support /opt/tomee /etc/httpd/conf /home/tomcat /usr/local/bin /etc/httpd/conf.d /usr/lib/jvm/java/jre/lib/security/cacerts -path /opt/grouper/slashRoot -prune -o -path /opt/grouper/logs -prune -o -perm -o+w -print | wc -l)
+lines=$(find /home/$user /opt/container_files /opt/grouper /opt/tier /opt/tier-support /opt/tomee /etc/httpd/conf /home/tomcat /usr/local/bin /etc/httpd/conf.d $JAVA_HOME/lib/security/cacerts -path /opt/grouper/slashRoot -prune -o -path /opt/grouper/logs -prune -o -perm -o+w -print | wc -l)
 if [ $lines -ne 0 ]; then
-  chmod o-w $(find /home/$user /opt/container_files /opt/grouper /opt/tier /opt/tier-support /opt/tomee /etc/httpd/conf /home/tomcat /usr/local/bin /etc/httpd/conf.d /usr/lib/jvm/java/jre/lib/security/cacerts -path /opt/grouper/slashRoot -prune -o -path /opt/grouper/logs -prune -o -perm -o+w -print)
+  chmod o-w $(find /home/$user /opt/container_files /opt/grouper /opt/tier /opt/tier-support /opt/tomee /etc/httpd/conf /home/tomcat /usr/local/bin /etc/httpd/conf.d $JAVA_HOME/lib/security/cacerts -path /opt/grouper/slashRoot -prune -o -path /opt/grouper/logs -prune -o -perm -o+w -print)
   returnCode=$?
-  echo "grouperDockerfile; INFO: ($0) chmod o-w \$(find /home/$user /opt/container_files /opt/grouper /opt/tier /opt/tier-support /opt/tomee /etc/httpd/conf /home/tomcat /usr/local/bin /etc/httpd/conf.d /usr/lib/jvm/java/jre/lib/security/cacerts -path /opt/grouper/slashRoot -prune -o -path /opt/grouper/logs -prune -o -perm -o+w -print), result: $returnCode"
+  echo "grouperDockerfile; INFO: ($0) chmod o-w \$(find /home/$user /opt/container_files /opt/grouper /opt/tier /opt/tier-support /opt/tomee /etc/httpd/conf /home/tomcat /usr/local/bin /etc/httpd/conf.d $JAVA_HOME/lib/security/cacerts -path /opt/grouper/slashRoot -prune -o -path /opt/grouper/logs -prune -o -perm -o+w -print), result: $returnCode"
   if [ $returnCode != 0 ]; then exit $returnCode; fi
 fi
 

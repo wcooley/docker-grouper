@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# $1 ARG JAVA_HOME=/usr/lib/jvm/java-1.8.0-amazon-corretto
+# $1 ARG JAVA_HOME=/usr/lib/jvm/java-17-amazon-corretto
 # $2 ARG GROUPER_VERSION=2.6.14
 JAVA_HOME=$1
 GROUPER_VERSION=$2

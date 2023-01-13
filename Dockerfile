@@ -10,7 +10,7 @@ ARG GROUPER_CONTAINER_VERSION
 
 ENV GROUPER_VERSION=2.6.20 \
     GROUPER_CONTAINER_VERSION=$GROUPER_CONTAINER_VERSION \
-    JAVA_HOME=/usr/lib/jvm/java-1.8.0-amazon-corretto \
+    JAVA_HOME=/usr/lib/jvm/java-17-amazon-corretto \
     PATH=$PATH:$JAVA_HOME/bin \
     GROUPER_HOME=/opt/grouper/grouperWebapp/WEB-INF
 
@@ -26,7 +26,7 @@ RUN yum update -y \
 # Install Corretto Java JDK
 #Corretto download page: https://docs.aws.amazon.com/corretto/latest/corretto-8-ug/downloads-list.html
 
-ARG JAVA_VERSION=1.8.0
+ARG JAVA_VERSION=17
 
 # real copy command (if not caching), uncomment this and change comments of COPY above to work on install script
 COPY container_files/ /opt/container_files/

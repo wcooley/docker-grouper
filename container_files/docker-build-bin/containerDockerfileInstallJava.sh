@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# $1 ARG JAVA_VERSION=1.8.0
+# $1 ARG JAVA_VERSION=17
 JAVA_VERSION=$1
 
 
