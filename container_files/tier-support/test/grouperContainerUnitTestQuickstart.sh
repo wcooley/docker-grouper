@@ -24,7 +24,6 @@ testContainerQuickstart() {
 
   assertFileExists /opt/grouper/grouperWebapp/WEB-INF/libWs/axis2-kernel-1.6.4.jar
   assertFileExists /opt/grouper/grouperWebapp/WEB-INF/lib/axis2-kernel-1.6.4.jar
-  assertFileExists /opt/grouper/grouperWebapp/WEB-INF/libScim/stax-api-1.0-2.jar
   assertFileExists /opt/grouper/grouperWebapp/WEB-INF/lib/stax-api-1.0-2.jar
   assertFileExists "/opt/grouper/grouperWebapp/WEB-INF/lib/grouper-messaging-activemq-$grouperVersion.jar"
   assertFileExists "/opt/grouper/grouperWebapp/WEB-INF/libUiAndDaemon/grouper-messaging-activemq-$grouperVersion.jar"
@@ -33,7 +32,7 @@ testContainerQuickstart() {
   assertFileNotContains /etc/httpd/conf.d/ssl-enabled.conf "__"
   assertFileContains /etc/httpd/conf/httpd.conf "Listen 80"
   assertFileNotContains /opt/tier-support/supervisord.conf "program:shibbolethsp"
-  assertFileContains /opt/tier-support/supervisord.conf "program:tomee"
+  assertFileContains /opt/tier-support/supervisord.conf "program:tomcat"
   assertFileContains /opt/tier-support/supervisord.conf "program:httpd"
   assertFileNotContains /opt/tier-support/supervisord.conf "user=shibd"
   assertFileNotContains /opt/tier-support/supervisord.conf "__"
@@ -49,8 +48,6 @@ testContainerQuickstart() {
   assertFileContains /etc/httpd/conf.d/grouper-www.conf "3600"
   assertFileNotContains /etc/httpd/conf.d/grouper-www.conf "__"
 
-  assertEnvVar GROUPERSCIM_PROXY_PASS ""
-  assertEnvVar GROUPERSCIM_URL_CONTEXT "grouper-ws-scim"
   assertEnvVar GROUPERWS_PROXY_PASS ""
   assertEnvVar GROUPERWS_URL_CONTEXT "grouper-ws"
   assertEnvVar GROUPER_APACHE_AJP_TIMEOUT_SECONDS "3600"
@@ -68,9 +65,7 @@ testContainerQuickstart() {
   assertEnvVar GROUPER_RUN_APACHE "true"
   assertEnvVar GROUPER_RUN_PROCESSES_AS_USERS "true"
   assertEnvVar GROUPER_RUN_SHIB_SP "false"
-  assertEnvVar GROUPER_RUN_TOMEE "true"
-  assertEnvVar GROUPER_SCIM "true"
-  assertEnvVar GROUPER_SCIM_GROUPER_AUTH "true"
+  assertEnvVar GROUPER_RUN_TOMCAT "true"
   assertEnvVar GROUPER_TOMCAT_CONTEXT "grouper"
   assertEnvVar GROUPER_UI "true"
   assertEnvVar GROUPER_UI_CONFIGURATION_EDITOR_SOURCEIPADDRESSES "0.0.0.0/0"
@@ -112,15 +107,6 @@ testContainerQuickstart() {
   curl -L -k -u GrouperSystem:thisPassIsCopyrightedDontUse https://localhost/grouper-ws/servicesRest/v2_4_000/subjects/GrouperSystem -o index.html
   assertLocalFileContains index.html '"resultCode":"SUCCESS"'
 
-  curl -L -k https://localhost/grouper-ws-scim/v2/Groups/ -o index.html
-  assertLocalFileContains index.html 'HTTP Status 401'
-
-  curl -L -k -u GrouperSystem:XthisPassIsCopyrightedDontUse https://localhost/grouper-ws-scim/v2/Groups/ -o index.html
-  assertLocalFileContains index.html 'HTTP Status 401'
-
-  curl -L -k -u GrouperSystem:thisPassIsCopyrightedDontUse https://localhost/grouper-ws-scim/v2/Groups/ -o index.html
-  assertLocalFileContains index.html 'etc:workflowEditors'
-
   docker stop $containerName
   docker start $containerName
 
@@ -145,7 +131,7 @@ testContainerQuickstart() {
   containerCommandResultEquals "ps -ef | grep root | grep awk | grep supervisord | wc -l" 1
   containerCommandResultEquals "ps -ef | grep root | grep awk | grep grouper | wc -l" 1
   containerCommandResultEquals "ps -ef | grep root | grep awk | grep httpd | wc -l" 1
-  containerCommandResultEquals "ps -ef | grep root | grep awk | grep tomee | wc -l" 1
+  containerCommandResultEquals "ps -ef | grep root | grep awk | grep tomcat | wc -l" 1
 
   docker-compose down
   rm docker-compose.yaml

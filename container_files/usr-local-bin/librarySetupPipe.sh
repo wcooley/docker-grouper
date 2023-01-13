@@ -52,10 +52,10 @@ setupPipe_shibdLog() {
 
 setupPipe_tomcatLog() {
   if [ "$GROUPER_USE_PIPES" == "true" ]; then
-    if [ "$GROUPER_RUN_TOMEE" = "true" ] && [ "$GROUPER_LOG_TO_PIPE" = "true" ]
+    if [ "$GROUPER_RUN_TOMCAT" = "true" ] && [ "$GROUPER_LOG_TO_PIPE" = "true" ]
       then
         setupPipe /tmp/logtomcat
-        (cat <> /tmp/logtomcat | awk -v ENV="$ENV" -v UT="$USERTOKEN" '{printf "tomee;console;%s;%s;%s\n", ENV, UT, $0; fflush()}' &>/tmp/logpipe) &
+        (cat <> /tmp/logtomcat | awk -v ENV="$ENV" -v UT="$USERTOKEN" '{printf "tomcat;console;%s;%s;%s\n", ENV, UT, $0; fflush()}' &>/tmp/logpipe) &
     fi
   fi
 }

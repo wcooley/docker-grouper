@@ -27,7 +27,6 @@ export failureCount=0
 . ./grouperContainerUnitTestUiDifferentPorts.sh
 . ./grouperContainerUnitTestSlashRoot.sh
 . ./grouperContainerUnitTestSelfSigned.sh
-. ./grouperContainerUnitTestScim.sh
 . ./grouperContainerUnitTestWs.sh
 . ./grouperContainerUnitTestWsAuthn.sh
 . ./grouperContainerUnitTestQuickstart.sh
@@ -41,7 +40,6 @@ testContainerUiNoSslOrClient
 testContainerSlashRoot
 testContainerSelfSigned
 testContainerUiDifferentPorts
-testContainerScim
 testContainerWs
 testContainerWsAuthn
 testContainerQuickstart
@@ -77,7 +75,6 @@ unset -f testContainerUiNoSsl
 unset -f testContainerUiDifferentPorts
 unset -f testContainerSlashRoot
 unset -f testContainerSelfSigned
-unset -f testContainerScim
 unset -f testContainerWs
 unset -f successCount
 unset -f failureCount

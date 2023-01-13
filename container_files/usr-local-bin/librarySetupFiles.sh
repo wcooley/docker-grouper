@@ -131,8 +131,8 @@ setupFiles_loggingPrefix() {
     sed -i "s|__GROUPER_LOG_PREFIX__|$GROUPER_LOG_PREFIX|g" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml
     echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_loggingPrefix) Changing log prefix to $GROUPER_LOG_PREFIX in log4j2.xml, result: $?"
 
-    cp /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml /opt/tomee/conf/log4j2.xml
-    echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_loggingPrefix) cp /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml /opt/tomee/conf/log4j2.xml, result: $?"
+    cp /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml /opt/tomcat/conf/log4j2.xml
+    echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_loggingPrefix) cp /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml /opt/tomcat/conf/log4j2.xml, result: $?"
 }
 
 setupFiles_chownDirs() {
@@ -239,7 +239,7 @@ setupFiles_originalFile() {
 
 setupFiles_analyzeOriginalFiles() {
 
-    setupFiles_originalFile /opt/tomee/conf/Catalina/localhost/grouper.xml
+    setupFiles_originalFile /opt/tomcat/conf/Catalina/localhost/grouper.xml
     original_file=$?
     if [ -z "$GROUPER_ORIGFILE_GROUPER_XML" ] && [[ $original_file -eq 0 ]]
       then
@@ -251,7 +251,7 @@ setupFiles_analyzeOriginalFiles() {
       export GROUPER_ORIGFILE_GROUPER_XML=false
     fi
       
-    setupFiles_originalFile /opt/tomee/conf/server.xml
+    setupFiles_originalFile /opt/tomcat/conf/server.xml
     original_file=$?
     if [ -z "$GROUPER_ORIGFILE_SERVER_XML" ] && [[ $original_file -eq 0 ]]
       then 
@@ -323,7 +323,7 @@ setupFiles_analyzeOriginalFiles() {
       export GROUPER_ORIGFILE_SHIB_CONF=false
     fi
 
-    setupFiles_originalFile /opt/tomee/conf/Catalina/localhost/grouper.xml
+    setupFiles_originalFile /opt/tomcat/conf/Catalina/localhost/grouper.xml
     original_file=$?
     if [ -z "$GROUPER_ORIGFILE_GROUPER_XML" ] && [[ $original_file -eq 0 ]]
       then 

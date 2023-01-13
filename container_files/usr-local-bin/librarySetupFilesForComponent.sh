@@ -13,17 +13,6 @@ setupFilesForComponent_ws() {
 
 }
 
-setupFilesForComponent_scim() {
-
-  if [ "$GROUPER_SCIM" = "true" ]
-     then
-       cp -r /opt/grouper/grouperWebapp/WEB-INF/libScim/* /opt/grouper/grouperWebapp/WEB-INF/lib/
-       returnCode=$?
-       echo "grouperContainer; INFO: (librarySetupFilesForComponent.sh-setupFilesForComponent_scim) cp -r /opt/grouper/grouperWebapp/WEB-INF/libScim/* /opt/grouper/grouperWebapp/WEB-INF/lib/ , result: $returnCode"
-       if [ $returnCode != 0 ]; then exit $returnCode; fi
-  fi
-
-}
 
 setupFilesForComponent_ui() {
 
@@ -65,8 +54,6 @@ setupFilesForComponent() {
   
   setupFilesForComponent_ws
 
-  setupFilesForComponent_scim
-  
   setupFilesForComponent_ui
 
   setupFilesForComponent_quickstart
@@ -77,7 +64,6 @@ setupFilesForComponent() {
 setupFilesForComponent_unsetAll() {
   unset -f setupFilesForComponent
   unset -f setupFilesForComponent_quickstart
-  unset -f setupFilesForComponent_scim
   unset -f setupFilesForComponent_ui
   unset -f setupFilesForComponent_unsetAll
   unset -f setupFilesForComponent_ws
@@ -86,7 +72,6 @@ setupFilesForComponent_unsetAll() {
 setupFilesForComponent_exportAll() {
   export -f setupFilesForComponent
   export -f setupFilesForComponent_quickstart
-  export -f setupFilesForComponent_scim
   export -f setupFilesForComponent_ui
   export -f setupFilesForComponent_unsetAll
   export -f setupFilesForComponent_ws

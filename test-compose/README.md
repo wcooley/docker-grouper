@@ -41,7 +41,6 @@ The components can be accessed at the following urls, with
 
 Grouper UI: https://localhost/grouper (username: banderson, password: password (from ldap) or password1 (from tomcat-users.xml))
 Grouper WS: https://localhost:8443/grouper-ws/status?diagnosticType=all
-Grouper SCIM: https://localhost:9443/grouper-ws-scim/ (username: banderson, password: password (from tomcat-users.xml))
 RabbmitMQ: http://localhost:15672/ (username: guest, password: guest) 
 MariaDB: Port 3306 (username: root, password: (no password) )
 389-ds Directory: Port 389 (username: cn=Directory Manager, password: password)

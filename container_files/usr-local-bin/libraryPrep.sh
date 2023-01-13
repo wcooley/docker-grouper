@@ -60,10 +60,6 @@ prep_quickstart() {
       echo "grouperContainer; INFO: (libraryPrep.sh-prep_quickstart) export GROUPER_WS_GROUPER_AUTH='true'"    
       export GROUPER_WS_GROUPER_AUTH='true'
     fi
-    if [ -z "$GROUPER_SCIM_GROUPER_AUTH" ] ; then 
-      echo "grouperContainer; INFO: (libraryPrep.sh-prep_quickstart) export GROUPER_SCIM_GROUPER_AUTH=true"    
-      export GROUPER_SCIM_GROUPER_AUTH=true
-    fi
     if [ -z "$GROUPER_QUICKSTART" ]; then 
       echo "grouperContainer; INFO: (libraryPrep.sh-prep_quickstart) export GROUPER_QUICKSTART=true"    
       export GROUPER_QUICKSTART=true
@@ -77,25 +73,9 @@ prep_daemon() {
       echo "grouperContainer; INFO: (libraryPrep.sh-prep_daemon) export GROUPER_DAEMON=true"    
       export GROUPER_DAEMON=true
     fi
-    if [ -z "$GROUPER_RUN_TOMEE" ]; then 
-      echo "grouperContainer; INFO: (libraryPrep.sh-prep_daemon) export GROUPER_RUN_TOMEE=true"    
-      export GROUPER_RUN_TOMEE=true
-    fi
-}
-
-prep_scim() {
-    
-    if [ -z "$GROUPER_SCIM" ]; then 
-      echo "grouperContainer; INFO: (libraryPrep.sh-prep_scim) export GROUPER_SCIM=true"    
-      export GROUPER_SCIM=true
-    fi
-    if [ -z "$GROUPER_RUN_APACHE" ] && [ "$GROUPER_RUN_TOMCAT_NOT_SUPERVISOR" != "true" ] && [ "$GROUPER_OPENSHIFT" != "true" ]; then 
-      echo "grouperContainer; INFO: (libraryPrep.sh-prep_scim) export GROUPER_RUN_APACHE=true"    
-      export GROUPER_RUN_APACHE=true
-    fi
-    if [ -z "$GROUPER_RUN_TOMEE" ]; then 
-      echo "grouperContainer; INFO: (libraryPrep.sh-prep_scim) export GROUPER_RUN_TOMEE=true"    
-      export GROUPER_RUN_TOMEE=true
+    if [ -z "$GROUPER_RUN_TOMCAT" ]; then 
+      echo "grouperContainer; INFO: (libraryPrep.sh-prep_daemon) export GROUPER_RUN_TOMCAT=true"    
+      export GROUPER_RUN_TOMCAT=true
     fi
 }
 
@@ -113,9 +93,9 @@ prep_ui() {
       echo "grouperContainer; INFO: (libraryPrep.sh-prep_ui) export GROUPER_RUN_SHIB_SP=true"    
       export GROUPER_RUN_SHIB_SP=true
     fi
-    if [ -z "$GROUPER_RUN_TOMEE" ]; then 
-      echo "grouperContainer; INFO: (libraryPrep.sh-prep_ui) export GROUPER_RUN_TOMEE=true"    
-      export GROUPER_RUN_TOMEE=true
+    if [ -z "$GROUPER_RUN_TOMCAT" ]; then 
+      echo "grouperContainer; INFO: (libraryPrep.sh-prep_ui) export GROUPER_RUN_TOMCAT=true"    
+      export GROUPER_RUN_TOMCAT=true
     fi
 }
 
@@ -147,21 +127,6 @@ prep_runWs() {
     
   fi
 }
-prep_runScim() {
-  if [ -z "$GROUPERSCIM_PROXY_PASS" ]
-    then
-      if [ "$GROUPER_SCIM" == 'true' ]
-        then
-          echo "grouperContainer; INFO: (libraryPrep.sh-prep_runScim) export GROUPER_PROXY_PASS="    
-          export GROUPERSCIM_PROXY_PASS=
-        else
-          echo "grouperContainer; INFO: (libraryPrep.sh-prep_runScim) export GROUPER_PROXY_PASS=#"    
-          export GROUPERSCIM_PROXY_PASS=#
-      fi
-    
-  fi
-}
-
 
 prep_ws() {
 
@@ -173,9 +138,9 @@ prep_ws() {
       echo "grouperContainer; INFO: (libraryPrep.sh-prep_ws) export GROUPER_RUN_APACHE=true"    
       export GROUPER_RUN_APACHE=true
     fi
-    if [ -z "$GROUPER_RUN_TOMEE" ]; then 
-      echo "grouperContainer; INFO: (libraryPrep.sh-prep_ws) export GROUPER_RUN_TOMEE=true"    
-      export GROUPER_RUN_TOMEE=true
+    if [ -z "$GROUPER_RUN_TOMCAT" ]; then 
+      echo "grouperContainer; INFO: (libraryPrep.sh-prep_ws) export GROUPER_RUN_TOMCAT=true"    
+      export GROUPER_RUN_TOMCAT=true
     fi
 }
 
@@ -220,10 +185,10 @@ prep_initDeprecatedEnvVars() {
       export GROUPER_RUN_SHIB_SP="$RUN_SHIB_SP"
   fi
 
-  if [ ! -z "$RUN_TOMEE" ] && [ -z "$GROUPER_RUN_TOMEE" ]
+  if [ ! -z "$RUN_TOMCAT" ] && [ -z "$GROUPER_RUN_TOMCAT" ]
     then 
-      echo "grouperContainer; INFO: (libraryPrep.sh-prep_initDeprecatedEnvVars) export GROUPER_RUN_TOMEE=$RUN_TOMEE"
-      export GROUPER_RUN_TOMEE="$RUN_TOMEE"
+      echo "grouperContainer; INFO: (libraryPrep.sh-prep_initDeprecatedEnvVars) export GROUPER_RUN_TOMCAT=$RUN_TOMCAT"
+      export GROUPER_RUN_TOMCAT="$RUN_TOMCAT"
   fi
 
   if [ ! -z "$SELF_SIGNED_CERT" ] && [ -z "$GROUPER_SELF_SIGNED_CERT" ]
@@ -248,10 +213,6 @@ prep_finishBegin() {
       echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_WS_GROUPER_AUTH=false"
       export GROUPER_WS_GROUPER_AUTH=false
     fi
-    if [ -z "$GROUPER_SCIM_GROUPER_AUTH" ] ; then 
-      echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_SCIM_GROUPER_AUTH=false"
-      export GROUPER_SCIM_GROUPER_AUTH=false
-    fi
     if [ -z "$GROUPER_UI_CONFIGURATION_EDITOR_SOURCEIPADDRESSES" ]; then 
       echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_UI_CONFIGURATION_EDITOR_SOURCEIPADDRESSES='127.0.0.1/32'"
       export GROUPER_UI_CONFIGURATION_EDITOR_SOURCEIPADDRESSES='127.0.0.1/32'
@@ -261,10 +222,6 @@ prep_finishBegin() {
     if [ -z "$GROUPER_UI" ] ; then 
       echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) GROUPER_UI=false"
       export GROUPER_UI=false
-    fi
-    if [ -z "$GROUPER_SCIM" ] ; then 
-      echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_SCIM=false"
-      export GROUPER_SCIM=false
     fi
     if [ -z "$GROUPER_WS" ] ; then 
       echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_WS=false"
@@ -369,10 +326,6 @@ prep_finishBegin() {
     if [ -z "$GROUPERWS_URL_CONTEXT" ] ; then 
       echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPERWS_URL_CONTEXT=grouper-ws"
       export GROUPERWS_URL_CONTEXT=grouper-ws
-    fi
-    if [ -z "$GROUPERSCIM_URL_CONTEXT" ] ; then 
-      echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPERSCIM_URL_CONTEXT=grouper-ws-scim"
-      export GROUPERSCIM_URL_CONTEXT=grouper-ws-scim
     fi
     if [ -z "$GROUPER_APACHE_AJP_TIMEOUT_SECONDS" ] ; then 
       echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_APACHE_AJP_TIMEOUT_SECONDS=3600"
@@ -542,7 +495,6 @@ prep_finish() {
 
     prepOnly    
 
-    prep_runScim
     prep_runUi
     prep_runWs
 
@@ -568,10 +520,8 @@ prep_unsetAll() {
   unset -f prep_initDeprecatedEnvVars
   unset -f prep_openshift
   unset -f prep_quickstart
-  unset -f prep_runScim
   unset -f prep_runUi
   unset -f prep_runWs
-  unset -f prep_scim
   unset -f prep_unsetAll
   unset -f prep_unsetAllAndFromFiles
   unset -f prep_ui
@@ -588,10 +538,8 @@ prep_exportAll() {
   export -f prep_initDeprecatedEnvVars
   export -f prep_openshift
   export -f prep_quickstart
-  export -f prep_runScim
   export -f prep_runUi
   export -f prep_runWs
-  export -f prep_scim
   export -f prep_unsetAll
   export -f prep_unsetAllAndFromFiles
   export -f prep_ui

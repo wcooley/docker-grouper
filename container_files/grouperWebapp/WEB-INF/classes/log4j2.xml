@@ -63,7 +63,7 @@
         __FILEEND__
         __LOGPIPESTART__
         <File name="logpipe_catalina" fileName="/tmp/logpipe">
-            <PatternLayout pattern="${grouplogprefix}tomee;catalina.out;${env}${usertoken}${layout}"/>
+            <PatternLayout pattern="${grouplogprefix}tomcat;catalina.out;${env}${usertoken}${layout}"/>
         </File>
         <File name="logpipe_grouper_error" fileName="/tmp/logpipe">
             <PatternLayout pattern="${grouplogprefix}grouper_error.log;${env}${usertoken}${layout}"/>

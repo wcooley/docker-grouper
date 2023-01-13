@@ -24,9 +24,9 @@ testContainerUiNoSslOrClient() {
   assertFileNotExists /etc/httpd/conf.d/ssl-enabled.conf
   assertFileNotExists /etc/httpd/conf.d/ssl.conf
 
-  assertFileNotContains /opt/tomee/conf/server.xml 'secure="true"'
-  assertFileNotContains /opt/tomee/conf/server.xml 'scheme="https"'
-  assertFileContains /opt/tomee/conf/server.xml 'scheme="http"'
+  assertFileNotContains /opt/tomcat/conf/server.xml 'secure="true"'
+  assertFileNotContains /opt/tomcat/conf/server.xml 'scheme="https"'
+  assertFileContains /opt/tomcat/conf/server.xml 'scheme="http"'
 
   assertEnvVar GROUPER_USE_SSL "false"
   assertEnvVar GROUPER_WEBCLIENT_IS_SSL "false"

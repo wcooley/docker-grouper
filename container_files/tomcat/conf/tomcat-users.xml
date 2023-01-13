@@ -20,7 +20,7 @@
               xsi:schemaLocation="http://tomcat.apache.org/xml tomcat-users.xsd"
               version="1.0">
 <role rolename="grouper_user"/>
-<user username="banderson" password="password" roles="grouper_user"/>
+<!--<user username="GrouperSystem" password="XXXXXXXXXX" roles="grouper_user"/>-->
 <!--
   NOTE:  By default, no user is included in the "manager-gui" role required
   to operate the "/manager/html" web application.  If you wish to use this app,
@@ -43,9 +43,4 @@
   <user username="both" password="<must-be-changed>" roles="tomcat,role1"/>
   <user username="role1" password="<must-be-changed>" roles="role1"/>
 -->
-  <!-- Activate those lines to get access to TomEE GUI -->
-  <!--
-  <role rolename="tomee-admin" />
-  <user username="tomee" password="tomee" roles="tomee-admin,manager-gui" />
-  -->
 </tomcat-users>

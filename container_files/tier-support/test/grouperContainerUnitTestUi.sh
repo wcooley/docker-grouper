@@ -20,19 +20,18 @@ testContainerUi() {
   sleep $globalSleepSecondsAfterRun
 
 
-  assertFileContains /opt/tomee/conf/server.xml 'address="0.0.0.0"'
-  assertFileContains /opt/tomee/conf/server.xml 'allowedRequestAttributesPattern=".*"'
+  assertFileContains /opt/tomcat/conf/server.xml 'address="0.0.0.0"'
+  assertFileContains /opt/tomcat/conf/server.xml 'allowedRequestAttributesPattern=".*"'
   
   assertFileExists /opt/grouper/grouperWebapp/WEB-INF/libWs/axis2-kernel-1.6.4.jar
   assertFileNotExists /opt/grouper/grouperWebapp/WEB-INF/lib/axis2-kernel-1.6.4.jar
-  assertFileExists /opt/grouper/grouperWebapp/WEB-INF/libScim/stax-api-1.0-2.jar
   assertFileNotExists /opt/grouper/grouperWebapp/WEB-INF/lib/stax-api-1.0-2.jar
   assertFileExists "/opt/grouper/grouperWebapp/WEB-INF/lib/grouper-messaging-activemq-$grouperVersion.jar"
   assertFileExists "/opt/grouper/grouperWebapp/WEB-INF/libUiAndDaemon/grouper-messaging-activemq-$grouperVersion.jar"
 
   assertFileContains /etc/httpd/conf/httpd.conf "Listen 80"
   assertFileContains /opt/tier-support/supervisord.conf "program:shibbolethsp"
-  assertFileContains /opt/tier-support/supervisord.conf "program:tomee"
+  assertFileContains /opt/tier-support/supervisord.conf "program:tomcat"
   assertFileContains /opt/tier-support/supervisord.conf "program:httpd"
   assertFileContains /opt/tier-support/supervisord.conf "user=shibd"
   assertFileNotContains /opt/tier-support/supervisord.conf "__"
@@ -56,12 +55,12 @@ testContainerUi() {
   assertEnvVarNot GROUPER_SSL_CHAIN_FILE "/etc/pki/tls/certs/cachain.pem"
   assertEnvVar GROUPER_SSL_USE_STAPLING "true"
 
-  assertFileContains /opt/tomee/conf/Catalina/localhost/grouper.xml 'cookies="true"'
+  assertFileContains /opt/tomcat/conf/Catalina/localhost/grouper.xml 'cookies="true"'
 
   assertFileNotContains /etc/httpd/conf/httpd.conf "Options Indexes"
 
   assertFileContains /opt/grouper/grouperWebapp/WEB-INF/classes/log4j.properties "/tmp/logpipe"
-  assertFileContains /opt/tomee/conf/web.xml "<session-timeout>600</session-timeout>"
+  assertFileContains /opt/tomcat/conf/web.xml "<session-timeout>600</session-timeout>"
   assertFileContains /opt/grouper/grouperWebapp/WEB-INF/classes/log4j.properties "grouper-ui;"
 
   assertFileNotContains /opt/grouper/grouperWebapp/WEB-INF/classes/grouper.hibernate.properties grouperPasswordConfigOverride_UI_GrouperSystem_pass.elConfig
@@ -75,18 +74,16 @@ testContainerUi() {
   assertFileNotContains /etc/httpd/conf.d/grouper-www.conf "RemoteIPHeader"
   assertFileNotContains /etc/httpd/conf.d/grouper-www.conf "RemoteIPTrustedProxy"
 
-  assertFileNotContains /opt/tomee/conf/server.xml "AccessLogValve"
+  assertFileNotContains /opt/tomcat/conf/server.xml "AccessLogValve"
 
-  assertFileContains /opt/tomee/conf/server.xml "maxHeaderCount"
-  assertFileContains /opt/tomee/conf/server.xml "200"
-  assertFileNotContains /opt/tomee/conf/server.xml "1235"
+  assertFileContains /opt/tomcat/conf/server.xml "maxHeaderCount"
+  assertFileContains /opt/tomcat/conf/server.xml "200"
+  assertFileNotContains /opt/tomcat/conf/server.xml "1235"
 
-  assertFileContains /opt/tomee/conf/server.xml "tomcatAuthentication"
+  assertFileContains /opt/tomcat/conf/server.xml "tomcatAuthentication"
 
   assertEnvVarNot GROUPER_APACHE_SERVER_NAME https://a.b.c:443
   assertEnvVar GROUPER_TOMCAT_LOG_ACCESS "false"
-  assertEnvVar GROUPERSCIM_PROXY_PASS "#"
-  assertEnvVar GROUPERSCIM_URL_CONTEXT "grouper-ws-scim"
   assertEnvVar GROUPERWS_PROXY_PASS "#"
   assertEnvVar GROUPERWS_URL_CONTEXT "grouper-ws"
   assertEnvVar GROUPER_APACHE_AJP_TIMEOUT_SECONDS "3600"
@@ -104,9 +101,7 @@ testContainerUi() {
   assertEnvVar GROUPER_RUN_APACHE "true"
   assertEnvVar GROUPER_RUN_PROCESSES_AS_USERS "true"
   assertEnvVar GROUPER_RUN_SHIB_SP "true"
-  assertEnvVar GROUPER_RUN_TOMEE "true"
-  assertEnvVar GROUPER_SCIM "false"
-  assertEnvVar GROUPER_SCIM_GROUPER_AUTH "false"
+  assertEnvVar GROUPER_RUN_TOMCAT "true"
   assertEnvVar GROUPER_TOMCAT_CONTEXT "grouper"
   assertEnvVar GROUPER_UI "true"
   assertEnvVar GROUPER_UI_CONFIGURATION_EDITOR_SOURCEIPADDRESSES "127.0.0.1/32"

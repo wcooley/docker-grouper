@@ -40,9 +40,9 @@ returnCode=$?
 echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) chmod g+rwxs /opt/grouper/logs/, result: $returnCode"
 if [ $returnCode != 0 ]; then exit $returnCode; fi
 
-mkdir -p /opt/tomee/
+mkdir -p /opt/tomcat/
 returnCode=$?
-echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) mkdir -p /opt/tomee/, result: $returnCode"
+echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) mkdir -p /opt/tomcat/, result: $returnCode"
 if [ $returnCode != 0 ]; then exit $returnCode; fi
 
 mv /opt/grouper/$GROUPER_VERSION/grouperInstaller.jar /opt/grouper/
@@ -50,19 +50,19 @@ returnCode=$?
 echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) mv /opt/grouper/$GROUPER_VERSION/grouperInstaller.jar /opt/grouper/, result: $returnCode"
 if [ $returnCode != 0 ]; then exit $returnCode; fi
 
-mv /opt/grouper/$GROUPER_VERSION/container/tomee/* /opt/tomee/
+mv /opt/grouper/$GROUPER_VERSION/container/tomcat/* /opt/tomcat/
 returnCode=$?
-echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) mv /opt/grouper/$GROUPER_VERSION/container/tomee/* /opt/tomee/, result: $returnCode"
+echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) mv /opt/grouper/$GROUPER_VERSION/container/tomcat/* /opt/tomcat/, result: $returnCode"
 if [ $returnCode != 0 ]; then exit $returnCode; fi
 
-mkdir -p /opt/tomee/temp
+mkdir -p /opt/tomcat/temp
 returnCode=$?
-echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) mkdir -p /opt/tomee/temp, result: $returnCode"
+echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) mkdir -p /opt/tomcat/temp, result: $returnCode"
 if [ $returnCode != 0 ]; then exit $returnCode; fi
 
-mkdir -p /opt/tomee/work
+mkdir -p /opt/tomcat/work
 returnCode=$?
-echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) mkdir -p /opt/tomee/work, result: $returnCode"
+echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) mkdir -p /opt/tomcat/work, result: $returnCode"
 if [ $returnCode != 0 ]; then exit $returnCode; fi
 
 mv /opt/grouper/$GROUPER_VERSION/container/webapp/* /opt/grouper/grouperWebapp/
@@ -75,9 +75,9 @@ returnCode=$?
 echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) rm -rf /opt/grouper/$GROUPER_VERSION, result: $returnCode"
 if [ $returnCode != 0 ]; then exit $returnCode; fi
 
-rm -rf /opt/tomee/webapps/docs/ /opt/tomee/webapps/host-manager/ /opt/tomee/webapps/manager/ /opt/tomee/logs/* /opt/tomee/temp/* /opt/tomee/work/* /opt/tomee/conf/logging.properties
+rm -rf /opt/tomcat/webapps/docs/ /opt/tomcat/webapps/host-manager/ /opt/tomcat/webapps/manager/ /opt/tomcat/logs/* /opt/tomcat/temp/* /opt/tomcat/work/* /opt/tomcat/conf/logging.properties
 returnCode=$?
-echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) rm -rf /opt/tomee/webapps/docs/ /opt/tomee/webapps/host-manager/ /opt/tomee/webapps/manager/ /opt/tomee/logs/* /opt/tomee/temp/* /opt/tomee/work/*\ /opt/tomee/conf/logging.properties, result: $returnCode"
+echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) rm -rf /opt/tomcat/webapps/docs/ /opt/tomcat/webapps/host-manager/ /opt/tomcat/webapps/manager/ /opt/tomcat/logs/* /opt/tomcat/temp/* /opt/tomcat/work/*\ /opt/tomcat/conf/logging.properties, result: $returnCode"
 if [ $returnCode != 0 ]; then exit $returnCode; fi
 
 cp -R /opt/container_files/grouperWebapp/* /opt/grouper/grouperWebapp
@@ -85,14 +85,14 @@ returnCode=$?
 echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) cp -R /opt/container_files/grouperWebapp/* /opt/grouper/grouperWebapp, result: $returnCode"
 if [ $returnCode != 0 ]; then exit $returnCode; fi
 
-cp -R /opt/container_files/tomee/* /opt/tomee/
+cp -R /opt/container_files/tomcat/* /opt/tomcat/
 returnCode=$?
-echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) cp -R /opt/container_files/tomee/* /opt/tomee/, result: $returnCode"
+echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) cp -R /opt/container_files/tomcat/* /opt/tomcat/, result: $returnCode"
 if [ $returnCode != 0 ]; then exit $returnCode; fi
 
-mkdir -p /opt/tomee/conf/Catalina/localhost/
+mkdir -p /opt/tomcat/conf/Catalina/localhost/
 returnCode=$?
-echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) mkdir -p /opt/tomee/conf/Catalina/localhost/, result: $returnCode"
+echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) mkdir -p /opt/tomcat/conf/Catalina/localhost/, result: $returnCode"
 if [ $returnCode != 0 ]; then exit $returnCode; fi
 
 ln -sf /usr/share/zoneinfo/UTC /etc/localtime
@@ -130,24 +130,24 @@ returnCode=$?
 echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) cp /dev/null /etc/httpd/conf.d/ssl.conf, result: $returnCode"
 if [ $returnCode != 0 ]; then exit $returnCode; fi
 
-rm -f /opt/tomee/bin/log4j-*
+rm -f /opt/tomcat/bin/log4j-*
 returnCode=$?
-echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) rm -f /opt/tomee/bin/log4j-*, result: $returnCode"
+echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) rm -f /opt/tomcat/bin/log4j-*, result: $returnCode"
 if [ $returnCode != 0 ]; then exit $returnCode; fi
 
-mv /opt/tier-support/log4j_fix/tomeeBin/log4j-* /opt/tomee/bin/
+mv /opt/tier-support/log4j_fix/tomcatBin/log4j-* /opt/tomcat/bin/
 returnCode=$?
-echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) mv /opt/tier-support/log4j_fix/tomeeBin/log4j-* /opt/tomee/bin/, result: $returnCode"
+echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) mv /opt/tier-support/log4j_fix/tomcatBin/log4j-* /opt/tomcat/bin/, result: $returnCode"
 if [ $returnCode != 0 ]; then exit $returnCode; fi
 
-rm -f /opt/tomee/lib/slf4j-*
+rm -f /opt/tomcat/lib/slf4j-*
 returnCode=$?
-echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) rm -f /opt/tomee/lib/slf4j-*, result: $returnCode"
+echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) rm -f /opt/tomcat/lib/slf4j-*, result: $returnCode"
 if [ $returnCode != 0 ]; then exit $returnCode; fi
 
-mv /opt/tier-support/log4j_fix/tomeeLib/slf4j-* /opt/tomee/lib/
+mv /opt/tier-support/log4j_fix/tomcatLib/slf4j-* /opt/tomcat/lib/
 returnCode=$?
-echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) mv /opt/tier-support/log4j_fix/tomeeLib/slf4j-* /opt/tomee/lib/, result: $returnCode"
+echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) mv /opt/tier-support/log4j_fix/tomcatLib/slf4j-* /opt/tomcat/lib/, result: $returnCode"
 if [ $returnCode != 0 ]; then exit $returnCode; fi
 
 rm -f /opt/grouper/grouperWebapp/WEB-INF/lib/slf4j-api-*
@@ -165,9 +165,9 @@ returnCode=$?
 echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) touch /opt/grouper/grouperEnv.sh, result: $returnCode"
 if [ $returnCode != 0 ]; then exit $returnCode; fi
 
-mkdir -p /opt/tomee/work/Catalina/localhost/
+mkdir -p /opt/tomcat/work/Catalina/localhost/
 returnCode=$?
-echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) mkdir -p /opt/tomee/work/Catalina/localhost/, result: $returnCode"
+echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) mkdir -p /opt/tomcat/work/Catalina/localhost/, result: $returnCode"
 if [ $returnCode != 0 ]; then exit $returnCode; fi
 
 mkdir -p /opt/grouper/certs/client
@@ -224,14 +224,14 @@ if [ -f /etc/httpd/conf.d/shib.conf ]; then
   if [ $returnCode != 0 ]; then exit $returnCode; fi
 fi
 
-cp /opt/tomee/conf/server.xml /opt/tier-support/originalFiles 2>/dev/null
+cp /opt/tomcat/conf/server.xml /opt/tier-support/originalFiles 2>/dev/null
 returnCode=$?
-echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) cp /opt/tomee/conf/server.xml /opt/tier-support/originalFiles 2>/dev/null, result: $returnCode"
+echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) cp /opt/tomcat/conf/server.xml /opt/tier-support/originalFiles 2>/dev/null, result: $returnCode"
 if [ $returnCode != 0 ]; then exit $returnCode; fi
 
-cp /opt/tomee/conf/Catalina/localhost/grouper.xml /opt/tier-support/originalFiles 2>/dev/null
+cp /opt/tomcat/conf/Catalina/localhost/grouper.xml /opt/tier-support/originalFiles 2>/dev/null
 returnCode=$?
-echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) cp /opt/tomee/conf/Catalina/localhost/grouper.xml /opt/tier-support/originalFiles 2>/dev/null, result: $returnCode"
+echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) cp /opt/tomcat/conf/Catalina/localhost/grouper.xml /opt/tier-support/originalFiles 2>/dev/null, result: $returnCode"
 if [ $returnCode != 0 ]; then exit $returnCode; fi
 
 cp /opt/grouper/grouperWebapp/WEB-INF/web.xml /opt/tier-support/originalFiles 2>/dev/null

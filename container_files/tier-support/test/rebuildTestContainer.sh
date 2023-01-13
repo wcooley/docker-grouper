@@ -26,8 +26,8 @@ rsync -avzpl $grouperContainerGitPath/container_files/httpd/ssl-enabled.conf sla
 
 rsync -avzpl $grouperContainerGitPath/container_files/tier-support/test/grouper*.sh $reldir
 
-#mkdir -p slashRoot/opt/tomee/conf
-#rsync -avzpl $grouperContainerGitPath/container_files/tomee/conf/* slashRoot/opt/tomee/conf/
+#mkdir -p slashRoot/opt/tomcat/conf
+#rsync -avzpl $grouperContainerGitPath/container_files/tomcat/conf/* slashRoot/opt/tomcat/conf/
 
 sed -i "s|__BASE_CONTAINER__|$grouperBaseImageName|g" "testContainer.Dockerfile"
 

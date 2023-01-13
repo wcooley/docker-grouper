@@ -20,25 +20,24 @@ testContainerUi2() {
   sleep $globalSleepSecondsAfterRun
 
 
-  assertFileContains /opt/tomee/conf/server.xml 'address="0.0.0.0"'
-  assertFileContains /opt/tomee/conf/server.xml 'allowedRequestAttributesPattern=".*"'
+  assertFileContains /opt/tomcat/conf/server.xml 'address="0.0.0.0"'
+  assertFileContains /opt/tomcat/conf/server.xml 'allowedRequestAttributesPattern=".*"'
   
   assertFileExists /opt/grouper/grouperWebapp/WEB-INF/libWs/axis2-kernel-1.6.4.jar
   assertFileNotExists /opt/grouper/grouperWebapp/WEB-INF/lib/axis2-kernel-1.6.4.jar
-  assertFileExists /opt/grouper/grouperWebapp/WEB-INF/libScim/stax-api-1.0-2.jar
   assertFileNotExists /opt/grouper/grouperWebapp/WEB-INF/lib/stax-api-1.0-2.jar
   assertFileExists "/opt/grouper/grouperWebapp/WEB-INF/lib/grouper-messaging-activemq-$grouperVersion.jar"
   assertFileExists "/opt/grouper/grouperWebapp/WEB-INF/libUiAndDaemon/grouper-messaging-activemq-$grouperVersion.jar"
 
   assertFileContains /etc/httpd/conf/httpd.conf "Listen 80"
   assertFileContains /opt/tier-support/supervisord.conf "program:shibbolethsp"
-  assertFileContains /opt/tier-support/supervisord.conf "program:tomee"
+  assertFileContains /opt/tier-support/supervisord.conf "program:tomcat"
   assertFileContains /opt/tier-support/supervisord.conf "program:httpd"
   assertFileContains /opt/tier-support/supervisord.conf "user=shibd"
   assertFileNotContains /opt/tier-support/supervisord.conf "__"
 
-  assertFileContains /opt/tomee/conf/server.xml "maxHeaderCount"
-  assertFileContains /opt/tomee/conf/server.xml "1235"
+  assertFileContains /opt/tomcat/conf/server.xml "maxHeaderCount"
+  assertFileContains /opt/tomcat/conf/server.xml "1235"
 
   assertFileContains /etc/httpd/conf.d/ssl-enabled.conf "SSLUseStapling off"
   assertFileContains /etc/httpd/conf.d/ssl-enabled.conf "SSLCertificateFile /a/b/cert"

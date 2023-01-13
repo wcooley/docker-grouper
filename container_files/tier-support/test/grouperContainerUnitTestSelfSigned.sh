@@ -35,15 +35,12 @@ testContainerSelfSigned() {
 
   assertFileContains /etc/httpd/conf.d/grouper-www.conf "ProxyPass /grouper ajp://localhost:8009/grouper timeout=3600"
   assertFileContains /etc/httpd/conf.d/grouper-www.conf "#ProxyPass /grouper-ws ajp://localhost:8009/grouper timeout=3600"
-  assertFileContains /etc/httpd/conf.d/grouper-www.conf "#ProxyPass /grouper-ws-scim ajp://localhost:8009/grouper timeout=3600"
   assertFileContains /etc/httpd/conf.d/grouper-www.conf "\"/grouper/\""
   assertFileNotContains /etc/httpd/conf.d/grouper-www.conf "__"
   assertFileContains /etc/httpd/conf.d/grouper-www.conf "RemoteIPHeader myRemoteIpHeader"
   assertFileContains /etc/httpd/conf.d/grouper-www.conf "RemoteIPTrustedProxy 10.0.2.16/28"
   
 
-  assertEnvVar GROUPERSCIM_PROXY_PASS "#"
-  assertEnvVar GROUPERSCIM_URL_CONTEXT "grouper-ws-scim"
   assertEnvVar GROUPERWS_PROXY_PASS "#"
   assertEnvVar GROUPERWS_URL_CONTEXT "grouper-ws"
   assertEnvVar GROUPER_APACHE_NONSSL_PORT "80"
@@ -60,9 +57,7 @@ testContainerSelfSigned() {
   assertEnvVar GROUPER_RUN_APACHE "true"
   assertEnvVar GROUPER_RUN_PROCESSES_AS_USERS "true"
   assertEnvVar GROUPER_RUN_SHIB_SP "true"
-  assertEnvVar GROUPER_RUN_TOMEE "true"
-  assertEnvVar GROUPER_SCIM "false"
-  assertEnvVar GROUPER_SCIM_GROUPER_AUTH "false"
+  assertEnvVar GROUPER_RUN_TOMCAT "true"
   assertEnvVar GROUPER_SELF_SIGNED_CERT "true"
   assertEnvVar GROUPER_TOMCAT_CONTEXT "grouper"
   assertEnvVar GROUPER_UI "true"

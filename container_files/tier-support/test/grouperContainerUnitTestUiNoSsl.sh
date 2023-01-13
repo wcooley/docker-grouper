@@ -28,21 +28,19 @@ testContainerUiNoSsl() {
 
   assertFileContains /etc/httpd/conf/httpd.conf "Listen 80"
   assertFileContains /opt/tier-support/supervisord.conf "program:shibbolethsp"
-  assertFileContains /opt/tier-support/supervisord.conf "program:tomee"
+  assertFileContains /opt/tier-support/supervisord.conf "program:tomcat"
   assertFileContains /opt/tier-support/supervisord.conf "program:httpd"
   assertFileContains /opt/tier-support/supervisord.conf "user=shibd"
   assertFileNotContains /opt/tier-support/supervisord.conf "__"
-  assertFileContains /opt/tomee/conf/server.xml "AccessLogValve"
-  assertFileContains /opt/tomee/conf/server.xml 'secure="true"'
-  assertFileContains /opt/tomee/conf/server.xml 'scheme="https"'
-  assertFileNotContains /opt/tomee/conf/server.xml 'scheme="http"'
-  assertFileContains /opt/tomee/conf/web.xml "<session-timeout>30</session-timeout>"
+  assertFileContains /opt/tomcat/conf/server.xml "AccessLogValve"
+  assertFileContains /opt/tomcat/conf/server.xml 'secure="true"'
+  assertFileContains /opt/tomcat/conf/server.xml 'scheme="https"'
+  assertFileNotContains /opt/tomcat/conf/server.xml 'scheme="http"'
+  assertFileContains /opt/tomcat/conf/web.xml "<session-timeout>30</session-timeout>"
   
-  assertFileNotContains /opt/tomee/conf/server.xml "maxHeaderCount"
+  assertFileNotContains /opt/tomcat/conf/server.xml "maxHeaderCount"
 
   assertEnvVar GROUPER_TOMCAT_LOG_ACCESS "true"
-  assertEnvVar GROUPERSCIM_PROXY_PASS "#"
-  assertEnvVar GROUPERSCIM_URL_CONTEXT "grouper-ws-scim"
   assertEnvVar GROUPERWS_PROXY_PASS "#"
   assertEnvVar GROUPERWS_URL_CONTEXT "grouper-ws"
   assertEnvVar GROUPER_APACHE_NONSSL_PORT "80"
@@ -59,9 +57,7 @@ testContainerUiNoSsl() {
   assertEnvVar GROUPER_RUN_APACHE "true"
   assertEnvVar GROUPER_RUN_PROCESSES_AS_USERS "true"
   assertEnvVar GROUPER_RUN_SHIB_SP "true"
-  assertEnvVar GROUPER_RUN_TOMEE "true"
-  assertEnvVar GROUPER_SCIM "false"
-  assertEnvVar GROUPER_SCIM_GROUPER_AUTH "false"
+  assertEnvVar GROUPER_RUN_TOMCAT "true"
   assertEnvVar GROUPER_TOMCAT_CONTEXT "grouper"
   assertEnvVar GROUPER_UI "true"
   assertEnvVar GROUPER_UI_CONFIGURATION_EDITOR_SOURCEIPADDRESSES "127.0.0.1/32"

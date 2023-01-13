@@ -3,7 +3,6 @@
 prep_quickstart
 prep_ui
 prep_ws
-prep_scim
 prep_daemon
 prep_finish
 setupFiles

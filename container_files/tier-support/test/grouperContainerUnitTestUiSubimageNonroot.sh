@@ -36,7 +36,6 @@ testContainerUiSubimageNonroot() {
 
   assertFileExists /opt/grouper/grouperWebapp/WEB-INF/libWs/axis2-kernel-1.6.4.jar
   assertFileNotExists /opt/grouper/grouperWebapp/WEB-INF/lib/axis2-kernel-1.6.4.jar
-  assertFileExists /opt/grouper/grouperWebapp/WEB-INF/libScim/stax-api-1.0-2.jar
   assertFileNotExists /opt/grouper/grouperWebapp/WEB-INF/lib/stax-api-1.0-2.jar
   assertFileExists "/opt/grouper/grouperWebapp/WEB-INF/lib/grouper-messaging-activemq-$grouperVersion.jar"
   assertFileExists "/opt/grouper/grouperWebapp/WEB-INF/libUiAndDaemon/grouper-messaging-activemq-$grouperVersion.jar"
@@ -47,8 +46,6 @@ testContainerUiSubimageNonroot() {
   assertFileNotContains /opt/grouper/grouperWebapp/WEB-INF/classes/grouper.hibernate.properties grouperPasswordConfigOverride_UI_GrouperSystem_pass.elConfig
   assertFileNotContains /opt/grouper/grouperWebapp/WEB-INF/classes/grouper.hibernate.properties thisPassIsCopyrightedDontUse
 
-  assertEnvVar GROUPERSCIM_PROXY_PASS "#"
-  assertEnvVar GROUPERSCIM_URL_CONTEXT "grouper-ws-scim"
   assertEnvVar GROUPERWS_PROXY_PASS "#"
   assertEnvVar GROUPERWS_URL_CONTEXT "grouper-ws"
   assertEnvVar GROUPER_APACHE_AJP_TIMEOUT_SECONDS "3600"
@@ -66,9 +63,7 @@ testContainerUiSubimageNonroot() {
   assertEnvVarNot GROUPER_RUN_APACHE "true"
   assertEnvVar GROUPER_RUN_PROCESSES_AS_USERS "true"
   assertEnvVarNot GROUPER_RUN_SHIB_SP "true"
-  assertEnvVar GROUPER_RUN_TOMEE "true"
-  assertEnvVar GROUPER_SCIM "false"
-  assertEnvVar GROUPER_SCIM_GROUPER_AUTH "false"
+  assertEnvVar GROUPER_RUN_TOMCAT "true"
   assertEnvVar GROUPER_TOMCAT_CONTEXT "grouper"
   assertEnvVar GROUPER_UI "true"
   assertEnvVar GROUPER_UI_CONFIGURATION_EDITOR_SOURCEIPADDRESSES "127.0.0.1/32"

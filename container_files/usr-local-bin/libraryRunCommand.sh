@@ -14,7 +14,7 @@ runCommand() {
   if [ "$GROUPER_RUN_TOMCAT_NOT_SUPERVISOR" = "true" ]
     then
       echo "grouperContainer; INFO: (libraryRunCommand.sh-runCommand) Starting tomcat not supervisor"
-      /opt/tomee/bin/catalina.sh run
+      /opt/tomcat/bin/catalina.sh run
     else
       echo "grouperContainer; INFO: (libraryRunCommand.sh-runCommand) Starting supervisor"
       exec /usr/bin/supervisord -c /opt/tier-support/supervisord.conf
