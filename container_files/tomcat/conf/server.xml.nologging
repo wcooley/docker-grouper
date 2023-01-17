@@ -20,13 +20,11 @@
      Documentation at /docs/config/server.html
  -->
 <Server port="8005" shutdown="SHUTDOWN">
-  <!-- TomEE plugin for Tomcat -->
-  <Listener className="org.apache.tomee.catalina.ServerListener" />
   <Listener className="org.apache.catalina.startup.VersionLoggerListener" />
   <!-- Security listener. Documentation at /docs/config/listeners.html
   <Listener className="org.apache.catalina.security.SecurityListener" />
   -->
-  <!--APR library loader. Documentation at /docs/apr.html -->
+  <!-- APR library loader. Documentation at /docs/apr.html -->
   <Listener className="org.apache.catalina.core.AprLifecycleListener" SSLEngine="on" />
   <!-- Prevent memory leaks due to use of particular java/javax APIs-->
   <Listener className="org.apache.catalina.core.JreMemoryLeakPreventionListener" />
@@ -70,7 +68,7 @@
     -->
     <Connector port="8080" protocol="HTTP/1.1"
                connectionTimeout="20000"
-               redirectPort="8443" xpoweredBy="false" server="Apache TomEE" />
+               redirectPort="8443" />
     <!-- A "Connector" using the shared thread pool-->
     <!--
     <Connector executor="tomcatThreadPool"
@@ -81,8 +79,7 @@
     <!-- Define an SSL/TLS HTTP/1.1 Connector on port 8443
          This connector uses the NIO implementation. The default
          SSLImplementation will depend on the presence of the APR/native
-         library and the useOpenSSL attribute of the
-         AprLifecycleListener.
+         library and the useOpenSSL attribute of the AprLifecycleListener.
          Either JSSE or OpenSSL style configuration may be used regardless of
          the SSLImplementation selected. JSSE style configuration is used below.
     -->
@@ -91,7 +88,7 @@
                maxThreads="150" SSLEnabled="true">
         <SSLHostConfig>
             <Certificate certificateKeystoreFile="conf/localhost-rsa.jks"
-                         type="RSA" xpoweredBy="false" server="Apache TomEE" />
+                         type="RSA" />
         </SSLHostConfig>
     </Connector>
     -->
@@ -104,7 +101,7 @@
     <!--
     <Connector port="8443" protocol="org.apache.coyote.http11.Http11AprProtocol"
                maxThreads="150" SSLEnabled="true" >
-        <UpgradeProtocol className="org.apache.coyote.http2.Http2Protocol" xpoweredBy="false" server="Apache TomEE" />
+        <UpgradeProtocol className="org.apache.coyote.http2.Http2Protocol" />
         <SSLHostConfig>
             <Certificate certificateKeyFile="conf/localhost-rsa-key.pem"
                          certificateFile="conf/localhost-rsa-cert.pem"
@@ -116,7 +113,6 @@
 
     <!-- Define an AJP 1.3 Connector on port 8009 -->
     <Connector secretRequired="false" secure="true"  scheme="https"  URIEncoding="UTF-8"  tomcatAuthentication="false"  port="8009" protocol="AJP/1.3" redirectPort="8443" />
-
 
     <!-- An Engine represents the entry point (within Catalina) that processes
          every request.  The Engine implementation for Tomcat stand alone
