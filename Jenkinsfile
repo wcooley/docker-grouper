@@ -1,10 +1,12 @@
 
 pipeline {
-    agent { node { label 'docker' } }
+    agent { node { label 'docker-multi-arch' } }
     environment { 
         maintainer = "t"
-        imagename = 'g'
+        imagename = 's'
         tag = 'l'
+        DOCKERHUBPW=credentials('tieradmin-dockerhub-pw')
+
     }
     stages {
         stage('Setting build context') {
@@ -14,9 +16,6 @@ pipeline {
                     imagename = imagename()
                     if(env.BRANCH_NAME == "main") {
                        tag = "latest"
-    //                } else if (env.BRANCH_NAME == "2.6.9") {
-    //                   // skip it for now
-    //                   sh 'exit -1'       
                     } else {
                        tag = env.BRANCH_NAME
                     }
@@ -54,14 +53,13 @@ pipeline {
             steps {
                 script {
                   try{
-                      // statically defining jenkins credential value dockerhub-tier
-                      docker.withRegistry('https://registry.hub.docker.com/',   "dockerhub-tier") {
-                        baseImg = docker.build("$maintainer/$imagename", "--build-arg GROUPER_CONTAINER_VERSION=$tag --no-cache .")
-                      }
-                      // test the environment 
-                      // sh 'cd test-compose && ./compose.sh'
-                      // bring down after testing
-                      // sh 'cd test-compose && docker-compose down'
+                        sh 'docker login -u tieradmin -p $DOCKERHUBPW'
+                        // fails if already exists
+                        // sh 'docker buildx create --use --name multiarch --append'
+                        sh 'docker buildx inspect --bootstrap'
+                        sh 'docker buildx ls'
+                        sh "docker buildx build --platform linux/amd64 -t ${imagename} --load ."
+                        sh "docker buildx build --platform linux/arm64 -t ${imagename}:arm64 --load ."
                   } catch(error) {
                      def error_details = readFile('./debug');
                       def message = "BUILD ERROR: There was a problem building ${maintainer}/${imagename}:${tag}. \n\n ${error_details}"
@@ -75,7 +73,10 @@ pipeline {
             steps {
                 script {
                    try {
+                     // echo "Starting tests..."
                      sh 'bin/test.sh 2>&1 | tee debug ; test ${PIPESTATUS[0]} -eq 0'
+                     //    ===> need bats, webisoget on jenkins node
+                     echo "Skipping tests for now"
                    } catch (error) {
                      def error_details = readFile('./debug')
                      def message = "BUILD ERROR: There was a problem testing ${maintainer}/${imagename}:${tag}. \n\n ${error_details}"
@@ -85,17 +86,66 @@ pipeline {
                 }    
              }
         }
+        stage('Scan') {
+            steps {
+                script {
+                   try {
+                         echo "Starting security scan..."
+                         // Install trivy and HTML template
+                         sh 'curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin v0.31.1'
+                         sh 'curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/html.tpl > html.tpl'
         
+                         // Scan container for all vulnerability levels
+                         echo "Scanning for all vulnerabilities..."
+                         sh 'mkdir -p reports'
+                         sh "trivy image --ignore-unfixed --vuln-type os,library --severity CRITICAL,HIGH --no-progress --security-checks vuln --format template --template '@html.tpl' -o reports/container-scan.html ${imagename}"
+                         sh "trivy image --ignore-unfixed --vuln-type os,library --severity CRITICAL,HIGH --no-progress --security-checks vuln --format template --template '@html.tpl' -o reports/container-scan-arm.html ${imagename}:arm64"
+                         publishHTML target : [
+                             allowMissing: true,
+                             alwaysLinkToLastBuild: true,
+                             keepAll: true,
+                             reportDir: 'reports',
+                             reportFiles: 'container-scan.html',
+                             reportName: 'Security Scan',
+                             reportTitles: 'Security Scan'
+                          ]
+                         publishHTML target : [
+                             allowMissing: true,
+                             alwaysLinkToLastBuild: true,
+                             keepAll: true,
+                             reportDir: 'reports',
+                             reportFiles: 'container-scan-arm.html',
+                             reportName: 'Security Scan (ARM)',
+                             reportTitles: 'Security Scan (ARM)'
+                          ]
+                         // Scan again and fail on CRITICAL vulns
+                         //below can be temporarily commented to prevent build from failing
+                         //echo "Scanning for CRITICAL vulnerabilities only (fatal)..."
+                         //sh "trivy image --ignore-unfixed --vuln-type os,library --exit-code 1 --severity CRITICAL ${imagename}"
+                         //sh "trivy image --ignore-unfixed --vuln-type os,library --exit-code 1 --severity CRITICAL ${imagename}:arm64"
+                         echo "Skipping scan for CRITICAL vulnerabilities (temporary)..."
+                   } catch(error) {
+                           def error_details = readFile('./debug');
+                           def message = "BUILD ERROR: There was a problem scanning ${imagename}:${tag}. \n\n ${error_details}"
+                           sh "rm -f ./debug"
+                           handleError(message)
+                   }
+                }
+            }
+        }
         stage('Push') {
             steps {
                 script {
-                        // statically defining jenkins credential value dockerhub-tier
-                        docker.withRegistry('https://registry.hub.docker.com/',   "dockerhub-tier") {
-                        baseImg.push("$tag")
+                        sh 'docker login -u tieradmin -p $DOCKERHUBPW'
+                        // fails if already exists
+                        // sh 'docker buildx create --use --name multiarch --append'
+                        sh 'docker buildx inspect --bootstrap'
+                        sh 'docker buildx ls'
+                        echo "Pushing image to dockerhub..."
+                        sh "docker buildx build --push --platform linux/arm64,linux/amd64 -t ${maintainer}/${imagename}:${tag} ."
                       }
                   }
             }
-        }
         stage('Notify') {
             steps{
                 echo "$maintainer"

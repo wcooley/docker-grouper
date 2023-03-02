@@ -1,4 +1,4 @@
-FROM i2incommon/shibboleth_sp:3.4.0_11032022
+FROM i2incommon/shibboleth_sp:3.4.0_02092023_rocky8_multiarch
 
 LABEL author="tier-packaging@internet2.edu <tier-packaging@internet2.edu>" \
       Vendor="TIER" \
@@ -26,7 +26,10 @@ RUN yum update -y \
 # Install Corretto Java JDK
 #Corretto download page: https://docs.aws.amazon.com/corretto/latest/corretto-8-ug/downloads-list.html
 
-ARG JAVA_VERSION=17
+# Install Corretto Java JDK (newer more arch independent way)
+RUN rpm --import https://yum.corretto.aws/corretto.key \
+    && curl -L -o /etc/yum.repos.d/corretto.repo https://yum.corretto.aws/corretto.repo \
+    && yum install -y java-17-amazon-corretto-devel
 
 # real copy command (if not caching), uncomment this and change comments of COPY above to work on install script
 COPY container_files/ /opt/container_files/
@@ -34,7 +37,6 @@ COPY container_files/ /opt/container_files/
 RUN cd /tmp \
     && chmod +x /opt/container_files/docker-build-bin/*.sh \
     && /opt/container_files/docker-build-bin/containerDockerfileInstallDos2unix.sh /opt/container_files \
-    && /opt/container_files/docker-build-bin/containerDockerfileInstallJava.sh $JAVA_VERSION \
     && /opt/container_files/docker-build-bin/containerDockerfileInstallGrouper.sh $JAVA_HOME $GROUPER_VERSION \
     && /opt/container_files/docker-build-bin/containerDockerfileInstall.sh $JAVA_HOME $GROUPER_VERSION
 
