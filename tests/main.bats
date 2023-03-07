@@ -3,7 +3,7 @@
 load ../common
 
 @test "010 Image is present and healthy" {
-    docker image inspect ${maintainer}/${imagename}
+    docker image inspect ${maintainer}/${imagename}:${tag}
 }
 
 @test "030 Test Compose the environment" {
@@ -12,5 +12,5 @@ load ../common
 
 
 #@test "070 There are no known security vulnerabilities" {
-#    ./tests/clairscan.sh ${maintainer}/${imagename}:latest
+#    ./tests/clairscan.sh ${maintainer}/${imagename}:${tag}
 #}
