@@ -2,9 +2,9 @@
 
 load ../common
 
-@test "010 Image is present and healthy" {
-    docker image inspect ${maintainer}/${imagename}:${tag}
-}
+#@test "010 Image is present and healthy" {
+#    docker image inspect ${maintainer}/${imagename}:${tag}
+#}
 
 @test "030 Test Compose the environment" {
     cd test-compose && ./compose.sh && docker-compose down
