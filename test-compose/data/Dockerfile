@@ -14,6 +14,7 @@ RUN dnf -y module enable 389-ds \
 
 RUN mysql_install_db --force \
     && chown -R mysql:mysql /var/lib/mysql/ \
+    && chown -R mysql:mysql /var/log/mariadb \
     && sed -i 's/^\(bind-address\s.*\)/# \1/' /etc/my.cnf \
     && sed -i 's/^\(log_error\s.*\)/# \1/' /etc/my.cnf \
     && sed -i 's/\[mysqld\]/\[mysqld\]\ncharacter_set_server = utf8/' /etc/my.cnf \
