@@ -5,11 +5,12 @@ LABEL author="tier-packaging@internet2.edu <tier-packaging@internet2.edu>"
 COPY container_files/seed-data/ /seed-data/
 COPY container_files/conf/ /opt/grouper/grouperWebapp/WEB-INF/classes/
 
-RUN yum install -y epel-release \
-    && yum update -y \
-    && yum install -y 389-ds-base 389-admin 389-adminutil mariadb-server mariadb \
-    && yum clean all \
-    && rm -rf /var/cache/yum
+RUN dnf install -y epel-release \
+    && dnf update -y \
+    && dnf clean all 
+
+RUN dnf -y module enable 389-ds \
+    && dnf -y install 389-ds-base 389-ds-base-legacy-tools mariadb-server mariadb nc
 
 RUN mysql_install_db --force \
     && chown -R mysql:mysql /var/lib/mysql/ \
