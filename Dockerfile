@@ -14,7 +14,7 @@ ENV GROUPER_VERSION=4.0.3 \
     PATH=$PATH:$JAVA_HOME/bin \
     GROUPER_HOME=/opt/grouper/grouperWebapp/WEB-INF
 
-# net-tools curl mlocate strace telnet man vim rsyslog cron httpd mod_ssl cronie
+#  net-tools curl mlocate strace telnet man vim rsyslog cron httpd mod_ssl cronie
 RUN yum update -y \
     && yum install -y logrotate python3-pip rsync sudo patch supervisor wget tar unzip dos2unix file \
     && pip3 install --upgrade setuptools \
