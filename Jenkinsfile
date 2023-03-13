@@ -58,8 +58,8 @@ pipeline {
                         // sh 'docker buildx create --use --name multiarch --append'
                         sh 'docker buildx inspect --bootstrap'
                         sh 'docker buildx ls'
-                        sh "docker buildx build --platform linux/amd64 -t ${imagename} --build-arg GROUPER_CONTAINER_VERSION=$tag --load ."
-                        sh "docker buildx build --platform linux/arm64 -t ${imagename}:arm64 --build-arg GROUPER_CONTAINER_VERSION=$tag --load ."
+                        sh "docker buildx build --platform linux/amd64 -t ${imagename} --build-arg GROUPER_CONTAINER_VERSION=${tag} --load ."
+                        sh "docker buildx build --platform linux/arm64 -t ${imagename}:arm64 --build-arg GROUPER_CONTAINER_VERSION=${tag} --load ."
                   } catch(error) {
                      def error_details = readFile('./debug');
                       def message = "BUILD ERROR: There was a problem building ${maintainer}/${imagename}:${tag}. \n\n ${error_details}"
