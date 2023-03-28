@@ -1,4 +1,4 @@
-FROM i2incommon/shibboleth_sp:3.4.0_02092023_rocky8_multiarch
+FROM --platform=$TARGETPLATFORM rockylinux:8.6
 
 LABEL author="tier-packaging@internet2.edu <tier-packaging@internet2.edu>" \
       Vendor="TIER" \
@@ -8,15 +8,15 @@ LABEL author="tier-packaging@internet2.edu <tier-packaging@internet2.edu>" \
 
 ARG GROUPER_CONTAINER_VERSION
 
-ENV GROUPER_VERSION=4.1.0 \
-    GROUPER_CONTAINER_VERSION=4.1.0 \
+ENV GROUPER_VERSION=5.0.0 \
+    GROUPER_CONTAINER_VERSION=5.0.0 \
     JAVA_HOME=/usr/lib/jvm/java-17-amazon-corretto \
     PATH=$PATH:$JAVA_HOME/bin \
     GROUPER_HOME=/opt/grouper/grouperWebapp/WEB-INF
 
-#  net-tools curl mlocate strace telnet man vim rsyslog cron httpd mod_ssl cronie
+#  net-tools curl mlocate strace telnet man vim rsyslog cron mod_ssl cronie
 RUN yum update -y \
-    && yum install -y logrotate python3-pip rsync sudo patch supervisor wget tar unzip dos2unix file \
+    && yum install -y logrotate python3-pip rsync sudo patch wget tar unzip dos2unix file net-tools curl mlocate logrotate strace telnet man vim rsyslog cronie findutils \
     && pip3 install --upgrade setuptools \
     && yum clean -y all \
     && groupadd -r tomcat \
@@ -34,11 +34,10 @@ RUN rpm --import https://yum.corretto.aws/corretto.key \
 # real copy command (if not caching), uncomment this and change comments of COPY above to work on install script
 COPY container_files/ /opt/container_files/
 
-RUN cd /tmp \
-    && chmod +x /opt/container_files/docker-build-bin/*.sh \
-    && /opt/container_files/docker-build-bin/containerDockerfileInstallDos2unix.sh /opt/container_files \
-    && /opt/container_files/docker-build-bin/containerDockerfileInstallGrouper.sh $JAVA_HOME $GROUPER_VERSION \
-    && /opt/container_files/docker-build-bin/containerDockerfileInstall.sh $JAVA_HOME $GROUPER_VERSION
+RUN chmod +x /opt/container_files/docker-build-bin/*.sh
+RUN /opt/container_files/docker-build-bin/containerDockerfileInstallDos2unix.sh /opt/container_files 
+RUN /opt/container_files/docker-build-bin/containerDockerfileInstallGrouper.sh $JAVA_HOME $GROUPER_VERSION
+RUN /opt/container_files/docker-build-bin/containerDockerfileInstall.sh $JAVA_HOME $GROUPER_VERSION
 
 
 # testing container
@@ -52,3 +51,5 @@ EXPOSE 80 443
 HEALTHCHECK NONE
 
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+#ENTRYPOINT ["ping"]
+#CMD ["google.com"]

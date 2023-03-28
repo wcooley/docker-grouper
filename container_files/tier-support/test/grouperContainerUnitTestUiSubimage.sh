@@ -39,31 +39,13 @@ testContainerUiSubimage() {
   assertFileExists "/opt/grouper/grouperWebapp/WEB-INF/lib/grouper-messaging-activemq-$grouperVersion.jar"
   assertFileExists "/opt/grouper/grouperWebapp/WEB-INF/libUiAndDaemon/grouper-messaging-activemq-$grouperVersion.jar"
 
-  assertFileContains /etc/httpd/conf.d/ssl-enabled.conf "Listen 443 https"
-  assertFileNotContains /etc/httpd/conf.d/ssl-enabled.conf "__"
-  assertFileContains /etc/httpd/conf/httpd.conf "Listen 80"
-  assertFileContains /opt/tier-support/supervisord.conf "program:shibbolethsp"
-  assertFileContains /opt/tier-support/supervisord.conf "program:tomcat"
-  assertFileContains /opt/tier-support/supervisord.conf "program:httpd"
-  assertFileContains /opt/tier-support/supervisord.conf "user=shibd"
-  assertFileNotContains /opt/tier-support/supervisord.conf "__"
-  assertFileNotContains /etc/httpd/conf.d/ssl-enabled.conf cachain.pem
-  assertFileNotContains /etc/httpd/conf.d/ssl-enabled.conf /etc/pki/tls/certs/localhost.crt
-
-  assertFileContains /opt/grouper/grouperWebapp/WEB-INF/classes/log4j.properties "/tmp/logpipe"
   assertFileContains /opt/grouper/grouperWebapp/WEB-INF/classes/log4j.properties "grouper-ui;"
 
   assertFileNotContains /opt/grouper/grouperWebapp/WEB-INF/classes/grouper.hibernate.properties grouperPasswordConfigOverride_UI_GrouperSystem_pass.elConfig
   assertFileNotContains /opt/grouper/grouperWebapp/WEB-INF/classes/grouper.hibernate.properties thisPassIsCopyrightedDontUse
 
-  assertFileContains /etc/httpd/conf.d/grouper-www.conf "3600"
-  assertFileNotContains /etc/httpd/conf.d/grouper-www.conf "__"
-
   assertEnvVar GROUPERWS_PROXY_PASS "#"
   assertEnvVar GROUPERWS_URL_CONTEXT "grouper-ws"
-  assertEnvVar GROUPER_APACHE_AJP_TIMEOUT_SECONDS "3600"
-  assertEnvVar GROUPER_APACHE_NONSSL_PORT "80"
-  assertEnvVar GROUPER_APACHE_SSL_PORT "443"
   assertEnvVar GROUPER_CHOWN_DIRS "true"
   assertEnvVar GROUPER_CONTAINER_VERSION "$containerVersion"
   assertEnvVar GROUPER_DAEMON "false"
@@ -73,9 +55,7 @@ testContainerUiSubimage() {
   assertEnvVar GROUPER_LOG_PREFIX "grouper-ui"
   assertEnvVar GROUPER_MAX_MEMORY "1500m"
   assertEnvVar GROUPER_PROXY_PASS ""
-  assertEnvVar GROUPER_RUN_APACHE "true"
   assertEnvVar GROUPER_RUN_PROCESSES_AS_USERS "true"
-  assertEnvVar GROUPER_RUN_SHIB_SP "true"
   assertEnvVar GROUPER_RUN_TOMCAT "true"
   assertEnvVar GROUPER_TOMCAT_CONTEXT "grouper"
   assertEnvVar GROUPER_UI "true"
@@ -88,9 +68,6 @@ testContainerUiSubimage() {
   assertEnvVar GROUPER_WS_GROUPER_AUTH "false"
 
   assertNumberOfTomcatProcesses 1
-  # bad cert apache wont start
-  assertNumberOfApacheProcesses 0
-  assertNumberOfShibProcesses 1
 
   assertNotListeningOnPort 443
   assertNotListeningOnPort 80

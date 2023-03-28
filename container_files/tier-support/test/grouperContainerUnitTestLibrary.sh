@@ -197,28 +197,6 @@ assertNumberOfTomcatProcesses() {
   assertEquals "tomcat process count" "$1" "$var"
 }
 
-assertNumberOfApacheProcesses() {
-  if [ "$#" -ne 1 ]; then
-    # generally 0 or 5 processes
-    echo "You must enter exactly 1 arguments: the number of apache processes"
-    exit 1
-  fi
-  local command="docker exec -it $containerName ps -ef | grep "^apache" | wc -l | xargs"
-  local var="$(runCommand "$command")"
-  assertEquals "apache process count" "$1" "$var"
-}
-
-assertNumberOfShibProcesses() {
-  if [ "$#" -ne 1 ]; then
-    # generally 0 or 5 processes
-    echo "You must enter exactly 1 arguments: the number of shib processes"
-    exit 1
-  fi
-  local command="docker exec -it $containerName ps -ef | grep "^shibd" | wc -l | xargs"
-  local var="$(runCommand "$command")"
-  assertEquals "shib process count" "$1" "$var"
-}
-
 assertEnvVar() {
   if [ "$#" -ne 2 ]; then
     echo "You must enter exactly 2 arguments: the env var name and value"
@@ -251,8 +229,6 @@ grouperContainerUnitTestLibrary_unsetAll() {
   unset -f assertListeningOnPort
   unset -f assertNotEquals
   unset -f assertNotListeningOnPort
-  unset -f assertNumberOfApacheProcesses
-  unset -f assertNumberOfShibProcesses
   unset -f assertNumberOfTomcatProcesses
   unset -f dockerRemoveContainer
   unset -f dockerRemoveSubimage
@@ -272,8 +248,6 @@ grouperContainerUnitTestLibrary_exportAll() {
   export -f assertListeningOnPort
   export -f assertNotEquals
   export -f assertNotListeningOnPort
-  export -f assertNumberOfApacheProcesses
-  export -f assertNumberOfShibProcesses
   export -f assertNumberOfTomcatProcesses
   export -f dockerRemoveContainer
   export -f dockerRemoveSubimage

@@ -19,11 +19,6 @@ testContainerUiNoSslOrClient() {
   docker run --detach --name $containerName --publish 443:443 -e GROUPER_USE_SSL=false -e GROUPER_WEBCLIENT_IS_SSL=false $imageName ui
   sleep $globalSleepSecondsAfterRun
 
-  assertFileExists /etc/httpd/conf.d/ssl-enabled.conf.dontuse
-  assertFileExists /etc/httpd/conf.d/ssl.conf.dontuse
-  assertFileNotExists /etc/httpd/conf.d/ssl-enabled.conf
-  assertFileNotExists /etc/httpd/conf.d/ssl.conf
-
   assertFileNotContains /opt/tomcat/conf/server.xml 'secure="true"'
   assertFileNotContains /opt/tomcat/conf/server.xml 'scheme="https"'
   assertFileContains /opt/tomcat/conf/server.xml 'scheme="http"'
@@ -31,10 +26,6 @@ testContainerUiNoSslOrClient() {
   assertEnvVar GROUPER_USE_SSL "false"
   assertEnvVar GROUPER_WEBCLIENT_IS_SSL "false"
   
-
-  assertNumberOfTomcatProcesses 1
-  assertNumberOfApacheProcesses 5
-  assertNumberOfShibProcesses 1
 
   assertNotListeningOnPort 443
   assertListeningOnPort 80

@@ -57,8 +57,6 @@ services:
        target: grouper_grouper-loader.properties
      - source: subject.properties
        target: grouper_subject.properties
-     - source: sp-key.pem
-       target: shib_sp-key.pem
      - source: host-key.pem
     volumes:
      - type: bind
@@ -67,15 +65,6 @@ services:
      - type: bind
        source: ./configs-and-secrets/grouper/grouper.client.properties
        target: /opt/grouper/conf/grouper.client.properties
-     - type: bind
-       source: ./configs-and-secrets/shibboleth/sp-cert.pem
-       target: /etc/shibboleth/sp-cert.pem
-     - type: bind
-       source: ./configs-and-secrets/shibboleth/shibboleth2.xml
-       target: /etc/shibboleth/shibboleth2.xml
-     - type: bind
-       source: ./configs-and-secrets/shibboleth/idp-metadata.xml
-       target: /etc/shibboleth/idp-metadata.xml
      - type: bind
        source: ./configs-and-secrets/httpd/host-cert.pem
        target: /etc/pki/tls/certs/host-cert.pem
@@ -107,8 +96,6 @@ services:
        target: grouper_grouper-loader.properties
      - source: subject.properties
        target: grouper_subject.properties
-     - source: sp-key.pem
-       target: shib_sp-key.pem
      - source: host-key.pem
     volumes:
      - type: bind
@@ -232,8 +219,6 @@ secrets:
     file: ./configs-and-secrets/grouper/rabbitmq_password.txt
   subject.properties:
     file: ./configs-and-secrets/grouper/subject.properties
-  sp-key.pem:
-    file: ./configs-and-secrets/shibboleth/sp-key.pem
   morphString.properties:
     file: ./configs-and-secrets/grouper/morphString.properties
      

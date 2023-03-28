@@ -18,12 +18,6 @@ cd $reldir
 mkdir -p slashRoot/usr/local/bin
 rsync -avzpl $grouperContainerGitPath/container_files/usr-local-bin/* slashRoot/usr/local/bin
 
-mkdir -p slashRoot/etc/httpd/conf.d
-rsync -avzpl $grouperContainerGitPath/container_files/httpd/* slashRoot/etc/httpd/conf.d
-
-mkdir -p slashRoot/opt/tier-support/originalFiles
-rsync -avzpl $grouperContainerGitPath/container_files/httpd/ssl-enabled.conf slashRoot/opt/tier-support/originalFiles
-
 rsync -avzpl $grouperContainerGitPath/container_files/tier-support/test/grouper*.sh $reldir
 
 #mkdir -p slashRoot/opt/tomcat/conf

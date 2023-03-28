@@ -25,13 +25,13 @@ testContainerUiSubimageNonroot() {
   echo cat DockerFile
   cat Dockerfile
   echo "docker build -t $subimageId ."
-  echo "docker run --detach --name $containerName -u $myId -e GROUPER_RUN_TOMCAT_NOT_SUPERVISOR=true --publish 8080:8080 $subimageId ui"
+  echo "docker run --detach --name $containerName -u $myId --publish 8080:8080 $subimageId ui"
   echo '################'
   echo
 
   docker build -t "$subimageId" .
 
-  docker run --detach --name $containerName -u $myId -e GROUPER_RUN_TOMCAT_NOT_SUPERVISOR=true --publish 8080:8080 $subimageId ui
+  docker run --detach --name $containerName -u $myId --publish 8080:8080 $subimageId ui
   sleep $globalSleepSecondsAfterRun
 
   assertFileExists /opt/grouper/grouperWebapp/WEB-INF/libWs/axis2-kernel-1.6.4.jar
@@ -40,7 +40,6 @@ testContainerUiSubimageNonroot() {
   assertFileExists "/opt/grouper/grouperWebapp/WEB-INF/lib/grouper-messaging-activemq-$grouperVersion.jar"
   assertFileExists "/opt/grouper/grouperWebapp/WEB-INF/libUiAndDaemon/grouper-messaging-activemq-$grouperVersion.jar"
 
-  assertFileContains /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml "/tmp/logpipe"
   assertFileContains /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml "grouper-ui;"
 
   assertFileNotContains /opt/grouper/grouperWebapp/WEB-INF/classes/grouper.hibernate.properties grouperPasswordConfigOverride_UI_GrouperSystem_pass.elConfig
@@ -48,9 +47,6 @@ testContainerUiSubimageNonroot() {
 
   assertEnvVar GROUPERWS_PROXY_PASS "#"
   assertEnvVar GROUPERWS_URL_CONTEXT "grouper-ws"
-  assertEnvVar GROUPER_APACHE_AJP_TIMEOUT_SECONDS "3600"
-  assertEnvVar GROUPER_APACHE_NONSSL_PORT "80"
-  assertEnvVar GROUPER_APACHE_SSL_PORT "443"
   assertEnvVarNot GROUPER_CHOWN_DIRS "true"
   assertEnvVar GROUPER_CONTAINER_VERSION "$containerVersion"
   assertEnvVar GROUPER_DAEMON "false"
@@ -60,9 +56,7 @@ testContainerUiSubimageNonroot() {
   assertEnvVar GROUPER_LOG_PREFIX "grouper-ui"
   assertEnvVar GROUPER_MAX_MEMORY "1500m"
   assertEnvVar GROUPER_PROXY_PASS ""
-  assertEnvVarNot GROUPER_RUN_APACHE "true"
   assertEnvVar GROUPER_RUN_PROCESSES_AS_USERS "true"
-  assertEnvVarNot GROUPER_RUN_SHIB_SP "true"
   assertEnvVar GROUPER_RUN_TOMCAT "true"
   assertEnvVar GROUPER_TOMCAT_CONTEXT "grouper"
   assertEnvVar GROUPER_UI "true"
@@ -76,9 +70,6 @@ testContainerUiSubimageNonroot() {
 
   #tomcat doesnt like no database there
   #assertNumberOfTomcatProcesses 13
-  # bad cert apache wont start
-  assertNumberOfApacheProcesses 0
-  assertNumberOfShibProcesses 0
 
   assertNotListeningOnPort 443
   assertNotListeningOnPort 80

@@ -2,7 +2,6 @@
 
 setupFilesTomcat() {
   setupFilesTomcat_turnOnAjp
-  setupFilesTomcat_supervisor
   setupFilesTomcat_authn
   setupFilesTomcat_context
   setupFilesTomcat_ports
@@ -35,16 +34,8 @@ setupFilesTomcat_turnOnAjp() {
 setupFilesTomcat_accessLogs() {
   
   if [ "$GROUPER_ORIGFILE_SERVER_XML" = "true" ]; then
-    if [ "$GROUPER_TOMCAT_LOG_ACCESS" = "true" ]; then
+    if [ "$GROUPER_TOMCAT_LOG_ACCESS" != "true" ]; then
     
-      # this patch happens after the last patch
-      patch /opt/tomcat/conf/server.xml /opt/tomcat/conf/server.xml.loggingpipe.patch
-      returnCode=$?
-      echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_accessLogs) Patch server.xml to log access: patch /opt/tomcat/conf/server.xml /opt/tomcat/conf/server.xml.loggingpipe.patch , result: $returnCode"
-      if [ $returnCode != 0 ]; then exit $returnCode; fi
-      
-    else  
-  
       patch /opt/tomcat/conf/server.xml /opt/tomcat/conf/server.xml.nologging.patch
       returnCode=$?
       echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_accessLogs) Patch server.xml to not log access: patch /opt/tomcat/conf/server.xml /opt/tomcat/conf/server.xml.nologging.patch , result: $returnCode"
@@ -119,51 +110,6 @@ setupFilesTomcat_context() {
       fi    
   fi
 
-  # setup the apache linkage to tomcat  
-  if [ -f /etc/httpd/conf.d/grouper-www.conf ] && [ "$GROUPER_RUN_TOMCAT_NOT_SUPERVISOR" != "true" ]
-    then
-      sed -i "s|__GROUPER_APACHE_AJP_TIMEOUT_SECONDS__|$GROUPER_APACHE_AJP_TIMEOUT_SECONDS|g" /etc/httpd/conf.d/grouper-www.conf
-      results="$?"
-      sed -i "s|__GROUPER_TOMCAT_CONTEXT__|$GROUPER_TOMCAT_CONTEXT|g" /etc/httpd/conf.d/grouper-www.conf
-      results="$results $?"
-      sed -i "s|__GROUPER_URL_CONTEXT__|$GROUPER_URL_CONTEXT|g" /etc/httpd/conf.d/grouper-www.conf
-      results="$results $?"
-      sed -i "s|__GROUPERWS_URL_CONTEXT__|$GROUPERWS_URL_CONTEXT|g" /etc/httpd/conf.d/grouper-www.conf
-      results="$results $?"
-      sed -i "s|__GROUPER_PROXY_PASS__|$GROUPER_PROXY_PASS|g" /etc/httpd/conf.d/grouper-www.conf
-      results="$results $?"
-
-      if [ "$GROUPER_REDIRECT_FROM_SLASH_TO_GROUPER" = "true" ]; then
-        sed -i "s|__GROUPER_REDIRECT_FROM_SLASH_TO_GROUPER__||g" /etc/httpd/conf.d/grouper-www.conf
-        results="$results $?"
-      else
-        sed -i "s|__GROUPER_REDIRECT_FROM_SLASH_TO_GROUPER__|#|g" /etc/httpd/conf.d/grouper-www.conf
-        results="$results $?"
-      fi
-
-      if [ -f /etc/httpd/conf.d/ssl-enabled.conf ]; then
-        sed -i "s|__GROUPER_PROXY_PASS__|$GROUPER_PROXY_PASS|g" /etc/httpd/conf.d/ssl-enabled.conf
-        results="$results $?"
-
-        if [ "$GROUPER_REDIRECT_FROM_SLASH_TO_GROUPER" = "true" ]; then
-          sed -i "s|__GROUPER_REDIRECT_FROM_SLASH_TO_GROUPER__||g" /etc/httpd/conf.d/ssl-enabled.conf
-          results="$results $?"
-        else
-          sed -i "s|__GROUPER_REDIRECT_FROM_SLASH_TO_GROUPER__|#|g" /etc/httpd/conf.d/ssl-enabled.conf
-          results="$results $?"
-        fi
-      fi
-      sed -i "s|__GROUPERWS_PROXY_PASS__|$GROUPERWS_PROXY_PASS|g" /etc/httpd/conf.d/grouper-www.conf
-      returnCode=$?
-      results="$results $returnCode"
-      if [ "$GROUPER_TOMCAT_AJP_PORT" != "8009" ]; then 
-        sed -i "s|:8009/|:$GROUPER_TOMCAT_AJP_PORT/|g" /etc/httpd/conf.d/grouper-www.conf
-        results="$results $?"
-      fi
-      echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_context) Set contexts in grouper-www.conf and other files, results: $results"
-      if [ $returnCode != 0 ]; then exit $returnCode; fi
-  fi
-
 }
 
 setupFilesTomcat_authn() {
@@ -186,18 +132,6 @@ setupFilesTomcat_authn() {
         if [ $returnCode != 0 ]; then exit $returnCode; fi
 
     fi
-
-}
-
-setupFilesTomcat_supervisor() {
-
-  if [ "$GROUPER_RUN_TOMCAT" = "true" ] && [ "$GROUPER_RUN_TOMCAT_NOT_SUPERVISOR" != "true" ]
-    then
-      cat /opt/tier-support/supervisord-tomcat.conf >> /opt/tier-support/supervisord.conf
-      returnCode=$?
-      echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_supervisor) Append supervisord-tomcat.conf to supervisord.conf: cat /opt/tier-support/supervisord-tomcat.conf >> /opt/tier-support/supervisord.conf , result: $returnCode"
-      if [ $returnCode != 0 ]; then exit $returnCode; fi
-  fi
 
 }
 
@@ -324,7 +258,6 @@ setupFilesTomcat_unsetAll() {
   unset -f setupFilesTomcat_ssl
   unset -f setupFilesTomcat_sslCertsAnchors
   unset -f setupFilesTomcat_sslCertsClient
-  unset -f setupFilesTomcat_supervisor
   unset -f setupFilesTomcat_unsetAll
   unset -f setupFilesTomcat_accessLogs
   unset -f setupFilesTomcat_sessionTimeout
@@ -341,7 +274,6 @@ setupFilesTomcat_exportAll() {
   export -f setupFilesTomcat_ssl
   export -f setupFilesTomcat_sslCertsAnchors
   export -f setupFilesTomcat_sslCertsClient
-  export -f setupFilesTomcat_supervisor
   export -f setupFilesTomcat_unsetAll
   export -f setupFilesTomcat_accessLogs
   export -f setupFilesTomcat_sessionTimeout

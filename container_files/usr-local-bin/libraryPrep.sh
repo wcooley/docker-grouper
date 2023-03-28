@@ -7,14 +7,6 @@ prep_openshift() {
       echo "grouperContainer; INFO: (libraryPrep.sh-prep_openshift) export GROUPER_CHOWN_DIRS=false"
       export GROUPER_CHOWN_DIRS=false
     fi
-    if [ -z "$GROUPER_SHIB_LOG_USE_PIPE" ]; then
-      echo "grouperContainer; INFO: (libraryPrep.sh-prep_openshift) export GROUPER_SHIB_LOG_USE_PIPE=false"    
-      export GROUPER_SHIB_LOG_USE_PIPE=false
-    fi
-    if [ -z "$GROUPER_USE_PIPES" ]; then
-      echo "grouperContainer; INFO: (libraryPrep.sh-prep_openshift) export GROUPER_USE_PIPES=false"    
-      export GROUPER_USE_PIPES=false
-    fi
     if [ -z "$GROUPER_GSH_CHECK_USER" ]; then 
       echo "grouperContainer; INFO: (libraryPrep.sh-prep_openshift) export GROUPER_GSH_CHECK_USER=false"    
       export GROUPER_GSH_CHECK_USER=false
@@ -28,24 +20,17 @@ prep_openshift() {
 
 prep_quickstart() {
     
-    if [ "$GROUPER_RUN_TOMCAT_NOT_SUPERVISOR" != "true" ]; then
-      echo "grouperContainer; INFO: (libraryPrep.sh-prep_quickstart) GROUPER_RUN_TOMCAT_NOT_SUPERVISOR is not true"    
-      if [ -z "$GROUPER_SELF_SIGNED_CERT" ] && [ "$GROUPER_OPENSHIFT" != "true" ]; then 
-        echo "grouperContainer; INFO: (libraryPrep.sh-prep_quickstart) export GROUPER_SELF_SIGNED_CERT=true"    
-        export GROUPER_SELF_SIGNED_CERT=true
-      fi
-      if [ -z "$GROUPER_START_DELAY_SECONDS" ]; then 
-        echo "grouperContainer; INFO: (libraryPrep.sh-prep_quickstart) export GROUPER_START_DELAY_SECONDS='10'"    
-        export GROUPER_START_DELAY_SECONDS='10'
-      fi
+    if [ -z "$GROUPER_SELF_SIGNED_CERT" ] && [ "$GROUPER_OPENSHIFT" != "true" ]; then 
+      echo "grouperContainer; INFO: (libraryPrep.sh-prep_quickstart) export GROUPER_SELF_SIGNED_CERT=true"    
+      export GROUPER_SELF_SIGNED_CERT=true
     fi
-    if [ -z "$GROUPER_RUN_SHIB_SP" ] && [ "$GROUPER_OPENSHIFT" != "true" ]; then 
-      echo "grouperContainer; INFO: (libraryPrep.sh-prep_quickstart) export GROUPER_RUN_SHIB_SP=false"    
-      export GROUPER_RUN_SHIB_SP=false
+    if [ -z "$GROUPER_START_DELAY_SECONDS" ]; then 
+      echo "grouperContainer; INFO: (libraryPrep.sh-prep_quickstart) export GROUPER_START_DELAY_SECONDS='10'"    
+      export GROUPER_START_DELAY_SECONDS='10'
     fi
     if [ -z "$GROUPER_AUTO_DDL_UPTOVERSION" ]; then
-      echo "grouperContainer; INFO: (libraryPrep.sh-prep_quickstart) export GROUPER_AUTO_DDL_UPTOVERSION='v2.6.*'"    
-      export GROUPER_AUTO_DDL_UPTOVERSION='v2.6.*'
+      echo "grouperContainer; INFO: (libraryPrep.sh-prep_quickstart) export GROUPER_AUTO_DDL_UPTOVERSION='v5.*.*'"    
+      export GROUPER_AUTO_DDL_UPTOVERSION='v5.*.*'
     fi
     if [ -z "$GROUPER_UI_CONFIGURATION_EDITOR_SOURCEIPADDRESSES" ]; then 
       echo "grouperContainer; INFO: (libraryPrep.sh-prep_quickstart) export GROUPER_UI_CONFIGURATION_EDITOR_SOURCEIPADDRESSES='0.0.0.0/0'"    
@@ -84,14 +69,6 @@ prep_ui() {
     if [ -z "$GROUPER_UI" ]; then 
       echo "grouperContainer; INFO: (libraryPrep.sh-prep_ui) export GROUPER_UI=true"    
       export GROUPER_UI=true
-    fi
-    if [ -z "$GROUPER_RUN_APACHE" ] && [ "$GROUPER_RUN_TOMCAT_NOT_SUPERVISOR" != "true" ] && [ "$GROUPER_OPENSHIFT" != "true" ]; then 
-      echo "grouperContainer; INFO: (libraryPrep.sh-prep_ui) export GROUPER_RUN_APACHE=true"    
-      export GROUPER_RUN_APACHE=true
-    fi
-    if [ -z "$GROUPER_RUN_SHIB_SP" ] && [ "$GROUPER_RUN_TOMCAT_NOT_SUPERVISOR" != "true" ] && [ "$GROUPER_OPENSHIFT" != "true" ]; then
-      echo "grouperContainer; INFO: (libraryPrep.sh-prep_ui) export GROUPER_RUN_SHIB_SP=true"    
-      export GROUPER_RUN_SHIB_SP=true
     fi
     if [ -z "$GROUPER_RUN_TOMCAT" ]; then 
       echo "grouperContainer; INFO: (libraryPrep.sh-prep_ui) export GROUPER_RUN_TOMCAT=true"    
@@ -134,10 +111,6 @@ prep_ws() {
       echo "grouperContainer; INFO: (libraryPrep.sh-prep_ws) export GROUPER_WS=true"    
       export GROUPER_WS=true
     fi
-    if [ -z "$GROUPER_RUN_APACHE" ] && [ "$GROUPER_RUN_TOMCAT_NOT_SUPERVISOR" != "true" ] && [ "$GROUPER_OPENSHIFT" != "true" ] ; then 
-      echo "grouperContainer; INFO: (libraryPrep.sh-prep_ws) export GROUPER_RUN_APACHE=true"    
-      export GROUPER_RUN_APACHE=true
-    fi
     if [ -z "$GROUPER_RUN_TOMCAT" ]; then 
       echo "grouperContainer; INFO: (libraryPrep.sh-prep_ws) export GROUPER_RUN_TOMCAT=true"    
       export GROUPER_RUN_TOMCAT=true
@@ -146,18 +119,6 @@ prep_ws() {
 
 prep_conf() {
 
-    echo "grouperContainer; INFO: (libraryPrep.sh-prep_conf) Start setting up initial pipes"
-    if [ -z "$GROUPER_USE_PIPES" ]; then
-      if [ "$GROUPER_OPENSHIFT" != 'true' ]; then
-        echo "grouperContainer; INFO: (libraryPrep.sh-prep_conf) GROUPER_USE_PIPES=true"
-        export GROUPER_USE_PIPES=true
-      fi
-    fi
-    setupPipe_logging
-    setupPipe_supervisordLog
-    setupPipe_grouperLog
-    echo "grouperContainer; INFO: (libraryPrep.sh-prep_conf) End setting up initial pipes"
-    
     # if we are stopping and starting, we just read the env vars and we done
     if [ -f /opt/grouper/grouperEnv.sh ]
       then
@@ -172,18 +133,6 @@ prep_conf() {
 }
 
 prep_initDeprecatedEnvVars() {
-
-  if [ ! -z "$RUN_APACHE" ] && [ -z "$GROUPER_RUN_APACHE" ]
-    then 
-      echo "grouperContainer; INFO: (libraryPrep.sh-prep_initDeprecatedEnvVars) export GROUPER_RUN_APACHE=$RUN_APACHE"
-      export GROUPER_RUN_APACHE="$RUN_APACHE"
-  fi
-
-  if [ ! -z "$RUN_SHIB_SP" ] && [ -z "$GROUPER_RUN_SHIB_SP" ]
-    then 
-      echo "grouperContainer; INFO: (libraryPrep.sh-prep_initDeprecatedEnvVars) export GROUPER_RUN_SHIB_SP=$RUN_SHIB_SP"
-      export GROUPER_RUN_SHIB_SP="$RUN_SHIB_SP"
-  fi
 
   if [ ! -z "$RUN_TOMCAT" ] && [ -z "$GROUPER_RUN_TOMCAT" ]
     then 
@@ -327,23 +276,6 @@ prep_finishBegin() {
       echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPERWS_URL_CONTEXT=grouper-ws"
       export GROUPERWS_URL_CONTEXT=grouper-ws
     fi
-    if [ -z "$GROUPER_APACHE_AJP_TIMEOUT_SECONDS" ] ; then 
-      echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_APACHE_AJP_TIMEOUT_SECONDS=3600"
-      export GROUPER_APACHE_AJP_TIMEOUT_SECONDS=3600
-    fi
-    if [ -z "$GROUPER_APACHE_SSL_PORT" ] ; then 
-      echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_APACHE_SSL_PORT=443"
-      export GROUPER_APACHE_SSL_PORT=443
-    fi
-    if [ -z "$GROUPER_APACHE_NONSSL_PORT" ] ; then 
-      echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_APACHE_NONSSL_PORT=80"
-      export GROUPER_APACHE_NONSSL_PORT=80
-    fi
-    if [ -z "$GROUPER_APACHE_DIRECTORY_INDEXES" ] ; then 
-      echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_APACHE_DIRECTORY_INDEXES=false"
-      export GROUPER_APACHE_DIRECTORY_INDEXES=false
-    fi
-    
     if [ -z "$GROUPER_GSH_CHECK_USER" ] ; then 
       echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_GSH_CHECK_USER=true"
       export GROUPER_GSH_CHECK_USER=true
@@ -356,13 +288,6 @@ prep_finishBegin() {
     if [ -z "$GROUPER_RUN_TOMCAT_NOT_SUPERVISOR" ]; then 
       echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_RUN_TOMCAT_NOT_SUPERVISOR=false"
       export GROUPER_RUN_TOMCAT_NOT_SUPERVISOR=false
-    fi
-    if [ "$GROUPER_RUN_TOMCAT_NOT_SUPERVISOR" = "true" ]; then
-      # if we are not running supervisor then default to not chown dirs
-      if [ -z "$GROUPER_CHOWN_DIRS" ] ; then 
-        echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_CHOWN_DIRS=false"
-        export GROUPER_CHOWN_DIRS=false
-      fi
     fi
     if [ -z "$GROUPER_CHOWN_DIRS" ] ; then 
       echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_CHOWN_DIRS=true"
@@ -385,16 +310,6 @@ prep_finishBegin() {
       export GROUPER_TOMCAT_SHUTDOWN_PORT=8005
     fi
     
-    if [ -z "$GROUPER_SHIB_LOG_USE_PIPE" ]; then 
-      echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_SHIB_LOG_USE_PIPE=true"
-      export GROUPER_SHIB_LOG_USE_PIPE=true
-    fi
-    
-    if [ -z "$GROUPER_APACHE_STATUS_PATH" ] ; then 
-      echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_APACHE_STATUS_PATH=/status_grouper/status"
-      export GROUPER_APACHE_STATUS_PATH=/status_grouper/status
-    fi
-
     if [ -z "$GROUPER_GSH_JVMARGS" ] ; then 
       echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_GSH_JVMARGS=\"-Djavax.net.ssl.trustStore=/etc/pki/java/cacerts\""
       export GROUPER_GSH_JVMARGS="-Djavax.net.ssl.trustStore=/etc/pki/java/cacerts"
@@ -417,16 +332,6 @@ prep_finishBegin() {
       export GROUPER_LOG_TO_HOST=false
     fi
     
-    if [ -z "$GROUPER_LOG_TO_PIPE" ] ; then 
-      if [ "$GROUPER_LOG_TO_HOST" = "true" ]; then
-        echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_analyzeOriginalFiles) export GROUPER_LOG_TO_PIPE=false"
-        export GROUPER_LOG_TO_PIPE=false
-      else
-        echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_analyzeOriginalFiles) export GROUPER_LOG_TO_PIPE=true"
-        export GROUPER_LOG_TO_PIPE=true
-      fi
-    fi
-
 }
 
 prep_finishEnd() {
@@ -459,10 +364,6 @@ prep_finishEnd() {
     if [ -z "$GROUPER_TOMCAT_LOG_ACCESS" ]; then 
       echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishEnd) export GROUPER_TOMCAT_LOG_ACCESS=false"
       export GROUPER_TOMCAT_LOG_ACCESS=false
-    fi
-    if [ "$GROUPER_RUN_SHIB_SP" = "true" ] && [ -z "$GROUPERUI_LOGOUT_REDIRECTTOURL" ]; then 
-      echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishEnd) export GROUPERUI_LOGOUT_REDIRECTTOURL=/Shibboleth.sso/Logout"
-      export GROUPERUI_LOGOUT_REDIRECTTOURL=/Shibboleth.sso/Logout
     fi
     if [ -z "$GROUPER_REDIRECT_FROM_SLASH_TO_GROUPER" ]; then 
       if [ "$GROUPER_PROXY_PASS" = "#" ]; then 

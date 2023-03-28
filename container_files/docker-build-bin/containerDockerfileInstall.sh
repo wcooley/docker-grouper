@@ -115,21 +115,6 @@ returnCode=$?
 echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) mv /opt/container_files/usr-local-bin/* /usr/local/bin/, result: $returnCode"
 if [ $returnCode != 0 ]; then exit $returnCode; fi
 
-mv /opt/container_files/httpd/* /etc/httpd/conf.d/
-returnCode=$?
-echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) mv /opt/container_files/httpd/* /etc/httpd/conf.d/, result: $returnCode"
-if [ $returnCode != 0 ]; then exit $returnCode; fi
-
-mv /opt/container_files/shibboleth/* /etc/shibboleth/
-returnCode=$?
-echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) mv /opt/container_files/shibboleth/* /etc/shibboleth/, result: $returnCode"
-if [ $returnCode != 0 ]; then exit $returnCode; fi
-
-cp /dev/null /etc/httpd/conf.d/ssl.conf
-returnCode=$?
-echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) cp /dev/null /etc/httpd/conf.d/ssl.conf, result: $returnCode"
-if [ $returnCode != 0 ]; then exit $returnCode; fi
-
 rm -f /opt/tomcat/bin/log4j-*
 returnCode=$?
 echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) rm -f /opt/tomcat/bin/log4j-*, result: $returnCode"
@@ -199,30 +184,6 @@ cp /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml /opt/tier-support/origi
 returnCode=$?
 echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) cp /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml /opt/tier-support/originalFiles 2>/dev/null, result: $returnCode"
 if [ $returnCode != 0 ]; then exit $returnCode; fi
-
-cp /etc/httpd/conf/httpd.conf /opt/tier-support/originalFiles 2>/dev/null
-returnCode=$?
-echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) cp /etc/httpd/conf/httpd.conf /opt/tier-support/originalFiles 2>/dev/null, result: $returnCode"
-if [ $returnCode != 0 ]; then exit $returnCode; fi
-
-cp /etc/httpd/conf.d/ssl-enabled.conf /opt/tier-support/originalFiles 2>/dev/null
-returnCode=$?
-echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) cp /etc/httpd/conf.d/ssl-enabled.conf /opt/tier-support/originalFiles 2>/dev/null, result: $returnCode"
-if [ $returnCode != 0 ]; then exit $returnCode; fi
-
-if [ -f /etc/httpd/conf.d/httpd-shib.conf ]; then
-  cp /etc/httpd/conf.d/httpd-shib.conf /opt/tier-support/originalFiles 2>/dev/null
-  returnCode=$?
-  echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) cp /etc/httpd/conf.d/httpd-shib.conf /opt/tier-support/originalFiles 2>/dev/null, result: $returnCode"
-  if [ $returnCode != 0 ]; then exit $returnCode; fi
-fi
-
-if [ -f /etc/httpd/conf.d/shib.conf ]; then
-  cp /etc/httpd/conf.d/shib.conf /opt/tier-support/originalFiles 2>/dev/null
-  returnCode=$?
-  echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) cp /etc/httpd/conf.d/shib.conf /opt/tier-support/originalFiles 2>/dev/null, result: $returnCode"
-  if [ $returnCode != 0 ]; then exit $returnCode; fi
-fi
 
 cp /opt/tomcat/conf/server.xml /opt/tier-support/originalFiles 2>/dev/null
 returnCode=$?

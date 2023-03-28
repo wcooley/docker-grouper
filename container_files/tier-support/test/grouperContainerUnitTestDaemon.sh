@@ -25,20 +25,8 @@ testContainerDaemon() {
   assertFileExists "/opt/grouper/grouperWebapp/WEB-INF/lib/grouper-messaging-activemq-$grouperVersion.jar"
   assertFileExists "/opt/grouper/grouperWebapp/WEB-INF/libUiAndDaemon/grouper-messaging-activemq-$grouperVersion.jar"
 
-  assertFileNotContains /opt/tier-support/supervisord.conf "program:shibbolethsp"
-  assertFileContains /opt/tier-support/supervisord.conf "program:tomcat"
-  assertFileNotContains /opt/tier-support/supervisord.conf "program:httpd"
-  assertFileNotContains /opt/tier-support/supervisord.conf "user=shibd"
-  assertFileNotContains /opt/tier-support/supervisord.conf "__"
-
-  assertFileContains /etc/httpd/conf.d/grouper-www.conf "3600"
-  assertFileNotContains /etc/httpd/conf.d/grouper-www.conf "__"
-
   assertEnvVar GROUPERWS_PROXY_PASS "#"
   assertEnvVar GROUPERWS_URL_CONTEXT "grouper-ws"
-  assertEnvVar GROUPER_APACHE_AJP_TIMEOUT_SECONDS "3600"
-  assertEnvVar GROUPER_APACHE_NONSSL_PORT "80"
-  assertEnvVar GROUPER_APACHE_SSL_PORT "443"
   assertEnvVar GROUPER_CHOWN_DIRS "true"
   assertEnvVar GROUPER_CONTAINER_VERSION "$containerVersion"
   assertEnvVar GROUPER_DAEMON "true"
@@ -48,24 +36,18 @@ testContainerDaemon() {
   assertEnvVar GROUPER_LOG_PREFIX "grouper-daemon"
   assertEnvVar GROUPER_MAX_MEMORY "1500m"
   assertEnvVar GROUPER_PROXY_PASS "#"
-  assertEnvVarNot GROUPER_RUN_APACHE "true"
   assertEnvVar GROUPER_RUN_PROCESSES_AS_USERS "true"
-  assertEnvVarNot GROUPER_RUN_SHIB_SP "true"
   assertEnvVar GROUPER_RUN_TOMCAT "true"
   assertEnvVar GROUPER_TOMCAT_CONTEXT "grouper"
   assertEnvVar GROUPER_UI "false"
   assertEnvVar GROUPER_UI_CONFIGURATION_EDITOR_SOURCEIPADDRESSES "127.0.0.1/32"
   assertEnvVar GROUPER_UI_GROUPER_AUTH "false"
-  assertEnvVarNot GROUPER_UI_ONLY "true"
   assertEnvVar GROUPER_URL_CONTEXT "grouper"
   assertEnvVar GROUPER_USE_SSL "true"
   assertEnvVar GROUPER_WS "false"
   assertEnvVar GROUPER_WS_GROUPER_AUTH "false"
 
   assertNumberOfTomcatProcesses 1
-  # bad cert apache wont start
-  assertNumberOfApacheProcesses 0
-  assertNumberOfShibProcesses 0
 
   assertNotListeningOnPort 443
   assertNotListeningOnPort 80

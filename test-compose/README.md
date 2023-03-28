@@ -5,7 +5,6 @@ In this example, the following cases are covered by this example:
 - A demo directory and SIS database are included, populated with approximately 1,000 test subjects.
 - Grouper is configured to use this directory as the subject source.
 - Grouper Loader creates groups based on the data in the SIS table.
-- Grouper UI is protected by a Shibboleth IdP (included) that connects to this directory server.
 - Grouper WS is protected by http basic auth that authenticates against the directory server.
 - Grouper publishes event data to a RabbitMQ instance (included). 
 

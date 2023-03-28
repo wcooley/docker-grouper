@@ -5,17 +5,7 @@ setupFiles_linkGrouperSecrets() {
         local label_file=`basename $filepath`
         local file=$(echo $label_file| cut -d'_' -f 2)
 
-        if [[ $label_file == shib_* ]]; then
-            ln -sf /run/secrets/$label_file /etc/shibboleth/$file
-            returnCode=$?
-            echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_linkGrouperSecrets) ln -sf /run/secrets/$label_file /etc/shibboleth/$file, result: $returnCode"
-            if [ $returnCode != 0 ]; then exit $returnCode; fi
-        elif [[ $label_file == httpd_* ]]; then
-            ln -sf /run/secrets/$label_file /etc/httpd/conf.d/$file
-            returnCode=$?
-            echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_linkGrouperSecrets) ln -sf /run/secrets/$label_file /etc/httpd/conf.d/$file, result: $returnCode"
-            if [ $returnCode != 0 ]; then exit $returnCode; fi
-        elif [ "$label_file" == "host-key.pem" ]; then
+        if [ "$label_file" == "host-key.pem" ]; then
             ln -sf /run/secrets/host-key.pem /etc/pki/tls/private/host-key.pem
             returnCode=$?
             echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_linkGrouperSecrets) ln -sf /run/secrets/host-key.pem /etc/pki/tls/private/host-key.pem, result: $returnCode"
@@ -70,27 +60,6 @@ setupFiles_localLogging() {
     sed -i "s|__FILEEND__|-->|g" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml
     returnCode=$?
     echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_localLogging) sed -i \"s|__FILEEND__|-->|g\" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml, result: $?"
-    if [ $returnCode != 0 ]; then exit $returnCode; fi
-  fi
-  if  [ "$GROUPER_LOG_TO_PIPE" = "true" ]; then
-    sed -i "s|__LOGPIPESTART__||g" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml
-    returnCode=$?
-    echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_localLogging) sed -i \"s|__LOGPIPESTART__||g\" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml, result: $?"
-    if [ $returnCode != 0 ]; then exit $returnCode; fi
-
-    sed -i "s|__LOGPIPEEND__||g" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml
-    returnCode=$?
-    echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_localLogging) sed -i \"s|__LOGPIPEEND__||g\" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml, result: $?"
-    if [ $returnCode != 0 ]; then exit $returnCode; fi
-  else
-    sed -i "s|__LOGPIPESTART__|<!--|g" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml
-    returnCode=$?
-    echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_localLogging) sed -i \"s|__LOGPIPESTART__|<!--|g\" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml, result: $?"
-    if [ $returnCode != 0 ]; then exit $returnCode; fi
-
-    sed -i "s|__LOGPIPEEND__|-->|g" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml
-    returnCode=$?
-    echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_localLogging) sed -i \"s|__LOGPIPEEND__|-->|g\" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml, result: $?"
     if [ $returnCode != 0 ]; then exit $returnCode; fi
   fi
 
@@ -275,54 +244,6 @@ setupFiles_analyzeOriginalFiles() {
       export GROUPER_ORIGFILE_LOG4J_PROPERTIES=false
     fi
 
-    setupFiles_originalFile /etc/httpd/conf/httpd.conf
-    original_file=$?
-    if [ -z "$GROUPER_ORIGFILE_HTTPD_CONF" ] && [[ $original_file -eq 0 ]]
-      then 
-        echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_analyzeOriginalFiles) export GROUPER_ORIGFILE_HTTPD_CONF=true"
-        export GROUPER_ORIGFILE_HTTPD_CONF=true
-    fi
-    if [ -z "$GROUPER_ORIGFILE_HTTPD_CONF" ] ; then 
-      echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_analyzeOriginalFiles) export GROUPER_ORIGFILE_HTTPD_CONF=false"
-      export GROUPER_ORIGFILE_HTTPD_CONF=false
-    fi
-
-    setupFiles_originalFile /etc/httpd/conf.d/ssl-enabled.conf
-    original_file=$?
-    if [ -z "$GROUPER_ORIGFILE_SSL_ENABLED_CONF" ] && [[ $original_file -eq 0 ]]
-      then 
-        echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_analyzeOriginalFiles) export GROUPER_ORIGFILE_SSL_ENABLED_CONF=true"
-        export GROUPER_ORIGFILE_SSL_ENABLED_CONF=true
-    fi
-    if [ -z "$GROUPER_ORIGFILE_SSL_ENABLED_CONF" ] ; then 
-      echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_analyzeOriginalFiles) export GROUPER_ORIGFILE_SSL_ENABLED_CONF=false"
-      export GROUPER_ORIGFILE_SSL_ENABLED_CONF=false
-    fi
-
-    setupFiles_originalFile /etc/httpd/conf.d/httpd-shib.conf
-    original_file=$?
-    if [ -z "$GROUPER_ORIGFILE_HTTPD_SHIB_CONF" ] && [[ $original_file -eq 0 ]]
-      then 
-        echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_analyzeOriginalFiles) export GROUPER_ORIGFILE_HTTPD_SHIB_CONF=true"
-        export GROUPER_ORIGFILE_HTTPD_SHIB_CONF=true
-    fi
-    if [ -z "$GROUPER_ORIGFILE_HTTPD_SHIB_CONF" ] ; then 
-      echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_analyzeOriginalFiles) export GROUPER_ORIGFILE_HTTPD_SHIB_CONF=false"
-      export GROUPER_ORIGFILE_HTTPD_SHIB_CONF=false
-    fi
-
-    setupFiles_originalFile /etc/httpd/conf.d/shib.conf
-    original_file=$?
-    if [ -z "$GROUPER_ORIGFILE_SHIB_CONF" ] && [[ $original_file -eq 0 ]]
-      then 
-        echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_analyzeOriginalFiles) export GROUPER_ORIGFILE_SHIB_CONF=true"
-        export GROUPER_ORIGFILE_SHIB_CONF=true
-    fi
-    if [ -z "$GROUPER_ORIGFILE_SHIB_CONF" ] ; then 
-      echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_analyzeOriginalFiles) export GROUPER_ORIGFILE_SHIB_CONF=false"
-      export GROUPER_ORIGFILE_SHIB_CONF=false
-    fi
-
     setupFiles_originalFile /opt/tomcat/conf/Catalina/localhost/grouper.xml
     original_file=$?
     if [ -z "$GROUPER_ORIGFILE_GROUPER_XML" ] && [[ $original_file -eq 0 ]]
@@ -350,18 +271,7 @@ setupFiles_analyzeOriginalFiles() {
 
 }
 
-setupFiles_removePids() {
-  if [ "$GROUPER_RUN_APACHE" = "true" ] && [ -f /run/httpd/httpd.pid ]; then
-    rm -f /run/httpd/httpd.pid
-    returnCode=$?
-    echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_removePids) rm -f /run/httpd/httpd.pid , result: $returnCode"
-    if [ $returnCode != 0 ]; then exit $returnCode; fi
-  fi
-}
-
 setupFiles() {
-
-  setupFiles_removePids
 
   if [ "$GROUPER_SETUP_FILES_COMPLETE" = "true" ]
     then
@@ -379,17 +289,7 @@ setupFiles() {
   
   setupFiles_linkGrouperSecrets
 
-  # this needs to be first
-  setupFilesForProcess_supervisor
-
-  setupFilesApache
-
   setupFilesTomcat
-  
-  setupFilesForProcess
-  
-  # this needs to be last
-  setupFilesForProcess_supervisorFinal
   
   setupFilesForComponent
   
@@ -412,9 +312,6 @@ setupFiles() {
 
 setupFiles_unsetAllAndFromFiles() {
   setupFiles_unsetAll
-  setupFilesApache_unsetAll
-  setupFilesForComponent_unsetAll
-  setupFilesForProcess_unsetAll
   setupFilesTomcat_unsetAll
   grouperScriptHooks_unsetAll
 }
@@ -428,7 +325,6 @@ setupFiles_unsetAll() {
   unset -f setupFiles_localLogging
   unset -f setupFiles_loggingPrefix
   unset -f setupFiles_originalFile
-  unset -f setupFiles_removePids
   unset -f setupFiles_rsyncSlashRoot
   unset -f setupFiles_storeEnvVars
   unset -f setupFiles_unsetAll

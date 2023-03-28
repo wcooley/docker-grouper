@@ -12,30 +12,13 @@ testContainerUiNoSsl() {
   echo
   echo '################'
   echo Running container as ui without SSL with SSL client
-  echo "docker run --detach --name $containerName --publish 443:443 -e GROUPER_TOMCAT_MAX_HEADER_COUNT=-1 -e GROUPER_USE_SSL=false -e GROUPER_TOMCAT_LOG_ACCESS=true -e GROUPER_APACHE_DIRECTORY_INDEXES=true -e GROUPER_TOMCAT_SESSION_TIMEOUT_MINUTES=30 $imageName ui"
+  echo "docker run --detach --name $containerName --publish 443:443 -e GROUPER_TOMCAT_MAX_HEADER_COUNT=-1 -e GROUPER_USE_SSL=false -e GROUPER_TOMCAT_LOG_ACCESS=true -e GROUPER_TOMCAT_SESSION_TIMEOUT_MINUTES=30 $imageName ui"
   echo '################'
   echo
 
-  docker run --detach --name $containerName --publish 443:443 -e GROUPER_TOMCAT_MAX_HEADER_COUNT=-1 -e GROUPER_USE_SSL=false -e GROUPER_TOMCAT_LOG_ACCESS=true -e GROUPER_APACHE_DIRECTORY_INDEXES=true -e GROUPER_TOMCAT_SESSION_TIMEOUT_MINUTES=30 $imageName ui
+  docker run --detach --name $containerName --publish 443:443 -e GROUPER_TOMCAT_MAX_HEADER_COUNT=-1 -e GROUPER_USE_SSL=false -e GROUPER_TOMCAT_LOG_ACCESS=true -e GROUPER_TOMCAT_SESSION_TIMEOUT_MINUTES=30 $imageName ui
   sleep $globalSleepSecondsAfterRun
 
-  assertFileExists /etc/httpd/conf.d/ssl-enabled.conf.dontuse
-  assertFileExists /etc/httpd/conf.d/ssl.conf.dontuse
-  assertFileNotExists /etc/httpd/conf.d/ssl-enabled.conf
-  assertFileNotExists /etc/httpd/conf.d/ssl.conf
-
-  assertFileContains /etc/httpd/conf/httpd.conf "Options Indexes"
-
-  assertFileContains /etc/httpd/conf/httpd.conf "Listen 80"
-  assertFileContains /opt/tier-support/supervisord.conf "program:shibbolethsp"
-  assertFileContains /opt/tier-support/supervisord.conf "program:tomcat"
-  assertFileContains /opt/tier-support/supervisord.conf "program:httpd"
-  assertFileContains /opt/tier-support/supervisord.conf "user=shibd"
-  assertFileNotContains /opt/tier-support/supervisord.conf "__"
-  assertFileContains /opt/tomcat/conf/server.xml "AccessLogValve"
-  assertFileContains /opt/tomcat/conf/server.xml 'secure="true"'
-  assertFileContains /opt/tomcat/conf/server.xml 'scheme="https"'
-  assertFileNotContains /opt/tomcat/conf/server.xml 'scheme="http"'
   assertFileContains /opt/tomcat/conf/web.xml "<session-timeout>30</session-timeout>"
   
   assertFileNotContains /opt/tomcat/conf/server.xml "maxHeaderCount"
@@ -43,8 +26,6 @@ testContainerUiNoSsl() {
   assertEnvVar GROUPER_TOMCAT_LOG_ACCESS "true"
   assertEnvVar GROUPERWS_PROXY_PASS "#"
   assertEnvVar GROUPERWS_URL_CONTEXT "grouper-ws"
-  assertEnvVar GROUPER_APACHE_NONSSL_PORT "80"
-  assertEnvVar GROUPER_APACHE_SSL_PORT "443"
   assertEnvVar GROUPER_CHOWN_DIRS "true"
   assertEnvVar GROUPER_CONTAINER_VERSION "$containerVersion"
   assertEnvVar GROUPER_DAEMON "false"
@@ -54,9 +35,7 @@ testContainerUiNoSsl() {
   assertEnvVar GROUPER_LOG_PREFIX "grouper-ui"
   assertEnvVar GROUPER_MAX_MEMORY "1500m"
   assertEnvVar GROUPER_PROXY_PASS ""
-  assertEnvVar GROUPER_RUN_APACHE "true"
   assertEnvVar GROUPER_RUN_PROCESSES_AS_USERS "true"
-  assertEnvVar GROUPER_RUN_SHIB_SP "true"
   assertEnvVar GROUPER_RUN_TOMCAT "true"
   assertEnvVar GROUPER_TOMCAT_CONTEXT "grouper"
   assertEnvVar GROUPER_UI "true"
@@ -70,8 +49,6 @@ testContainerUiNoSsl() {
   assertEnvVar GROUPER_WEBCLIENT_IS_SSL "true"
 
   assertNumberOfTomcatProcesses 1
-  assertNumberOfApacheProcesses 5
-  assertNumberOfShibProcesses 1
 
   assertNotListeningOnPort 443
   assertListeningOnPort 80
