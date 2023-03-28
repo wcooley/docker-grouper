@@ -32,13 +32,6 @@
             </Policies>
             <DefaultRolloverStrategy max="30" />
         </RollingFile>
-        <RollingFile name="file_grouper_pspng" fileName="/opt/grouper/logs/pspng.log" filePattern="/opt/grouper/logs/pspng.log.%d{yyyy-MM-dd}" >
-            <PatternLayout pattern="${grouplogprefix}pspng.log;${env}${usertoken}${layout}"/>
-            <Policies>
-                <TimeBasedTriggeringPolicy interval="1"/>
-            </Policies>
-            <DefaultRolloverStrategy max="30" />
-        </RollingFile>
         <RollingFile name="file_grouper_provisioning" fileName="/opt/grouper/logs/provisioning.log" filePattern="/opt/grouper/logs/provisioning.log.%d{yyyy-MM-dd}" >
             <PatternLayout pattern="${grouplogprefix}provisioning.log;${env}${usertoken}${layout}"/>
             <Policies>
