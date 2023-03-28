@@ -8,8 +8,8 @@ LABEL author="tier-packaging@internet2.edu <tier-packaging@internet2.edu>" \
 
 ARG GROUPER_CONTAINER_VERSION
 
-ENV GROUPER_VERSION=5.0.0 \
-    GROUPER_CONTAINER_VERSION=5.0.0 \
+ENV GROUPER_VERSION=5.0.1 \
+    GROUPER_CONTAINER_VERSION=5.0.1 \
     JAVA_HOME=/usr/lib/jvm/java-17-amazon-corretto \
     PATH=$PATH:$JAVA_HOME/bin \
     GROUPER_HOME=/opt/grouper/grouperWebapp/WEB-INF
@@ -34,6 +34,7 @@ RUN rpm --import https://yum.corretto.aws/corretto.key \
 # real copy command (if not caching), uncomment this and change comments of COPY above to work on install script
 COPY container_files/ /opt/container_files/
 
+# TODO put this back in one command
 RUN chmod +x /opt/container_files/docker-build-bin/*.sh
 RUN /opt/container_files/docker-build-bin/containerDockerfileInstallDos2unix.sh /opt/container_files 
 RUN /opt/container_files/docker-build-bin/containerDockerfileInstallGrouper.sh $JAVA_HOME $GROUPER_VERSION
