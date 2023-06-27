@@ -8,15 +8,15 @@ LABEL author="tier-packaging@internet2.edu <tier-packaging@internet2.edu>" \
 
 ARG GROUPER_CONTAINER_VERSION
 
-ENV GROUPER_VERSION=4.2.1 \
-    GROUPER_CONTAINER_VERSION=4.2.1 \
+ENV GROUPER_VERSION=4.2.2 \
+    GROUPER_CONTAINER_VERSION=4.2.2 \
     JAVA_HOME=/usr/lib/jvm/java-17-amazon-corretto \
     PATH=$PATH:$JAVA_HOME/bin \
     GROUPER_HOME=/opt/grouper/grouperWebapp/WEB-INF
 
 #  net-tools curl mlocate strace telnet man vim rsyslog cron httpd mod_ssl cronie
 RUN yum update -y \
-    && yum install -y logrotate python3-pip rsync sudo patch supervisor wget tar unzip dos2unix file \
+    && yum install -y diffutils logrotate python3-pip rsync sudo patch supervisor wget tar unzip dos2unix file \
     && pip3 install --upgrade setuptools \
     && yum clean -y all \
     && groupadd -r tomcat \
