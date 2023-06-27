@@ -59,7 +59,7 @@ RUN cd /tmp \
 
 # testing container
 # see output with  docker build . --tag my:grouper
-# DOCKER_BUILDKIT=0 docker build --progress=plain -t mygrouper .
+# DOCKER_BUILDKIT=0 docker build -f Dockerfile2 --progress=plain -t mygrouper .
 # docker run --detach --name mygrouper mygrouper:latest
 # docker exec -it mygrouper bash
 
