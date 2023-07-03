@@ -1,6 +1,8 @@
 #!/bin/bash
 
 setupFilesTomcat() {
+  setupFilesTomcat_serverXml
+  setupFilesTomcat_remoteCidrValve
   setupFilesTomcat_turnOnAjp
   setupFilesTomcat_supervisor
   setupFilesTomcat_authn
@@ -13,46 +15,76 @@ setupFilesTomcat() {
   setupFilesTomcat_sslCertsClient
 }
 
+setupFilesTomcat_remoteCidrValve() {
 
-setupFilesTomcat_turnOnAjp() {
+  if [ -z "$GROUPER_TOMCAT_REMOTE_CIDR_VALVE_ALLOW" ]; then 
+  else
+    if [ $(grep -c '<!--GROUPER_REMOTE_CIDR_VALVE-->' /opt/tomcat/conf/server.xml) -ge 1 ]; then
+    
+      sed -i 's|<!--GROUPER_REMOTE_CIDR_VALVE-->|<Valve className="org.apache.catalina.valves.RemoteCIDRValve" allow="__GROUPER_TOMCAT_REMOTE_CIDR_VALVE_ALLOW__"/>|g' /opt/tomcat/conf/server.xml 
+      returnCode=$?
+      echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_remoteCidrValve) Apply remote CIDR valve: sed -i 's|<!--GROUPER_REMOTE_CIDR_VALVE-->|<Valve className=\"org.apache.catalina.valves.RemoteCIDRValve\" allow=\"__GROUPER_TOMCAT_REMOTE_CIDR_VALVE_ALLOW__\"/>|g' /opt/tomcat/conf/server.xml, result: $returnCode"
+      if [ $returnCode != 0 ]; then exit $returnCode; fi
+      
+      sed -i "s|__GROUPER_TOMCAT_REMOTE_CIDR_VALVE_ALLOW__|$GROUPER_TOMCAT_REMOTE_CIDR_VALVE_ALLOW|g" /opt/tomcat/conf/server.xml
+      returnCode=$?
+      echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_remoteCidrValve) Apply remote CIDR valve value: sed -i \"s|__GROUPER_TOMCAT_REMOTE_CIDR_VALVE_ALLOW__|$GROUPER_TOMCAT_REMOTE_CIDR_VALVE_ALLOW|g\" /opt/tomcat/conf/server.xml, result: $returnCode"
+      if [ $returnCode != 0 ]; then exit $returnCode; fi
+      
+      
+    else
+      echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_remoteCidrValve) /opt/tomcat/conf/server.xml does not contain <!--GROUPER_REMOTE_CIDR_VALVE--> so will not have remote CIDR valve applied"
+    fi
+    
+  fi
+
+}
+
+setupFilesTomcat_serverXml() {
 
   if [ "$GROUPER_ORIGFILE_SERVER_XML" = "true" ]; then
     cp /opt/tomcat/conf/server.xml /opt/tomcat/conf/server.xml.currentOriginalInContainer
     returnCode=$?
-    echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_turnOnAjp) cp /opt/tomcat/conf/server.xml /opt/tomcat/conf/server.xml.currentOriginalInContainer , result: $returnCode"
+    echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_serverXml) cp /opt/tomcat/conf/server.xml /opt/tomcat/conf/server.xml.currentOriginalInContainer , result: $returnCode"
     if [ $returnCode != 0 ]; then exit $returnCode; fi
 
-    patch /opt/tomcat/conf/server.xml /opt/tomcat/conf/server.xml.turnOnAjp.patch
+    patch /opt/tomcat/conf/server.xml /opt/tomcat/conf/server.xml.grouper.patch
     returnCode=$?
-    echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_turnOnAjp) Patch server.xml to turn on ajp: patch /opt/tomcat/conf/server.xml /opt/tomcat/conf/server.xml.turnOnAjp.patch, result: $returnCode"
+    echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_serverXml) Patch server.xml to apply grouper settings: patch /opt/tomcat/conf/server.xml /opt/tomcat/conf/server.xml.grouper.patch, result: $returnCode"
     if [ $returnCode != 0 ]; then exit $returnCode; fi
   else
-    echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_turnOnAjp) /opt/tomcat/conf/server.xml is not the original file so will not be edited"
+    echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_serverXml) /opt/tomcat/conf/server.xml is not the original file so will not be edited"
+  fi
+  
+}
+
+
+setupFilesTomcat_turnOnAjp() {
+
+  if [ $(grep -c '<!--GROUPER_AJP_CONNECTOR-->' /opt/tomcat/conf/server.xml) -ge 1 ]; then
+  
+    sed -i 's|<!--GROUPER_AJP_CONNECTOR-->|<Connector address="0.0.0.0" secretRequired="false" secure="true"  scheme="https"  URIEncoding="UTF-8"  tomcatAuthentication="false"  port="8009" protocol="AJP/1.3" redirectPort="8443" maxParameterCount="10000" />|g' /opt/tomcat/conf/server.xml 
+    returnCode=$?
+    echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_turnOnAjp) Apply AJP: sed -i 's|<!--GROUPER_AJP_CONNECTOR-->|<Connector address=\"0.0.0.0\" secretRequired=\"false\" secure=\"true\"  scheme=\"https\"  URIEncoding=\"UTF-8\"  tomcatAuthentication=\"false\"  port=\"8009\" protocol=\"AJP/1.3\" redirectPort=\"8443\" maxParameterCount=\"10000\" />|g' /opt/tomcat/conf/server.xml, result: $returnCode"
+    if [ $returnCode != 0 ]; then exit $returnCode; fi
+  else
+    echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_turnOnAjp) /opt/tomcat/conf/server.xml does not contain <!--GROUPER_AJP_CONNECTOR--> so will not have AJP connector applied"
   fi
   
 }
 
 setupFilesTomcat_accessLogs() {
   
-  if [ "$GROUPER_ORIGFILE_SERVER_XML" = "true" ]; then
-    if [ "$GROUPER_TOMCAT_LOG_ACCESS" = "true" ]; then
+  if [ "$GROUPER_TOMCAT_LOG_ACCESS" = "true" ]; then
+    if [ $(grep -c '<!--GROUPER_LOGGING_VALVE-->' /opt/tomcat/conf/server.xml) -ge 1 ]; then
     
-      # this patch happens after the last patch
-      patch /opt/tomcat/conf/server.xml /opt/tomcat/conf/server.xml.loggingpipe.patch
+      sed -i 's|<!--GROUPER_LOGGING_VALVE-->|<Valve className="org.apache.catalina.valves.AccessLogValve" directory="/tmp" prefix="tomcat_access_log" rotatable="false" pattern="%h %l %u %t &quot;%r&quot; %s %b" />|g' /opt/tomcat/conf/server.xml 
       returnCode=$?
-      echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_accessLogs) Patch server.xml to log access: patch /opt/tomcat/conf/server.xml /opt/tomcat/conf/server.xml.loggingpipe.patch , result: $returnCode"
+      echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_accessLogs) Apply access logs: sed -i 's|<!--GROUPER_LOGGING_VALVE-->|<Valve className=\"org.apache.catalina.valves.AccessLogValve\" directory=\"/tmp\" prefix=\"tomcat_access_log\" rotatable=\"false\" pattern=\"%h %l %u %t &quot;%r&quot; %s %b\" />|g' /opt/tomcat/conf/server.xml, result: $returnCode"
       if [ $returnCode != 0 ]; then exit $returnCode; fi
-      
-    else  
-  
-      patch /opt/tomcat/conf/server.xml /opt/tomcat/conf/server.xml.nologging.patch
-      returnCode=$?
-      echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_accessLogs) Patch server.xml to not log access: patch /opt/tomcat/conf/server.xml /opt/tomcat/conf/server.xml.nologging.patch , result: $returnCode"
-      if [ $returnCode != 0 ]; then exit $returnCode; fi
-      
+    else
+      echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_accessLogs) /opt/tomcat/conf/server.xml does not contain <!--GROUPER_LOGGING_VALVE--> so will not have access logs applied"
     fi
-  else
-    echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_accessLogs) /opt/tomcat/conf/server.xml is not the original file so will not be edited"
   fi
   
 }
@@ -321,6 +353,8 @@ setupFilesTomcat_unsetAll() {
   unset -f setupFilesTomcat_authn
   unset -f setupFilesTomcat_context
   unset -f setupFilesTomcat_ports
+  unset -f setupFilesTomcat_remoteCidrValve
+  unset -f setupFilesTomcat_serverXml
   unset -f setupFilesTomcat_ssl
   unset -f setupFilesTomcat_sslCertsAnchors
   unset -f setupFilesTomcat_sslCertsClient
@@ -338,6 +372,8 @@ setupFilesTomcat_exportAll() {
   export -f setupFilesTomcat_authn
   export -f setupFilesTomcat_context
   export -f setupFilesTomcat_ports
+  export -f setupFilesTomcat_remoteCidrValve
+  export -f setupFilesTomcat_serverXml
   export -f setupFilesTomcat_ssl
   export -f setupFilesTomcat_sslCertsAnchors
   export -f setupFilesTomcat_sslCertsClient

@@ -1,4 +1,2 @@
 # note: get the server.xml into the original, make sure it ends with newline if the file does
-diff -u server.xml.original server.xml.turnOnAjp > server.xml.turnOnAjp.patch     
-diff -u server.xml.turnOnAjp server.xml.loggingpipe > server.xml.loggingpipe.patch
-diff -u server.xml.turnOnAjp server.xml.nologging > server.xml.nologging.patch
+diff -u server.xml.original server.xml.grouper > server.xml.grouper.patch
