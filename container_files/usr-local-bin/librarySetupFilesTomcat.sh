@@ -17,8 +17,7 @@ setupFilesTomcat() {
 
 setupFilesTomcat_remoteCidrValve() {
 
-  if [ -z "$GROUPER_TOMCAT_REMOTE_CIDR_VALVE_ALLOW" ]; then 
-  else
+  if [ ! -z "$GROUPER_TOMCAT_REMOTE_CIDR_VALVE_ALLOW" ]; then 
     if [ $(grep -c '<!--GROUPER_REMOTE_CIDR_VALVE-->' /opt/tomcat/conf/server.xml) -ge 1 ]; then
     
       sed -i 's|<!--GROUPER_REMOTE_CIDR_VALVE-->|<Valve className="org.apache.catalina.valves.RemoteCIDRValve" allow="__GROUPER_TOMCAT_REMOTE_CIDR_VALVE_ALLOW__"/>|g' /opt/tomcat/conf/server.xml 
