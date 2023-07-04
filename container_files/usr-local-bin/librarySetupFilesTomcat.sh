@@ -77,7 +77,7 @@ setupFilesTomcat_accessLogs() {
   if [ "$GROUPER_TOMCAT_LOG_ACCESS" = "true" ]; then
     if [ $(grep -c '<!--GROUPER_LOGGING_VALVE-->' /opt/tomcat/conf/server.xml) -ge 1 ]; then
     
-      sed -i 's|<!--GROUPER_LOGGING_VALVE-->|<Valve className="org.apache.catalina.valves.AccessLogValve" directory="/tmp" prefix="tomcat_access_log" rotatable="false" pattern="%h %l %u %t &quot;%r&quot; %s %b" />|g' /opt/tomcat/conf/server.xml 
+      sed -i 's|<!--GROUPER_LOGGING_VALVE-->|<Valve className="org.apache.catalina.valves.AccessLogValve" directory="/tmp" prefix="tomcat_access_log" rotatable="false" pattern="%h %l %u %t \&quot;%r\&quot; %s %b" />|g' /opt/tomcat/conf/server.xml 
       returnCode=$?
       echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_accessLogs) Apply access logs: sed -i 's|<!--GROUPER_LOGGING_VALVE-->|<Valve className=\"org.apache.catalina.valves.AccessLogValve\" directory=\"/tmp\" prefix=\"tomcat_access_log\" rotatable=\"false\" pattern=\"%h %l %u %t &quot;%r&quot; %s %b\" />|g' /opt/tomcat/conf/server.xml, result: $returnCode"
       if [ $returnCode != 0 ]; then exit $returnCode; fi
