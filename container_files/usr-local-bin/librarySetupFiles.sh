@@ -339,7 +339,6 @@ setupFiles_exportAll() {
   export -f setupFiles_localLogging
   export -f setupFiles_loggingPrefix
   export -f setupFiles_originalFile
-  export -f setupFiles_removePids
   export -f setupFiles_rsyncSlashRoot
   export -f setupFiles_storeEnvVars
   export -f setupFiles_unsetAll

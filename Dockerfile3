@@ -1,0 +1,4 @@
+FROM i2incommon/grouper:4.3.0
+
+ENTRYPOINT ["ping"]
+CMD ["google.com"]
