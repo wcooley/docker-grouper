@@ -1,4 +1,4 @@
-FROM i2incommon/shibboleth_sp:3.4.0_02092023_rocky8_multiarch
+FROM i2incommon/shibboleth_sp:3.4.1_06122023_rocky8_multiarch
 
 LABEL author="tier-packaging@internet2.edu <tier-packaging@internet2.edu>" \
       Vendor="TIER" \
@@ -8,8 +8,8 @@ LABEL author="tier-packaging@internet2.edu <tier-packaging@internet2.edu>" \
 
 ARG GROUPER_CONTAINER_VERSION
 
-ENV GROUPER_VERSION=4.5.2 \
-    GROUPER_CONTAINER_VERSION=4.5.2 \
+ENV GROUPER_VERSION=4.5.3 \
+    GROUPER_CONTAINER_VERSION=4.5.3 \
     JAVA_HOME=/usr/lib/jvm/java-17-amazon-corretto \
     PATH=$PATH:$JAVA_HOME/bin \
     GROUPER_HOME=/opt/grouper/grouperWebapp/WEB-INF
