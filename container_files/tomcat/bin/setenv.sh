@@ -1,5 +1,5 @@
 CLASSPATH=/opt/tomcat/bin/*
-GROUPER_ADD_OPENS="--add-opens java.base/java.lang=ALL-UNNAMED \
+GROUPER_ADD_OPENS="--add-opens=java.base/java.nio=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED \
   --add-opens java.base/java.util=ALL-UNNAMED \
   --add-opens java.sql/java.sql=ALL-UNNAMED"
 #JAVA_OPTS="-Dlog4j.configurationFile=/opt/tomcat/conf/log4j2.xml -DENV=$ENV -DUSERTOKEN=$USERTOKEN"
