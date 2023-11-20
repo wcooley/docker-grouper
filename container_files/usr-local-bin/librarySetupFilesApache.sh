@@ -131,6 +131,14 @@ setupFilesApache_remoteip() {
       echo "grouperContainer; INFO: (librarySetupFilesApache.sh-setupFilesApache_remoteip) echo \"RemoteIPInternalProxy $GROUPER_APACHE_REMOTE_IP_INTERNAL_PROXY\" >> /etc/httpd/conf.d/grouper-www.conf , result: $?"
       if [ $returnCode != 0 ]; then exit $returnCode; fi
   fi
+  if [ "$GROUPER_RUN_APACHE" = "true" ] && [ ! -z "$GROUPER_APACHE_REMOTE_IP_HEADER" ] && [ "$GROUPER_APACHE_REMOTE_IP_HEADER" != "" ] && [ -f /etc/httpd/conf.d/09_i2inc_logging.conf ]
+    then
+      echo "grouperContainer; INFO: (librarySetupFilesApache.sh-setupFilesApache_remoteip) Changing logging config for client address"
+      sed -i "s|%h|%a|g" /etc/httpd/conf.d/09_i2inc_logging.conf
+      returnCode=$?
+      echo "grouperContainer; INFO: (librarySetupFilesApache.sh-setupFilesApache_remoteip) sed -i \"s|%h|%a|g\" /etc/httpd/conf.d/09_i2inc_logging.conf , result: $?"
+      if [ $returnCode != 0 ]; then exit $returnCode; fi
+  fi
 
 }
 
