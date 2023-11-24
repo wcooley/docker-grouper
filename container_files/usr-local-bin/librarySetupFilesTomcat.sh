@@ -268,7 +268,9 @@ setupFilesTomcat_sslCertsAnchors() {
 
     # the container user (we arent sure who this is) should be able to update root certs
     # echo 'ALL ALL=NOPASSWD: /bin/update-ca-trust' | sudo EDITOR='tee -n' visudo
-
+    # generate anchor:
+    # openssl genrsa -out rootCAKey.pem 2048
+    # openssl req -x509 -sha256 -new -nodes -key rootCAKey.pem -days 3650 -out rootCACert.pem
     
     if [ -n "$(ls -A /opt/grouper/certs/anchors/ 2>/dev/null)" ]; then
   
@@ -294,7 +296,39 @@ setupFilesTomcat_sslCertsAnchors() {
         fi  
         
       else
-        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_sslCertsAnchors) There are anchor certs in /opt/grouper/certs/anchors/ to process but not running as root so run this in subimage: /bin/update-ca-trust"
+        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_sslCertsAnchors) There are anchor certs in /opt/grouper/certs/anchors/ to process but not running as root so run this in derived image: /usr/bin/cp -v /opt/grouper/certs/anchors/* /etc/pki/ca-trust/source/anchors; /bin/update-ca-trust"
+      fi
+      
+      chmod u+w $JAVA_HOME/lib/security/cacerts
+      returnCode=$?
+      echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_sslCertsAnchors) chmod u+w $JAVA_HOME/lib/security/cacerts , result=$returnCode"
+      if [ $returnCode != 0 ]
+      then
+        exit $returnCode
+      fi  
+  
+      for fileName in /opt/grouper/certs/anchors/*.pem; do
+        [ -f "$fileName" ] || continue
+
+        fileNameNoExtension=$(basename -- "$fileName")
+        fileNameNoExtension="${fileNameNoExtension%.*}"
+        /usr/lib/jvm/java/bin/keytool -import -trustcacerts -noprompt -keystore $JAVA_HOME/lib/security/cacerts -storepass changeit -alias "$fileNameNoExtension" -file "$fileName"
+
+        returnCode=$?
+        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_sslCertsAnchors) /usr/lib/jvm/java/bin/keytool -import -trustcacerts -noprompt -keystore $JAVA_HOME/lib/security/cacerts -storepass changeit -alias \"$fileNameNoExtension\" -file \"$fileName\" , result=$returnCode"
+        if [ $returnCode != 0 ]
+        then
+          exit $returnCode
+        fi  
+        
+      done
+
+      chmod u-w $JAVA_HOME/lib/security/cacerts
+      returnCode=$?
+      echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_sslCertsAnchors) chmod u-w $JAVA_HOME/lib/security/cacerts , result=$returnCode"
+      if [ $returnCode != 0 ]
+      then
+        exit $returnCode
       fi
       
     else
@@ -309,21 +343,21 @@ setupFilesTomcat_sslCertsClient() {
 
       chmod u+w $JAVA_HOME/lib/security/cacerts
       returnCode=$?
-      echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_sslCertsAnchors) chmod u+w $JAVA_HOME/lib/security/cacerts , result=$returnCode"
+      echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_sslCertsClient) chmod u+w $JAVA_HOME/lib/security/cacerts , result=$returnCode"
       if [ $returnCode != 0 ]
       then
         exit $returnCode
       fi  
   
       for fileName in /opt/grouper/certs/client/*.pem; do
-        [ -f "$fileName" ] || break
+        [ -f "$fileName" ] || continue
 
         fileNameNoExtension=$(basename -- "$fileName")
         fileNameNoExtension="${fileNameNoExtension%.*}"
         /usr/lib/jvm/java/bin/keytool -import -noprompt -keystore $JAVA_HOME/lib/security/cacerts -storepass changeit -alias "$fileNameNoExtension" -file "$fileName"
 
         returnCode=$?
-        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_sslCertsAnchors) /usr/lib/jvm/java/bin/keytool -import -noprompt -keystore $JAVA_HOME/lib/security/cacerts -storepass changeit -alias \"$fileNameNoExtension\" -file \"$fileName\" , result=$returnCode"
+        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_sslCertsClient) /usr/lib/jvm/java/bin/keytool -import -noprompt -keystore $JAVA_HOME/lib/security/cacerts -storepass changeit -alias \"$fileNameNoExtension\" -file \"$fileName\" , result=$returnCode"
         if [ $returnCode != 0 ]
         then
           exit $returnCode
@@ -333,7 +367,7 @@ setupFilesTomcat_sslCertsClient() {
 
       chmod u-w $JAVA_HOME/lib/security/cacerts
       returnCode=$?
-      echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_sslCertsAnchors) chmod u-w $JAVA_HOME/lib/security/cacerts , result=$returnCode"
+      echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_sslCertsClient) chmod u-w $JAVA_HOME/lib/security/cacerts , result=$returnCode"
       if [ $returnCode != 0 ]
       then
         exit $returnCode
