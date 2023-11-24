@@ -16,11 +16,11 @@ ENV GROUPER_VERSION=5.5.0 \
 
 #  net-tools curl mlocate strace telnet man vim rsyslog cron mod_ssl cronie
 RUN yum update -y \
-    && yum install -y logrotate python3-pip rsync sudo patch wget tar unzip dos2unix file net-tools diffutils curl mlocate logrotate strace telnet man vim rsyslog cronie findutils \
+    && yum install -y logrotate python3-pip rsync sudo patch wget tar unzip dos2unix file net-tools diffutils curl mlocate logrotate strace telnet man vim rsyslog cronie findutils procps \
     && pip3 install --upgrade setuptools \
     && yum clean -y all \
-    && groupadd -r tomcat \
-    && useradd -r -m -s /sbin/nologin -g tomcat tomcat \
+    && groupadd -g 994 -r tomcat \
+    && useradd -u 996 -r -m -s /sbin/nologin -g tomcat tomcat \
     && mkdir -p /opt/container_files
 
 # Install Corretto Java JDK

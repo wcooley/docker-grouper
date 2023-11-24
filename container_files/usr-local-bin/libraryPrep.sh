@@ -172,6 +172,18 @@ prep_finishBegin() {
       echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) GROUPER_UI=false"
       export GROUPER_UI=false
     fi
+    if [ -z "$GROUPER_TOMCAT_UID" ] ; then 
+      echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) GROUPER_TOMCAT_UID=996"
+      export GROUPER_TOMCAT_UID=996
+    fi
+    if [ -z "$GROUPER_TOMCAT_GID" ] ; then 
+      echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) GROUPER_TOMCAT_GID=994"
+      export GROUPER_TOMCAT_GID=994
+    fi
+    if [ -z "$GROUPER_TOMCAT_UNIX_GROUP" ] ; then 
+      echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) GROUPER_TOMCAT_UNIX_GROUP=root"
+      export GROUPER_TOMCAT_UNIX_GROUP=root
+    fi
     if [ -z "$GROUPER_WS" ] ; then 
       echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_WS=false"
       export GROUPER_WS=false
