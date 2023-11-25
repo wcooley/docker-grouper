@@ -19,8 +19,8 @@ RUN yum update -y \
     && yum install -y diffutils logrotate python3-pip rsync sudo patch supervisor wget tar unzip dos2unix file \
     && pip3 install --upgrade setuptools \
     && yum clean -y all \
-    && groupadd -r tomcat \
-    && useradd -r -m -s /sbin/nologin -g tomcat tomcat \
+    && groupadd -g 994 -r tomcat \
+    && useradd -u 996 -r -m -s /sbin/nologin -g tomcat tomcat \
     && mkdir -p /opt/container_files
 
 # Install Corretto Java JDK

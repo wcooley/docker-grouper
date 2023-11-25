@@ -34,6 +34,44 @@ setupFiles_rsyncSlashRoot() {
     fi
 }
 
+setupFiles_uid() {
+
+  makeChange=false
+  if [ "$GROUPER_TOMCAT_UID" != "996" ]; then
+    makeChange=true
+  elif [ "$GROUPER_TOMCAT_GID" != "994" ]; then
+    makeChange=true
+  elif [ "$GROUPER_TOMCAT_UNIX_GROUP" != "root" ]; then
+    makeChange=true
+  fi
+  
+  if [ "$makeChange" = "true" ]; then
+    if [[ $EUID -ne 0 ]]; then
+      echo "grouperContainer; ERROR: (librarySetupFiles.sh-setupFiles_uid) Cannot set tomcat UID/GID/unixGroup if not running the container as root"
+      exit 1
+    fi  
+  fi
+  
+  if [ "$GROUPER_TOMCAT_UID" != "996" ]; then
+    
+    /usr/local/bin/changeUid.sh tomcat $GROUPER_TOMCAT_UID
+    returnCode=$?
+    echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_uid) /usr/local/bin/changeUid.sh tomcat $GROUPER_TOMCAT_UID, result: $returnCode"
+    
+  fi
+
+  if [ "$GROUPER_TOMCAT_GID" != "994" ]; then
+
+    /usr/local/bin/changeGid.sh tomcat $GROUPER_TOMCAT_GID
+    returnCode=$?
+    echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_uid) /usr/local/bin/changeGid.sh tomcat $GROUPER_TOMCAT_GID, result: $returnCode"
+    
+  fi
+  
+  # this is called later: setupFiles_chownDirs to set ownership and privs on filesystem
+
+}
+
 setupFiles_localLogging() {
   additionalLoggersFile=/opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.additionalLoggers.xml.txt
   if [ -f $additionalLoggersFile ]; then
@@ -139,9 +177,9 @@ setupFiles_chownDirs() {
     # do this last
     if [ "$GROUPER_CHOWN_DIRS" = "true" ]
       then
-        /opt/container_files/docker-build-bin/containerDockerfileInstallPermissions.sh tomcat root
+        /opt/container_files/docker-build-bin/containerDockerfileInstallPermissions.sh tomcat $GROUPER_TOMCAT_UNIX_GROUP
         returnCode=$?
-        echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_chownDirs) /opt/container_files/docker-build-bin/containerDockerfileInstallPermissions.sh tomcat root, result: $returnCode"
+        echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_chownDirs) /opt/container_files/docker-build-bin/containerDockerfileInstallPermissions.sh tomcat $GROUPER_TOMCAT_UNIX_GROUP, result: $returnCode"
         if [ $returnCode != 0 ]; then exit $returnCode; fi
     fi
 }
@@ -371,6 +409,8 @@ setupFiles() {
   fi
 
   setupFiles_rsyncSlashRoot
+
+  setupFiles_uid
   
   setupFiles_analyzeOriginalFiles
 
@@ -431,6 +471,7 @@ setupFiles_unsetAll() {
   unset -f setupFiles_removePids
   unset -f setupFiles_rsyncSlashRoot
   unset -f setupFiles_storeEnvVars
+  unset -f setupFiles_uid
   unset -f setupFiles_unsetAll
   unset -f setupFiles_unsetAllAndFromFiles
 }
@@ -446,6 +487,7 @@ setupFiles_exportAll() {
   export -f setupFiles_removePids
   export -f setupFiles_rsyncSlashRoot
   export -f setupFiles_storeEnvVars
+  export -f setupFiles_uid
   export -f setupFiles_unsetAll
   export -f setupFiles_unsetAllAndFromFiles
 }

@@ -273,9 +273,8 @@ setupFilesTomcat_sslCertsAnchors() {
     # openssl req -x509 -sha256 -new -nodes -key rootCAKey.pem -days 3650 -out rootCACert.pem
     
     if [ -n "$(ls -A /opt/grouper/certs/anchors/ 2>/dev/null)" ]; then
-  
-      amiroot=`whoami`
-      if [ "$amiroot" = "root" ]; then
+      # if root
+      if [[ $EUID -eq 0 ]]; then
     
         echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_sslCertsAnchors) There are anchor certs in /opt/grouper/certs/anchors/ to process"
         
@@ -296,7 +295,7 @@ setupFilesTomcat_sslCertsAnchors() {
         fi  
         
       else
-        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_sslCertsAnchors) There are anchor certs in /opt/grouper/certs/anchors/ to process but not running as root so run this in derived image: /usr/bin/cp -v /opt/grouper/certs/anchors/* /etc/pki/ca-trust/source/anchors; /bin/update-ca-trust"
+        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_sslCertsAnchors) There are anchor certs in /opt/grouper/certs/anchors/ to process but not running as root so you might need to run this in derived image: /usr/bin/cp -v /opt/grouper/certs/anchors/* /etc/pki/ca-trust/source/anchors; /bin/update-ca-trust"
       fi
       
       chmod u+w $JAVA_HOME/lib/security/cacerts
