@@ -1,0 +1,11 @@
+#!/bin/bash
+
+prep_daemon
+prep_finish
+setupFiles
+runCommand_unsetAll
+
+export GSH_JVMARGS="$GSH_JVMARGS -DENV=$ENV -DUSERTOKEN=$USERTOKEN"
+
+# sample command every 10 minutes, just a ping to keep container running, for testing
+/usr/bin/ping -i 600 google.com

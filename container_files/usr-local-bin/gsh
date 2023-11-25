@@ -11,9 +11,9 @@ export GSH_JVMARGS="$GSH_JVMARGS -DENV=$ENV -DUSERTOKEN=$USERTOKEN"
 set -o pipefail
 
 # openshift cannot do whoami
-if [ "$GROUPER_GSH_CHECK_USER" = "true"  ] && [ "$GROUPER_GSH_USER" != "$(whoami)" ]
+if [ "$GROUPER_GSH_USER" != "$(whoami)" ] && [ $EUID -eq 0 ]
   then
-    echo "grouperContainer; INFO: (gsh file) sudo --preserve-env -u tomcat bin/gsh.sh \"$@\" | tee /tmp/loggrouper"
+    echo "grouperContainer; INFO: (gsh file) sudo --preserve-env -u $GROUPER_GSH_USER bin/gsh.sh \"$@\" | tee /tmp/loggrouper"
     sudo --preserve-env -u tomcat bin/gsh.sh "$@" | tee /tmp/loggrouper
   else 
     echo "grouperContainer; INFO: (gsh file) bin/gsh.sh \"$@\" | tee /tmp/loggrouper"
