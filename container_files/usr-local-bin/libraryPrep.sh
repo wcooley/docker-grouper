@@ -275,8 +275,13 @@ prep_finishBegin() {
     fi
     
     if [ -z "$GROUPER_RUN_PROCESSES_AS_USERS" ]; then 
-      echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_RUN_PROCESSES_AS_USERS=true"
-      export GROUPER_RUN_PROCESSES_AS_USERS=true
+      if [[ $EUID -eq 0 ]]; then
+        echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) running as root: export GROUPER_RUN_PROCESSES_AS_USERS=true"
+        export GROUPER_RUN_PROCESSES_AS_USERS=true
+      else
+        echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) not running as root: export GROUPER_RUN_PROCESSES_AS_USERS=false"
+        export GROUPER_RUN_PROCESSES_AS_USERS=false
+      fi
     fi
 
     # do these before the "only" component
@@ -330,10 +335,10 @@ prep_finishBegin() {
     #Replace web.xml session timeout with env variable
     if [[ -z "$GROUPER_TOMCAT_SESSION_TIMEOUT_MINUTES" ]]; then
       if [[ "$GROUPER_UI" != 'true' ]] && [[ "$GROUPER_WS" = 'true' ]]; then
-        echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) $ GROUPER_TOMCAT_SESSION_TIMEOUT_MINUTES is not set, export GROUPER_TOMCAT_SESSION_TIMEOUT_MINUTES=1"
+        echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_TOMCAT_SESSION_TIMEOUT_MINUTES=1"
         export GROUPER_TOMCAT_SESSION_TIMEOUT_MINUTES=1
       else
-        echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) $ GROUPER_TOMCAT_SESSION_TIMEOUT_MINUTES is not set, export GROUPER_TOMCAT_SESSION_TIMEOUT_MINUTES=600 (10 hours)"
+        echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_TOMCAT_SESSION_TIMEOUT_MINUTES=600"
         export GROUPER_TOMCAT_SESSION_TIMEOUT_MINUTES=600
       
       fi
