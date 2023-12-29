@@ -197,9 +197,9 @@ prep_finishBegin() {
       export GROUPER_USE_SSL=true
     fi
     if [ "$GROUPER_USE_SSL" = "true" ]; then
-      if [ -z "$GROUPER_SELF_SIGNED_CERT" ] && [ -z "$GROUPER_SSL_CERT_FILE" ] && [ ! -f /etc/pki/tls/certs/host-cert.pem ] ; then 
+      if [ -z "$GROUPER_SELF_SIGNED_CERT" ] && [ -z "$GROUPER_SSL_CERT_FILE" ] && [ ! -f /opt/grouper/certs/client/localhost.pem ] ; then 
       
-        echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) GROUPER_SELF_SIGNED_CERT and GROUPER_SSL_CERT_FILE are not specified and /etc/pki/tls/certs/host-cert.pem does not exist, so: export GROUPER_SELF_SIGNED_CERT=true"
+        echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) GROUPER_SELF_SIGNED_CERT and GROUPER_SSL_CERT_FILE are not specified and /opt/grouper/certs/client/localhost.pem does not exist, so: export GROUPER_SELF_SIGNED_CERT=true"
         export GROUPER_SELF_SIGNED_CERT=true
       
       fi
@@ -207,42 +207,18 @@ prep_finishBegin() {
   
         # default the cert path to self signed and no chain file
         if [ -z "$GROUPER_SSL_CERT_FILE" ] ; then 
-          echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_SSL_CERT_FILE=/etc/pki/tls/certs/localhost.crt"
-          export GROUPER_SSL_CERT_FILE=/etc/pki/tls/certs/localhost.crt
+          echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_SSL_CERT_FILE=/opt/grouper/certs/client/localhost.pem"
+          export GROUPER_SSL_CERT_FILE=/opt/grouper/certs/client/localhost.pem
         fi
         if [ -z "$GROUPER_SSL_KEY_FILE" ] ; then 
-          echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_SSL_KEY_FILE=/etc/pki/tls/private/localhost.key"
-          export GROUPER_SSL_KEY_FILE=/etc/pki/tls/private/localhost.key
+          echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_SSL_KEY_FILE=/opt/grouper/certs/keys/localhost.key"
+          export GROUPER_SSL_KEY_FILE=/opt/grouper/certs/keys/localhost.key
         fi
         if [ -z "$GROUPER_SSL_CHAIN_FILE" ] && [ -z "$GROUPER_SSL_USE_CHAIN_FILE" ] ; then 
           echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_SSL_USE_CHAIN_FILE=false"
           export GROUPER_SSL_USE_CHAIN_FILE=false
         fi
       
-      fi
-      # default the cert path
-      if [ -z "$GROUPER_SSL_CERT_FILE" ] ; then 
-        echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_SSL_CERT_FILE=/etc/pki/tls/certs/host-cert.pem"
-        export GROUPER_SSL_CERT_FILE=/etc/pki/tls/certs/host-cert.pem
-      fi
-      if [ -z "$GROUPER_SSL_KEY_FILE" ] ; then 
-        echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_SSL_KEY_FILE=/etc/pki/tls/private/host-key.pem"
-        export GROUPER_SSL_KEY_FILE=/etc/pki/tls/private/host-key.pem
-      fi
-      if [ -z "$GROUPER_SSL_CHAIN_FILE" ] ; then 
-      
-        if [ -f /etc/pki/tls/certs/cachain.pem ]; then
-      
-          echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_SSL_USE_CHAIN_FILE=true"
-          export GROUPER_SSL_USE_CHAIN_FILE=true
-          echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_SSL_CHAIN_FILE=/etc/pki/tls/certs/cachain.pem"
-          export GROUPER_SSL_CHAIN_FILE=/etc/pki/tls/certs/cachain.pem
-        else 
-
-          echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_SSL_USE_CHAIN_FILE=false"
-          export GROUPER_SSL_USE_CHAIN_FILE=false
-        
-        fi
       fi
       if [ -z "$GROUPER_SSL_USE_CHAIN_FILE" ] ; then 
 
@@ -314,6 +290,10 @@ prep_finishBegin() {
       echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_TOMCAT_HTTP_PORT=8080"
       export GROUPER_TOMCAT_HTTP_PORT=8080
     fi
+    if [ -z "$GROUPER_TOMCAT_HTTPS_PORT" ]; then 
+      echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_TOMCAT_HTTPS_PORT=8443"
+      export GROUPER_TOMCAT_HTTP_PORT=8443
+    fi
     if [ -z "$GROUPER_TOMCAT_MAX_HEADER_COUNT" ]; then 
       echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_TOMCAT_MAX_HEADER_COUNT=200"
       export GROUPER_TOMCAT_MAX_HEADER_COUNT=200
@@ -326,6 +306,11 @@ prep_finishBegin() {
       echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_TOMCAT_SHUTDOWN_PORT=8005"
       export GROUPER_TOMCAT_SHUTDOWN_PORT=8005
     fi
+    
+    if [ -z "$GROUPER_TOMCAT_HTTPS_ALIAS" ] && [ "$GROUPER_SELF_SIGNED_CERT" = "true" ]; then 
+      echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_TOMCAT_HTTPS_ALIAS=localhost"
+      export GROUPER_TOMCAT_HTTPS_ALIAS=localhost
+    fi    
     
     if [ -z "$GROUPER_GSH_JVMARGS" ] ; then 
       echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_GSH_JVMARGS=\"-Djavax.net.ssl.trustStore=/etc/pki/java/cacerts\""
@@ -381,6 +366,10 @@ prep_finishEnd() {
     if [ -z "$GROUPER_TOMCAT_LOG_ACCESS" ]; then 
       echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishEnd) export GROUPER_TOMCAT_LOG_ACCESS=false"
       export GROUPER_TOMCAT_LOG_ACCESS=false
+    fi
+    if [ -z "$GROUPER_TOMCAT_REMOTE_IP_VALVE" ]; then 
+      echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishEnd) export GROUPER_TOMCAT_REMOTE_IP_VALVE=false"
+      export GROUPER_TOMCAT_REMOTE_IP_VALVE=false
     fi
     if [ -z "$GROUPER_REDIRECT_FROM_SLASH_TO_GROUPER" ]; then 
       if [ "$GROUPER_PROXY_PASS" = "#" ]; then 

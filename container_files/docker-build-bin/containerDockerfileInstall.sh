@@ -165,9 +165,19 @@ returnCode=$?
 echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) mkdir -p /opt/grouper/certs/anchors, result: $returnCode"
 if [ $returnCode != 0 ]; then exit $returnCode; fi
 
-mv /opt/container_files/certs/* /opt/grouper/certs/
+mkdir -p /opt/grouper/certs/keys
 returnCode=$?
-echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) mv /opt/container_files/certs/* /opt/grouper/certs/, result: $returnCode"
+echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) mkdir -p /opt/grouper/certs/keys, result: $returnCode"
+if [ $returnCode != 0 ]; then exit $returnCode; fi
+
+cp -R /opt/container_files/certs/* /opt/grouper/certs/
+returnCode=$?
+echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) cp -R /opt/container_files/certs/* /opt/grouper/certs/, result: $returnCode"
+if [ $returnCode != 0 ]; then exit $returnCode; fi
+
+rm -rf /opt/container_files/certs
+returnCode=$?
+echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) rm -rf /opt/container_files/certs, result: $returnCode"
 if [ $returnCode != 0 ]; then exit $returnCode; fi
 
 echo 'umask 002' >> /home/tomcat/.bashrc
