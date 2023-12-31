@@ -48,7 +48,7 @@ RUN /opt/container_files/docker-build-bin/containerDockerfileInstall.sh $JAVA_HO
 # docker exec -it mygrouper bash
 
 WORKDIR /opt/grouper/grouperWebapp/WEB-INF/
-EXPOSE 80 443
+EXPOSE 80 443 8080 8443
 HEALTHCHECK NONE
 
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]

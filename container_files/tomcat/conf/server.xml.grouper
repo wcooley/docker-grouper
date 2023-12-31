@@ -169,9 +169,9 @@
         <!--
         <Valve className="org.apache.catalina.authenticator.SingleSignOn" />
         -->
-        <!--GROUPER_REMOTE_CIDR_VALVE-->
+        <!--GROUPER_TOMCAT_REMOTE_CIDR_VALVE-->
 
-        <!--GROUPER_REMOTE_IP_VALVE-->
+        <!--GROUPER_TOMCAT_REMOTE_IP_VALVE-->
 
         <!-- Access log processes all example.
              Documentation at: /docs/config/valve.html

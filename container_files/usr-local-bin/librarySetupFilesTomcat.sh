@@ -20,114 +20,114 @@ setupFilesTomcat() {
 setupFilesTomcat_remoteIpValve() {
 
   if [ "$GROUPER_TOMCAT_REMOTE_IP_VALVE" = "true" ]; then 
-    if [ $(grep -c '<!--GROUPER_REMOTE_IP_VALVE-->' /opt/tomcat/conf/server.xml) -ge 1 ]; then
+    if [ $(grep -c '<!--GROUPER_TOMCAT_REMOTE_IP_VALVE-->' /opt/tomcat/conf/server.xml) -ge 1 ]; then
     
       # <Valve className="org.apache.catalina.valves.RemoteIpValve" internalProxies="192\.168\.0\.10|192\.168\.0\.11" remoteIpHeader="x-forwarded-for" proxiesHeader="x-forwarded-by" trustedProxies="proxy1|proxy2" />
-      # <Valve className="org.apache.catalina.valves.RemoteIpValve" __REMOTE_IP_INTERNAL_PROXIES__ __REMOTE_IP_HEADER__ __REMOTE_IP_PROXIES_HEADER__ __REMOTE_IP_TRUSTED_PROXIES__ __REMOTE_IP_PROCOL_HEADER__ __REMOTE_IP_PROCOL_HEADER_HTTPS_VALUE__ __REMOTE_IP_HTTP_SERVER_PORT__ __REMOTE_IP_HTTPS_SERVER_PORT__ />
+      # <Valve className="org.apache.catalina.valves.RemoteIpValve" __GROUPER_TOMCAT_REMOTE_IP_INTERNAL_PROXIES__ __GROUPER_TOMCAT_REMOTE_IP_HEADER__ __GROUPER_TOMCAT_REMOTE_IP_PROXIES_HEADER__ __GROUPER_TOMCAT_REMOTE_IP_TRUSTED_PROXIES__ __GROUPER_TOMCAT_REMOTE_IP_PROTOCOL_HEADER__ __GROUPER_TOMCAT_REMOTE_IP_PROTOCOL_HEADER_HTTPS_VALUE__ __GROUPER_TOMCAT_REMOTE_IP_HTTP_SERVER_PORT__ __GROUPER_TOMCAT_REMOTE_IP_HTTPS_SERVER_PORT__ />
     
-      sed -i 's|<!--GROUPER_REMOTE_IP_VALVE-->|<Valve className="org.apache.catalina.valves.RemoteIpValve" __REMOTE_IP_INTERNAL_PROXIES__ __REMOTE_IP_HEADER__ __REMOTE_IP_PROXIES_HEADER__ __REMOTE_IP_TRUSTED_PROXIES__ />|g' /opt/tomcat/conf/server.xml 
+      sed -i 's|<!--GROUPER_TOMCAT_REMOTE_IP_VALVE-->|<Valve className="org.apache.catalina.valves.RemoteIpValve" __GROUPER_TOMCAT_REMOTE_IP_INTERNAL_PROXIES__ __GROUPER_TOMCAT_REMOTE_IP_HEADER__ __GROUPER_TOMCAT_REMOTE_IP_PROXIES_HEADER__ __GROUPER_TOMCAT_REMOTE_IP_TRUSTED_PROXIES__ __GROUPER_TOMCAT_REMOTE_IP_PROTOCOL_HEADER__ __GROUPER_TOMCAT_REMOTE_IP_PROTOCOL_HEADER_HTTPS_VALUE__ __GROUPER_TOMCAT_REMOTE_IP_HTTP_SERVER_PORT__ __GROUPER_TOMCAT_REMOTE_IP_HTTPS_SERVER_PORT__ />|g' /opt/tomcat/conf/server.xml 
       returnCode=$?
-      echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_remoteIpValve) Apply remote IP valve: sed -i 's|<!--GROUPER_REMOTE_IP_VALVE-->|<Valve className="org.apache.catalina.valves.RemoteIpValve" __REMOTE_IP_INTERNAL_PROXIES__ __REMOTE_IP_HEADER__ __REMOTE_IP_PROXIES_HEADER__ __REMOTE_IP_TRUSTED_PROXIES__ />|g' /opt/tomcat/conf/server.xml, result: $returnCode"
+      echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_remoteIpValve) Apply remote IP valve: sed -i 's|<!--GROUPER_TOMCAT_REMOTE_IP_VALVE-->|<Valve className="org.apache.catalina.valves.RemoteIpValve" __GROUPER_TOMCAT_REMOTE_IP_INTERNAL_PROXIES__ __GROUPER_TOMCAT_REMOTE_IP_HEADER__ __GROUPER_TOMCAT_REMOTE_IP_PROXIES_HEADER__ __GROUPER_TOMCAT_REMOTE_IP_TRUSTED_PROXIES__ __GROUPER_TOMCAT_REMOTE_IP_PROTOCOL_HEADER__ __GROUPER_TOMCAT_REMOTE_IP_PROTOCOL_HEADER_HTTPS_VALUE__ __GROUPER_TOMCAT_REMOTE_IP_HTTP_SERVER_PORT__ __GROUPER_TOMCAT_REMOTE_IP_HTTPS_SERVER_PORT__ />|g' /opt/tomcat/conf/server.xml, result: $returnCode"
       if [ $returnCode != 0 ]; then exit $returnCode; fi
       
-      if [ ! -z "$REMOTE_IP_INTERNAL_PROXIES" ]; then 
-        sed -i 's|__REMOTE_IP_INTERNAL_PROXIES__|internalProxies="$REMOTE_IP_INTERNAL_PROXIES"|g' /opt/tomcat/conf/server.xml 
+      if [ ! -z "$GROUPER_TOMCAT_REMOTE_IP_INTERNAL_PROXIES" ]; then 
+        sed -i "s|__GROUPER_TOMCAT_REMOTE_IP_INTERNAL_PROXIES__|internalProxies=\"$GROUPER_TOMCAT_REMOTE_IP_INTERNAL_PROXIES\"|g" /opt/tomcat/conf/server.xml 
         returnCode=$?
-        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_remoteIpValve) sed -i 's|__REMOTE_IP_INTERNAL_PROXIES__|internalProxies=\"$REMOTE_IP_INTERNAL_PROXIES\"|g' /opt/tomcat/conf/server.xml, result: $returnCode"
+        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_remoteIpValve) sed -i \"s|__GROUPER_TOMCAT_REMOTE_IP_INTERNAL_PROXIES__|internalProxies=\\\"$GROUPER_TOMCAT_REMOTE_IP_INTERNAL_PROXIES\\\"|g\" /opt/tomcat/conf/server.xml, result: $returnCode"
         if [ $returnCode != 0 ]; then exit $returnCode; fi
       else
-        sed -i 's|__REMOTE_IP_INTERNAL_PROXIES__||g' /opt/tomcat/conf/server.xml 
+        sed -i 's|__GROUPER_TOMCAT_REMOTE_IP_INTERNAL_PROXIES__||g' /opt/tomcat/conf/server.xml 
         returnCode=$?
-        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_remoteIpValve) sed -i 's|__REMOTE_IP_INTERNAL_PROXIES__||g' /opt/tomcat/conf/server.xml, result: $returnCode"
+        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_remoteIpValve) sed -i 's|__GROUPER_TOMCAT_REMOTE_IP_INTERNAL_PROXIES__||g' /opt/tomcat/conf/server.xml, result: $returnCode"
         if [ $returnCode != 0 ]; then exit $returnCode; fi
       fi
       
-      if [ ! -z "$REMOTE_IP_HEADER" ]; then 
-        sed -i 's|__REMOTE_IP_HEADER__|remoteIpHeader="$REMOTE_IP_HEADER"|g' /opt/tomcat/conf/server.xml 
+      if [ ! -z "$GROUPER_TOMCAT_REMOTE_IP_HEADER" ]; then 
+        sed -i "s|__GROUPER_TOMCAT_REMOTE_IP_HEADER__|remoteIpHeader=\"$GROUPER_TOMCAT_REMOTE_IP_HEADER\"|g" /opt/tomcat/conf/server.xml 
         returnCode=$?
-        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_remoteIpValve) sed -i 's|__REMOTE_IP_HEADER__|remoteIpHeader=\"$REMOTE_IP_HEADER\"|g' /opt/tomcat/conf/server.xml, result: $returnCode"
+        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_remoteIpValve) sed -i \"s|__GROUPER_TOMCAT_REMOTE_IP_HEADER__|remoteIpHeader=\\\"$GROUPER_TOMCAT_REMOTE_IP_HEADER\\\"|g\" /opt/tomcat/conf/server.xml, result: $returnCode"
         if [ $returnCode != 0 ]; then exit $returnCode; fi
       else
-        sed -i 's|__REMOTE_IP_HEADER__||g' /opt/tomcat/conf/server.xml 
+        sed -i 's|__GROUPER_TOMCAT_REMOTE_IP_HEADER__||g' /opt/tomcat/conf/server.xml 
         returnCode=$?
-        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_remoteIpValve) sed -i 's|__REMOTE_IP_HEADER__||g' /opt/tomcat/conf/server.xml, result: $returnCode"
+        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_remoteIpValve) sed -i 's|__GROUPER_TOMCAT_REMOTE_IP_HEADER__||g' /opt/tomcat/conf/server.xml, result: $returnCode"
         if [ $returnCode != 0 ]; then exit $returnCode; fi
       fi
       
-      if [ ! -z "$REMOTE_IP_PROXIES_HEADER" ]; then 
-        sed -i 's|__REMOTE_IP_PROXIES_HEADER__|proxiesHeader="$REMOTE_IP_PROXIES_HEADER"|g' /opt/tomcat/conf/server.xml 
+      if [ ! -z "$GROUPER_TOMCAT_REMOTE_IP_PROXIES_HEADER" ]; then 
+        sed -i "s|__GROUPER_TOMCAT_REMOTE_IP_PROXIES_HEADER__|proxiesHeader=\"$GROUPER_TOMCAT_REMOTE_IP_PROXIES_HEADER\"|g" /opt/tomcat/conf/server.xml 
         returnCode=$?
-        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_remoteIpValve) sed -i 's|__REMOTE_IP_PROXIES_HEADER__|proxiesHeader=\"$REMOTE_IP_PROXIES_HEADER\"|g' /opt/tomcat/conf/server.xml, result: $returnCode"
+        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_remoteIpValve) sed -i \"s|__GROUPER_TOMCAT_REMOTE_IP_PROXIES_HEADER__|proxiesHeader=\\\"$GROUPER_TOMCAT_REMOTE_IP_PROXIES_HEADER\\\"|g\" /opt/tomcat/conf/server.xml, result: $returnCode"
         if [ $returnCode != 0 ]; then exit $returnCode; fi
       else
-        sed -i 's|__REMOTE_IP_PROXIES_HEADER__||g' /opt/tomcat/conf/server.xml 
+        sed -i 's|__GROUPER_TOMCAT_REMOTE_IP_PROXIES_HEADER__||g' /opt/tomcat/conf/server.xml 
         returnCode=$?
-        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_remoteIpValve) sed -i 's|__REMOTE_IP_PROXIES_HEADER__||g' /opt/tomcat/conf/server.xml, result: $returnCode"
+        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_remoteIpValve) sed -i 's|__GROUPER_TOMCAT_REMOTE_IP_PROXIES_HEADER__||g' /opt/tomcat/conf/server.xml, result: $returnCode"
         if [ $returnCode != 0 ]; then exit $returnCode; fi
       fi
       
-      if [ ! -z "$REMOTE_IP_TRUSTED_PROXIES" ]; then 
-        sed -i 's|__REMOTE_IP_TRUSTED_PROXIES__|trustedProxies="$REMOTE_IP_TRUSTED_PROXIES"|g' /opt/tomcat/conf/server.xml 
+      if [ ! -z "$GROUPER_TOMCAT_REMOTE_IP_TRUSTED_PROXIES" ]; then 
+        sed -i "s|__GROUPER_TOMCAT_REMOTE_IP_TRUSTED_PROXIES__|trustedProxies=\"$GROUPER_TOMCAT_REMOTE_IP_TRUSTED_PROXIES\"|g" /opt/tomcat/conf/server.xml 
         returnCode=$?
-        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_remoteIpValve) sed -i 's|__REMOTE_IP_TRUSTED_PROXIES__|trustedProxies=\"$REMOTE_IP_TRUSTED_PROXIES\"|g' /opt/tomcat/conf/server.xml, result: $returnCode"
+        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_remoteIpValve) sed -i \"s|__GROUPER_TOMCAT_REMOTE_IP_TRUSTED_PROXIES__|trustedProxies=\\\"$GROUPER_TOMCAT_REMOTE_IP_TRUSTED_PROXIES\\\"|g\" /opt/tomcat/conf/server.xml, result: $returnCode"
         if [ $returnCode != 0 ]; then exit $returnCode; fi
       else
-        sed -i 's|__REMOTE_IP_TRUSTED_PROXIES__||g' /opt/tomcat/conf/server.xml 
+        sed -i 's|__GROUPER_TOMCAT_REMOTE_IP_TRUSTED_PROXIES__||g' /opt/tomcat/conf/server.xml 
         returnCode=$?
-        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_remoteIpValve) sed -i 's|__REMOTE_IP_TRUSTED_PROXIES__||g' /opt/tomcat/conf/server.xml, result: $returnCode"
+        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_remoteIpValve) sed -i 's|__GROUPER_TOMCAT_REMOTE_IP_TRUSTED_PROXIES__||g' /opt/tomcat/conf/server.xml, result: $returnCode"
         if [ $returnCode != 0 ]; then exit $returnCode; fi
       fi
         
-      if [ ! -z "$REMOTE_IP_PROCOL_HEADER" ]; then 
-        sed -i 's|__REMOTE_IP_PROCOL_HEADER__|protocolHeader="$REMOTE_IP_PROCOL_HEADER"|g' /opt/tomcat/conf/server.xml 
+      if [ ! -z "$GROUPER_TOMCAT_REMOTE_IP_PROTOCOL_HEADER" ]; then 
+        sed -i "s|__GROUPER_TOMCAT_REMOTE_IP_PROTOCOL_HEADER__|protocolHeader=\"$GROUPER_TOMCAT_REMOTE_IP_PROTOCOL_HEADER\"|g" /opt/tomcat/conf/server.xml 
         returnCode=$?
-        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_remoteIpValve) sed -i 's|__REMOTE_IP_PROCOL_HEADER__|protocolHeader=\"$REMOTE_IP_PROCOL_HEADER\"|g' /opt/tomcat/conf/server.xml, result: $returnCode"
+        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_remoteIpValve) sed -i \"s|__GROUPER_TOMCAT_REMOTE_IP_PROTOCOL_HEADER__|protocolHeader=\\\"$GROUPER_TOMCAT_REMOTE_IP_PROTOCOL_HEADER\\\"|g\" /opt/tomcat/conf/server.xml, result: $returnCode"
         if [ $returnCode != 0 ]; then exit $returnCode; fi
       else
-        sed -i 's|__REMOTE_IP_PROCOL_HEADER__||g' /opt/tomcat/conf/server.xml 
+        sed -i 's|__GROUPER_TOMCAT_REMOTE_IP_PROTOCOL_HEADER__||g' /opt/tomcat/conf/server.xml 
         returnCode=$?
-        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_remoteIpValve) sed -i 's|__REMOTE_IP_PROCOL_HEADER__||g' /opt/tomcat/conf/server.xml, result: $returnCode"
+        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_remoteIpValve) sed -i 's|__GROUPER_TOMCAT_REMOTE_IP_PROTOCOL_HEADER__||g' /opt/tomcat/conf/server.xml, result: $returnCode"
         if [ $returnCode != 0 ]; then exit $returnCode; fi
       fi
         
-      if [ ! -z "$REMOTE_IP_PROCOL_HEADER_HTTPS_VALUE" ]; then 
-        sed -i 's|__REMOTE_IP_PROCOL_HEADER_HTTPS_VALUE__|protocolHeaderHttpsValue="$REMOTE_IP_PROCOL_HEADER_HTTPS_VALUE"|g' /opt/tomcat/conf/server.xml 
+      if [ ! -z "$GROUPER_TOMCAT_REMOTE_IP_PROTOCOL_HEADER_HTTPS_VALUE" ]; then 
+        sed -i "s|__GROUPER_TOMCAT_REMOTE_IP_PROTOCOL_HEADER_HTTPS_VALUE__|protocolHeaderHttpsValue=\"$GROUPER_TOMCAT_REMOTE_IP_PROTOCOL_HEADER_HTTPS_VALUE\"|g" /opt/tomcat/conf/server.xml 
         returnCode=$?
-        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_remoteIpValve) sed -i 's|__REMOTE_IP_PROCOL_HEADER_HTTPS_VALUE__|protocolHeaderHttpsValue=\"$REMOTE_IP_PROCOL_HEADER_HTTPS_VALUE\"|g' /opt/tomcat/conf/server.xml, result: $returnCode"
+        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_remoteIpValve) sed -i \"s|__GROUPER_TOMCAT_REMOTE_IP_PROTOCOL_HEADER_HTTPS_VALUE__|protocolHeaderHttpsValue=\\\"$GROUPER_TOMCAT_REMOTE_IP_PROTOCOL_HEADER_HTTPS_VALUE\\\"|g\" /opt/tomcat/conf/server.xml, result: $returnCode"
         if [ $returnCode != 0 ]; then exit $returnCode; fi
       else
-        sed -i 's|__REMOTE_IP_PROCOL_HEADER_HTTPS_VALUE__||g' /opt/tomcat/conf/server.xml 
+        sed -i 's|__GROUPER_TOMCAT_REMOTE_IP_PROTOCOL_HEADER_HTTPS_VALUE__||g' /opt/tomcat/conf/server.xml 
         returnCode=$?
-        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_remoteIpValve) sed -i 's|__REMOTE_IP_PROCOL_HEADER_HTTPS_VALUE__||g' /opt/tomcat/conf/server.xml, result: $returnCode"
+        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_remoteIpValve) sed -i 's|__GROUPER_TOMCAT_REMOTE_IP_PROTOCOL_HEADER_HTTPS_VALUE__||g' /opt/tomcat/conf/server.xml, result: $returnCode"
         if [ $returnCode != 0 ]; then exit $returnCode; fi
       fi
         
-      if [ ! -z "$REMOTE_IP_HTTP_SERVER_PORT" ]; then 
-        sed -i 's|__REMOTE_IP_HTTP_SERVER_PORT__|httpServerPort="$REMOTE_IP_HTTP_SERVER_PORT"|g' /opt/tomcat/conf/server.xml 
+      if [ ! -z "$GROUPER_TOMCAT_REMOTE_IP_HTTP_SERVER_PORT" ]; then 
+        sed -i "s|__GROUPER_TOMCAT_REMOTE_IP_HTTP_SERVER_PORT__|httpServerPort=\"$GROUPER_TOMCAT_REMOTE_IP_HTTP_SERVER_PORT\"|g" /opt/tomcat/conf/server.xml 
         returnCode=$?
-        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_remoteIpValve) sed -i 's|__REMOTE_IP_HTTP_SERVER_PORT__|httpServerPort=\"$REMOTE_IP_HTTP_SERVER_PORT\"|g' /opt/tomcat/conf/server.xml, result: $returnCode"
+        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_remoteIpValve) sed -i \"s|__GROUPER_TOMCAT_REMOTE_IP_HTTP_SERVER_PORT__|httpServerPort=\\\"$GROUPER_TOMCAT_REMOTE_IP_HTTP_SERVER_PORT\\\"|g\" /opt/tomcat/conf/server.xml, result: $returnCode"
         if [ $returnCode != 0 ]; then exit $returnCode; fi
       else
-        sed -i 's|__REMOTE_IP_HTTP_SERVER_PORT__||g' /opt/tomcat/conf/server.xml 
+        sed -i 's|__GROUPER_TOMCAT_REMOTE_IP_HTTP_SERVER_PORT__||g' /opt/tomcat/conf/server.xml 
         returnCode=$?
-        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_remoteIpValve) sed -i 's|__REMOTE_IP_HTTP_SERVER_PORT__||g' /opt/tomcat/conf/server.xml, result: $returnCode"
+        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_remoteIpValve) sed -i 's|__GROUPER_TOMCAT_REMOTE_IP_HTTP_SERVER_PORT__||g' /opt/tomcat/conf/server.xml, result: $returnCode"
         if [ $returnCode != 0 ]; then exit $returnCode; fi
       fi
         
-      if [ ! -z "$REMOTE_IP_HTTPS_SERVER_PORT" ]; then 
-        sed -i 's|__REMOTE_IP_HTTPS_SERVER_PORT__|httpsServerPort="$REMOTE_IP_HTTPS_SERVER_PORT"|g' /opt/tomcat/conf/server.xml 
+      if [ ! -z "$GROUPER_TOMCAT_REMOTE_IP_HTTPS_SERVER_PORT" ]; then 
+        sed -i "s|__GROUPER_TOMCAT_REMOTE_IP_HTTPS_SERVER_PORT__|httpsServerPort=\"$GROUPER_TOMCAT_REMOTE_IP_HTTPS_SERVER_PORT\"|g" /opt/tomcat/conf/server.xml 
         returnCode=$?
-        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_remoteIpValve) sed -i 's|__REMOTE_IP_HTTPS_SERVER_PORT__|httpsServerPort=\"$REMOTE_IP_HTTPS_SERVER_PORT\"|g' /opt/tomcat/conf/server.xml, result: $returnCode"
+        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_remoteIpValve) sed -i \"s|__GROUPER_TOMCAT_REMOTE_IP_HTTPS_SERVER_PORT__|httpsServerPort=\\\"$GROUPER_TOMCAT_REMOTE_IP_HTTPS_SERVER_PORT\\\"|g\" /opt/tomcat/conf/server.xml, result: $returnCode"
         if [ $returnCode != 0 ]; then exit $returnCode; fi
       else
-        sed -i 's|__REMOTE_IP_HTTPS_SERVER_PORT__||g' /opt/tomcat/conf/server.xml 
+        sed -i 's|__GROUPER_TOMCAT_REMOTE_IP_HTTPS_SERVER_PORT__||g' /opt/tomcat/conf/server.xml 
         returnCode=$?
-        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_remoteIpValve) sed -i 's|__REMOTE_IP_HTTPS_SERVER_PORT__||g' /opt/tomcat/conf/server.xml, result: $returnCode"
+        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_remoteIpValve) sed -i 's|__GROUPER_TOMCAT_REMOTE_IP_HTTPS_SERVER_PORT__||g' /opt/tomcat/conf/server.xml, result: $returnCode"
         if [ $returnCode != 0 ]; then exit $returnCode; fi
       fi
       
     else
-      echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_remoteIpValve) /opt/tomcat/conf/server.xml does not contain <!--GROUPER_REMOTE_IP_VALVE--> so will not have remote IP valve applied"
+      echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_remoteIpValve) /opt/tomcat/conf/server.xml does not contain <!--GROUPER_GROUPER_TOMCAT_REMOTE_IP_VALVE--> so will not have remote IP valve applied"
     fi
     
   fi
@@ -137,11 +137,11 @@ setupFilesTomcat_remoteIpValve() {
 setupFilesTomcat_remoteCidrValve() {
 
   if [ ! -z "$GROUPER_TOMCAT_REMOTE_CIDR_VALVE_ALLOW" ]; then 
-    if [ $(grep -c '<!--GROUPER_REMOTE_CIDR_VALVE-->' /opt/tomcat/conf/server.xml) -ge 1 ]; then
+    if [ $(grep -c '<!--GROUPER_TOMCAT_REMOTE_CIDR_VALVE-->' /opt/tomcat/conf/server.xml) -ge 1 ]; then
     
-      sed -i 's|<!--GROUPER_REMOTE_CIDR_VALVE-->|<Valve className="org.apache.catalina.valves.RemoteCIDRValve" allow="__GROUPER_TOMCAT_REMOTE_CIDR_VALVE_ALLOW__" usePeerAddress="true" />|g' /opt/tomcat/conf/server.xml 
+      sed -i 's|<!--GROUPER_TOMCAT_REMOTE_CIDR_VALVE-->|<Valve className="org.apache.catalina.valves.RemoteCIDRValve" allow="__GROUPER_TOMCAT_REMOTE_CIDR_VALVE_ALLOW__" usePeerAddress="true" />|g' /opt/tomcat/conf/server.xml 
       returnCode=$?
-      echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_remoteCidrValve) Apply remote CIDR valve: sed -i 's|<!--GROUPER_REMOTE_CIDR_VALVE-->|<Valve className=\"org.apache.catalina.valves.RemoteCIDRValve\" allow=\"__GROUPER_TOMCAT_REMOTE_CIDR_VALVE_ALLOW__\"  usePeerAddress=\"true\" />|g' /opt/tomcat/conf/server.xml, result: $returnCode"
+      echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_remoteCidrValve) Apply remote CIDR valve: sed -i 's|<!--GROUPER_TOMCAT_REMOTE_CIDR_VALVE-->|<Valve className=\"org.apache.catalina.valves.RemoteCIDRValve\" allow=\"__GROUPER_TOMCAT_REMOTE_CIDR_VALVE_ALLOW__\"  usePeerAddress=\"true\" />|g' /opt/tomcat/conf/server.xml, result: $returnCode"
       if [ $returnCode != 0 ]; then exit $returnCode; fi
       
       sed -i "s|__GROUPER_TOMCAT_REMOTE_CIDR_VALVE_ALLOW__|$GROUPER_TOMCAT_REMOTE_CIDR_VALVE_ALLOW|g" /opt/tomcat/conf/server.xml
@@ -151,7 +151,7 @@ setupFilesTomcat_remoteCidrValve() {
       
       
     else
-      echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_remoteCidrValve) /opt/tomcat/conf/server.xml does not contain <!--GROUPER_REMOTE_CIDR_VALVE--> so will not have remote CIDR valve applied"
+      echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_remoteCidrValve) /opt/tomcat/conf/server.xml does not contain <!--GROUPER_TOMCAT_REMOTE_CIDR_VALVE--> so will not have remote CIDR valve applied"
     fi
     
   fi
@@ -206,7 +206,7 @@ setupFilesTomcat_turnOnHttp() {
     
       sed -i 's|<!--GROUPER_HTTP_CONNECTOR-->|<Connector address="0.0.0.0" secure="true" scheme="https" URIEncoding="UTF-8" tomcatAuthentication="false" port="8080" protocol="HTTP/1.1" redirectPort="8443" maxParameterCount="10000" />|g' /opt/tomcat/conf/server.xml 
       returnCode=$?
-      echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_turnOnHttp) Apply AJP: sed -i 's|<!--GROUPER_HTTP_CONNECTOR-->|<Connector address=\"0.0.0.0\" secure=\"true\" scheme=\"https\" URIEncoding=\"UTF-8\" tomcatAuthentication=\"false\" port=\"8080\" protocol=\"HTTP/1.1\" redirectPort=\"8443\" maxParameterCount=\"10000\" />|g' /opt/tomcat/conf/server.xml, result: $returnCode"
+      echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_turnOnHttp) Apply HTTP: sed -i 's|<!--GROUPER_HTTP_CONNECTOR-->|<Connector address=\"0.0.0.0\" secure=\"true\" scheme=\"https\" URIEncoding=\"UTF-8\" tomcatAuthentication=\"false\" port=\"8080\" protocol=\"HTTP/1.1\" redirectPort=\"8443\" maxParameterCount=\"10000\" />|g' /opt/tomcat/conf/server.xml, result: $returnCode"
       if [ $returnCode != 0 ]; then exit $returnCode; fi
     else
       echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_turnOnHttp) /opt/tomcat/conf/server.xml does not contain <!--GROUPER_HTTP_CONNECTOR--> so will not have HTTP connector applied"
@@ -222,13 +222,31 @@ setupFilesTomcat_turnOnHttps() {
 
     if [ $(grep -c '<!--GROUPER_HTTPS_CONNECTOR-->' /opt/tomcat/conf/server.xml) -ge 1 ]; then
     
-      sed -i 's|<!--GROUPER_HTTPS_CONNECTOR-->|<Connector address="0.0.0.0" secure="true" scheme="https" URIEncoding="UTF-8" tomcatAuthentication="false" port="8443" protocol="org.apache.coyote.http11.Http11NioProtocol" maxParameterCount="10000" keyAlias="$GROUPER_TOMCAT_HTTPS_ALIAS" SSLEnabled="true" />|g' /opt/tomcat/conf/server.xml 
+      sed -i "s|<\!--GROUPER_HTTPS_CONNECTOR-->|<Connector address=\"0.0.0.0\" secure=\"true\" scheme=\"https\" URIEncoding=\"UTF-8\" compression=\"on\" tomcatAuthentication=\"false\" port=\"8443\" protocol=\"org.apache.coyote.http11.Http11NioProtocol\" maxParameterCount=\"10000\" SSLEnabled=\"true\" ><SSLHostConfig protocols=\"TLSv1.2\"><Certificate certificateFile=\"$GROUPER_SSL_CERT_FILE\" certificateKeyFile=\"$GROUPER_SSL_KEY_FILE\" __GROUPER_SSL_CHAIN_FILE__ /></SSLHostConfig></Connector>|g" /opt/tomcat/conf/server.xml 
       returnCode=$?
-      echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_turnOnHttps) Apply AJP: sed -i 's|<!--GROUPER_HTTPS_CONNECTOR-->|<Connector address=\"0.0.0.0\" secure=\"true\" scheme=\"https\" URIEncoding=\"UTF-8\" tomcatAuthentication=\"false\" port=\"8443\" protocol=\"org.apache.coyote.http11.Http11NioProtocol\" maxParameterCount=\"10000\" keyAlias=\"$GROUPER_TOMCAT_HTTPS_ALIAS\" SSLEnabled=\"true\" />|g' /opt/tomcat/conf/server.xml, result: $returnCode"
+      echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_turnOnHttps) Apply HTTPS: sed -i \"s|<\\!--GROUPER_HTTPS_CONNECTOR-->|<Connector address=\\\"0.0.0.0\\\" secure=\\\"true\\\" scheme=\\\"https\\\" URIEncoding=\\\"UTF-8\\\" compression=\\\"on\\\" tomcatAuthentication=\\\"false\\\" port=\\\"8443\\\" protocol=\\\"org.apache.coyote.http11.Http11NioProtocol\\\" maxParameterCount=\\\"10000\\\" keyAlias=\\\"$GROUPER_TOMCAT_HTTPS_ALIAS\\\" SSLEnabled=\\\"true\\\"  ><SSLHostConfig protocols=\\\"TLSv1.2\\\"><Certificate certificateFile=\\\"$GROUPER_SSL_CERT_FILE\\\" certificateKeyFile=\\\"$GROUPER_SSL_KEY_FILE\\\" __GROUPER_SSL_CHAIN_FILE__ /></SSLHostConfig></Connector>|g\" /opt/tomcat/conf/server.xml, result: $returnCode"
       if [ $returnCode != 0 ]; then exit $returnCode; fi
     else
       echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_turnOnHttps) /opt/tomcat/conf/server.xml does not contain <!--GROUPER_HTTPS_CONNECTOR--> so will not have HTTPS connector applied"
     fi
+    
+    if [ "$GROUPER_SSL_USE_CHAIN_FILE" = "true" ]; then
+
+      sed -i "s|__GROUPER_SSL_CHAIN_FILE__|certificateChainFile=\"$GROUPER_SSL_CHAIN_FILE\"|g" /opt/tomcat/conf/server.xml
+      returnCode=$?
+      echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_turnOnHttps) Setting chain: sed -i \"s|__GROUPER_SSL_CHAIN_FILE__|certificateChainFile=\\\"$GROUPER_SSL_CHAIN_FILE\\\"|g\" /opt/tomcat/conf/server.xml , result: $?"
+      if [ $returnCode != 0 ]; then exit $returnCode; fi
+      
+  
+    else
+      sed -i "s|__GROUPER_SSL_CHAIN_FILE__||g" /opt/tomcat/conf/server.xml
+      returnCode=$?
+      echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_turnOnHttps) No chain setting: sed -i \"s|__GROUPER_SSL_CHAIN_FILE__||g\" /opt/tomcat/conf/server.xml , result: $?"
+      if [ $returnCode != 0 ]; then exit $returnCode; fi
+  
+    fi
+
+    
   else 
     echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_turnOnHttps) GROUPER_TOMCAT_HTTPS_PORT is set to -1, so will not have AJP connector applied"
   fi  
@@ -239,9 +257,9 @@ setupFilesTomcat_accessLogs() {
   if [ "$GROUPER_TOMCAT_LOG_ACCESS" = "true" ]; then
     if [ $(grep -c '<!--GROUPER_LOGGING_VALVE-->' /opt/tomcat/conf/server.xml) -ge 1 ]; then
     
-      sed -i 's|<!--GROUPER_LOGGING_VALVE-->|<Valve className="org.apache.catalina.valves.AccessLogValve" requestAttributesEnabled="$GROUPER_TOMCAT_REMOTE_IP_VALVE" directory="/tmp" prefix="tomcat_access_log" rotatable="false" pattern="%h %l %u %t \&quot;%r\&quot; %s %b" />|g' /opt/tomcat/conf/server.xml 
+      sed -i "s|<!--GROUPER_LOGGING_VALVE-->|<Valve className=\"org.apache.catalina.valves.AccessLogValve\" requestAttributesEnabled=\"$GROUPER_TOMCAT_REMOTE_IP_VALVE\" directory=\"$GROUPER_TOMCAT_LOG_ACCESS_DIRECTORY\" prefix=\"tomcat_access_log\" rotatable=\"false\" pattern=\"%h %l %u %t \&quot;%r\&quot; %s %b\" />|g" /opt/tomcat/conf/server.xml 
       returnCode=$?
-      echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_accessLogs) Apply access logs: sed -i 's|<!--GROUPER_LOGGING_VALVE-->|<Valve className=\"org.apache.catalina.valves.AccessLogValve\" directory=\"/tmp\" prefix=\"tomcat_access_log\" rotatable=\"false\" pattern=\"%h %l %u %t &quot;%r&quot; %s %b\" />|g' /opt/tomcat/conf/server.xml, result: $returnCode"
+      echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_accessLogs) Apply access logs: sed -i \"s|<!--GROUPER_LOGGING_VALVE-->|<Valve className=\\\"org.apache.catalina.valves.AccessLogValve\\\" directory=\\\"GROUPER_TOMCAT_LOG_ACCESS_DIRECTORY\\\" prefix=\\\"tomcat_access_log\\\" rotatable=\\\"false\\\" pattern=\\\"%h %l %u %t &quot;%r&quot; %s %b\\\" />|g\" /opt/tomcat/conf/server.xml, result: $returnCode"
       if [ $returnCode != 0 ]; then exit $returnCode; fi
 
     else
@@ -253,7 +271,7 @@ setupFilesTomcat_accessLogs() {
 
 setupFilesTomcat_ports() {
 
-      if [ "$GROUPER_TOMCAT_HTTP_PORT" != "8080" ]; then 
+      if [ "$GROUPER_TOMCAT_HTTP_PORT" != "8080" ] && [ "$GROUPER_TOMCAT_HTTP_PORT" != "-1" ] ; then 
         sed -i "s|8080|$GROUPER_TOMCAT_HTTP_PORT|g" /opt/tomcat/conf/server.xml
         returnCode=$?
         echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_ports) update server.xml to change http port: sed -i \"s|8080|$GROUPER_TOMCAT_HTTP_PORT|g\" /opt/tomcat/conf/server.xml, result: $returnCode"
@@ -520,7 +538,6 @@ setupFilesTomcat_exportAll() {
   export -f setupFilesTomcat
   export -f setupFilesTomcat_authn
   export -f setupFilesTomcat_context
-  export -f setupFilesTomcat_http
   export -f setupFilesTomcat_ports
   export -f setupFilesTomcat_remoteCidrValve
   export -f setupFilesTomcat_remoteIpValve

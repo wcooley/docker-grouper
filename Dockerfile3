@@ -1,4 +1,6 @@
-FROM i2incommon/grouper:4.3.0
+FROM i2incommon/grouper:5.7.0
 
-ENTRYPOINT ["ping"]
-CMD ["google.com"]
+COPY container_files/usr-local-bin /usr/local/bin
+COPY container_files /opt
+
+EXPOSE 8080 8443 8009

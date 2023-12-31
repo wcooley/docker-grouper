@@ -100,6 +100,27 @@ setupFiles_localLogging() {
     echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_localLogging) sed -i \"s|__FILEEND__|-->|g\" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml, result: $?"
     if [ $returnCode != 0 ]; then exit $returnCode; fi
   fi
+  if  [ "$GROUPER_LOG_TO_PIPE" = "true" ] && [ "1" = "2" ]; then
+    sed -i "s|__LOGPIPESTART__||g" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml
+    returnCode=$?
+    echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_localLogging) sed -i \"s|__LOGPIPESTART__||g\" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml, result: $?"
+    if [ $returnCode != 0 ]; then exit $returnCode; fi
+
+    sed -i "s|__LOGPIPEEND__||g" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml
+    returnCode=$?
+    echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_localLogging) sed -i \"s|__LOGPIPEEND__||g\" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml, result: $?"
+    if [ $returnCode != 0 ]; then exit $returnCode; fi
+  else
+    sed -i "s|__LOGPIPESTART__|<!--|g" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml
+    returnCode=$?
+    echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_localLogging) sed -i \"s|__LOGPIPESTART__|<!--|g\" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml, result: $?"
+    if [ $returnCode != 0 ]; then exit $returnCode; fi
+
+    sed -i "s|__LOGPIPEEND__|-->|g" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml
+    returnCode=$?
+    echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_localLogging) sed -i \"s|__LOGPIPEEND__|-->|g\" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml, result: $?"
+    if [ $returnCode != 0 ]; then exit $returnCode; fi
+  fi
 
   # add semicolons
   LOCAL_ENV=
