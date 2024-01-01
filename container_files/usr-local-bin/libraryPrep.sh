@@ -307,10 +307,6 @@ prep_finishBegin() {
       export GROUPER_TOMCAT_SHUTDOWN_PORT=8005
     fi
     
-    if [ -z "$GROUPER_TOMCAT_HTTPS_ALIAS" ] && [ "$GROUPER_SELF_SIGNED_CERT" = "true" ]; then 
-      echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_TOMCAT_HTTPS_ALIAS=localhost"
-      export GROUPER_TOMCAT_HTTPS_ALIAS=localhost
-    fi    
     if [ -z "$GROUPER_TOMCAT_LOG_ACCESS_DIRECTORY" ]; then 
       echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_TOMCAT_LOG_ACCESS_DIRECTORY=/opt/grouper/logs"
       export GROUPER_TOMCAT_LOG_ACCESS_DIRECTORY=/opt/grouper/logs

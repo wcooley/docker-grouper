@@ -4,6 +4,7 @@ setupFilesTomcat() {
   setupFilesTomcat_serverXml
   setupFilesTomcat_remoteCidrValve
   setupFilesTomcat_remoteIpValve
+  setupFilesTomcat_rewriteValve
   setupFilesTomcat_turnOnAjp
   setupFilesTomcat_turnOnHttp
   setupFilesTomcat_turnOnHttps
@@ -16,6 +17,31 @@ setupFilesTomcat() {
   setupFilesTomcat_sslCertsAnchors
   setupFilesTomcat_sslCertsClient
 }
+
+setupFilesTomcat_rewriteValve() {
+
+  if [ ! -f /opt/tomcat/conf/Catalina/localhost/rewrite.config ]; then 
+    if [ "$GROUPER_UI" = "true" ]; then
+      mv /opt/tomcat/conf/Catalina/localhost/rewrite.config.grouper /opt/tomcat/conf/Catalina/localhost/rewrite.config
+      returnCode=$?
+      echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_rewriteValve) mv /opt/tomcat/conf/Catalina/localhost/rewrite.config.grouper /opt/tomcat/conf/Catalina/localhost/rewrite.config, result: $returnCode"
+      if [ $returnCode != 0 ]; then exit $returnCode; fi
+      
+      sed -i "s|__CONTEXT__|$GROUPER_TOMCAT_CONTEXT|g" /opt/tomcat/conf/Catalina/localhost/rewrite.config 
+      returnCode=$?
+      echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_rewriteValve) sed -i \"s|__CONTEXT__|$GROUPER_TOMCAT_CONTEXT|g\" /opt/tomcat/conf/Catalina/localhost/rewrite.config, result: $returnCode"
+      if [ $returnCode != 0 ]; then exit $returnCode; fi
+      
+    else
+      touch /opt/tomcat/conf/Catalina/localhost/rewrite.config
+      returnCode=$?
+      echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_rewriteValve) touch /opt/tomcat/conf/Catalina/localhost/rewrite.config, result: $returnCode"
+      if [ $returnCode != 0 ]; then exit $returnCode; fi
+    fi
+  
+  fi
+}
+    
 
 setupFilesTomcat_remoteIpValve() {
 
@@ -520,6 +546,7 @@ setupFilesTomcat_unsetAll() {
   unset -f setupFilesTomcat_ports
   unset -f setupFilesTomcat_remoteCidrValve
   unset -f setupFilesTomcat_remoteIpValve
+  unset -f setupFilesTomcat_rewriteValve
   unset -f setupFilesTomcat_serverXml
   unset -f setupFilesTomcat_ssl
   unset -f setupFilesTomcat_sslCertsAnchors
@@ -541,6 +568,7 @@ setupFilesTomcat_exportAll() {
   export -f setupFilesTomcat_ports
   export -f setupFilesTomcat_remoteCidrValve
   export -f setupFilesTomcat_remoteIpValve
+  export -f setupFilesTomcat_rewriteValve
   export -f setupFilesTomcat_serverXml
   export -f setupFilesTomcat_ssl
   export -f setupFilesTomcat_sslCertsAnchors
