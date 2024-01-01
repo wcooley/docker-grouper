@@ -197,9 +197,9 @@ prep_finishBegin() {
       export GROUPER_USE_SSL=true
     fi
     if [ "$GROUPER_USE_SSL" = "true" ]; then
-      if [ -z "$GROUPER_SELF_SIGNED_CERT" ] && [ -z "$GROUPER_SSL_CERT_FILE" ] && [ ! -f /opt/grouper/certs/client/localhost.pem ] ; then 
+      if [ -z "$GROUPER_SELF_SIGNED_CERT" ] && [ -z "$GROUPER_SSL_CERT_FILE" ]  && [ ! -f /etc/pki/tls/certs/host-cert.pem ] ; then 
       
-        echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) GROUPER_SELF_SIGNED_CERT and GROUPER_SSL_CERT_FILE are not specified and /opt/grouper/certs/client/localhost.pem does not exist, so: export GROUPER_SELF_SIGNED_CERT=true"
+        echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) GROUPER_SELF_SIGNED_CERT and GROUPER_SSL_CERT_FILE are not specified and /etc/pki/tls/certs/host-cert.pem does not exist, so: export GROUPER_SELF_SIGNED_CERT=true"
         export GROUPER_SELF_SIGNED_CERT=true
       
       fi
@@ -220,6 +220,31 @@ prep_finishBegin() {
         fi
       
       fi
+      # default the cert path
+      if [ -z "$GROUPER_SSL_CERT_FILE" ] && [ -f /etc/pki/tls/certs/host-cert.pem ] ; then 
+        echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_SSL_CERT_FILE=/etc/pki/tls/certs/host-cert.pem"
+        export GROUPER_SSL_CERT_FILE=/etc/pki/tls/certs/host-cert.pem
+      fi
+      if [ -z "$GROUPER_SSL_KEY_FILE" ] && [ -f /etc/pki/tls/private/host-key.pem ] ; then 
+        echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_SSL_KEY_FILE=/etc/pki/tls/private/host-key.pem"
+        export GROUPER_SSL_KEY_FILE=/etc/pki/tls/private/host-key.pem
+      fi
+      if [ -z "$GROUPER_SSL_CHAIN_FILE" ] ; then 
+      
+        if [ -f /etc/pki/tls/certs/cachain.pem ]; then
+      
+          echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_SSL_USE_CHAIN_FILE=true"
+          export GROUPER_SSL_USE_CHAIN_FILE=true
+          echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_SSL_CHAIN_FILE=/etc/pki/tls/certs/cachain.pem"
+          export GROUPER_SSL_CHAIN_FILE=/etc/pki/tls/certs/cachain.pem
+        else 
+
+          echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_SSL_USE_CHAIN_FILE=false"
+          export GROUPER_SSL_USE_CHAIN_FILE=false
+        
+        fi
+      fi
+      
       if [ -z "$GROUPER_SSL_USE_CHAIN_FILE" ] ; then 
 
         if [ -z "$GROUPER_SSL_CHAIN_FILE" ]; then
@@ -310,11 +335,6 @@ prep_finishBegin() {
     if [ -z "$GROUPER_TOMCAT_LOG_ACCESS_DIRECTORY" ]; then 
       echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_TOMCAT_LOG_ACCESS_DIRECTORY=/opt/grouper/logs"
       export GROUPER_TOMCAT_LOG_ACCESS_DIRECTORY=/opt/grouper/logs
-    fi
-    
-    if [ -z "$GROUPER_GSH_JVMARGS" ] ; then 
-      echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_GSH_JVMARGS=\"-Djavax.net.ssl.trustStore=/etc/pki/java/cacerts\""
-      export GROUPER_GSH_JVMARGS="-Djavax.net.ssl.trustStore=/etc/pki/java/cacerts"
     fi
     
     #Replace web.xml session timeout with env variable
