@@ -75,9 +75,9 @@ returnCode=$?
 echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) rm -rf /opt/grouper/$GROUPER_VERSION, result: $returnCode"
 if [ $returnCode != 0 ]; then exit $returnCode; fi
 
-rm -rf /opt/tomcat/webapps/docs/ /opt/tomcat/webapps/host-manager/ /opt/tomcat/webapps/manager/ /opt/tomcat/logs/* /opt/tomcat/temp/* /opt/tomcat/work/* /opt/tomcat/conf/logging.properties
+rm -rf /opt/tomcat/webapps/ROOT /opt/tomcat/webapps/examples /opt/tomcat/webapps/docs/ /opt/tomcat/webapps/host-manager/ /opt/tomcat/webapps/manager/ /opt/tomcat/logs/* /opt/tomcat/temp/* /opt/tomcat/work/* /opt/tomcat/conf/logging.properties
 returnCode=$?
-echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) rm -rf /opt/tomcat/webapps/docs/ /opt/tomcat/webapps/host-manager/ /opt/tomcat/webapps/manager/ /opt/tomcat/logs/* /opt/tomcat/temp/* /opt/tomcat/work/*\ /opt/tomcat/conf/logging.properties, result: $returnCode"
+echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) rm -rf /opt/tomcat/webapps/ROOT /opt/tomcat/webapps/examples /opt/tomcat/webapps/docs/ /opt/tomcat/webapps/host-manager/ /opt/tomcat/webapps/manager/ /opt/tomcat/logs/* /opt/tomcat/temp/* /opt/tomcat/work/*\ /opt/tomcat/conf/logging.properties, result: $returnCode"
 if [ $returnCode != 0 ]; then exit $returnCode; fi
 
 cp -R /opt/container_files/grouperWebapp/* /opt/grouper/grouperWebapp

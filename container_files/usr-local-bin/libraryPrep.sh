@@ -389,6 +389,10 @@ prep_finishBegin() {
       echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_TOMCAT_HTTP_PORT=8080"
       export GROUPER_TOMCAT_HTTP_PORT=8080
     fi
+    if [ -z "$GROUPER_TOMCAT_HTTPS_PORT" ]; then 
+      echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_TOMCAT_HTTPS_PORT=-1"
+      export GROUPER_TOMCAT_HTTPS_PORT=-1
+    fi
     if [ -z "$GROUPER_TOMCAT_MAX_HEADER_COUNT" ]; then 
       echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_TOMCAT_MAX_HEADER_COUNT=200"
       export GROUPER_TOMCAT_MAX_HEADER_COUNT=200
@@ -402,6 +406,11 @@ prep_finishBegin() {
       export GROUPER_TOMCAT_SHUTDOWN_PORT=8005
     fi
     
+    if [ -z "$GROUPER_TOMCAT_LOG_ACCESS_DIRECTORY" ]; then 
+      echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_TOMCAT_LOG_ACCESS_DIRECTORY=/opt/grouper/logs"
+      export GROUPER_TOMCAT_LOG_ACCESS_DIRECTORY=/opt/grouper/logs
+    fi
+
     if [ -z "$GROUPER_SHIB_LOG_USE_PIPE" ]; then 
       echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_SHIB_LOG_USE_PIPE=true"
       export GROUPER_SHIB_LOG_USE_PIPE=true
@@ -475,6 +484,10 @@ prep_finishEnd() {
     if [ "$GROUPER_RUN_SHIB_SP" = "true" ] && [ -z "$GROUPERUI_LOGOUT_REDIRECTTOURL" ]; then 
       echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishEnd) export GROUPERUI_LOGOUT_REDIRECTTOURL=/Shibboleth.sso/Logout"
       export GROUPERUI_LOGOUT_REDIRECTTOURL=/Shibboleth.sso/Logout
+    fi
+    if [ -z "$GROUPER_TOMCAT_REMOTE_IP_VALVE" ]; then 
+      echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishEnd) export GROUPER_TOMCAT_REMOTE_IP_VALVE=false"
+      export GROUPER_TOMCAT_REMOTE_IP_VALVE=false
     fi
     if [ -z "$GROUPER_REDIRECT_FROM_SLASH_TO_GROUPER" ]; then 
       if [ "$GROUPER_PROXY_PASS" = "#" ]; then 

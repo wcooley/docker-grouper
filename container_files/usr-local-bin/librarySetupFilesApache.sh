@@ -68,7 +68,7 @@ setupFilesApache_ssl() {
 
         sed -i "s|__GROUPER_SSL_CHAIN_FILE__|$GROUPER_SSL_CHAIN_FILE|g" /etc/httpd/conf.d/ssl-enabled.conf
         returnCode=$?
-        echo "grouperContainer; INFO: (librarySetupFilesApache.sh-setupFilesApache_ports) No chain setting: sed -i \"s|SSLCertificateChainFile __GROUPER_SSL_CHAIN_FILE__|$GROUPER_SSL_CHAIN_FILE|g\" /etc/httpd/conf.d/ssl-enabled.conf , result: $?"
+        echo "grouperContainer; INFO: (librarySetupFilesApache.sh-setupFilesApache_ports) Setting chain: sed -i \"s|SSLCertificateChainFile __GROUPER_SSL_CHAIN_FILE__|$GROUPER_SSL_CHAIN_FILE|g\" /etc/httpd/conf.d/ssl-enabled.conf , result: $?"
         if [ $returnCode != 0 ]; then exit $returnCode; fi
         
     
