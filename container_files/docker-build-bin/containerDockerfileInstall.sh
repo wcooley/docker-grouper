@@ -175,6 +175,11 @@ returnCode=$?
 echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) mkdir -p /opt/grouper/certs/client, result: $returnCode"
 if [ $returnCode != 0 ]; then exit $returnCode; fi
 
+mkdir -p /opt/grouper/certs/keys
+returnCode=$?
+echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) mkdir -p /opt/grouper/certs/keys, result: $returnCode"
+if [ $returnCode != 0 ]; then exit $returnCode; fi
+
 mkdir -p /opt/grouper/certs/anchors
 returnCode=$?
 echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) mkdir -p /opt/grouper/certs/anchors, result: $returnCode"
