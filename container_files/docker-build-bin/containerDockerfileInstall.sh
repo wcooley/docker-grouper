@@ -180,10 +180,25 @@ returnCode=$?
 echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) mkdir -p /opt/grouper/certs/anchors, result: $returnCode"
 if [ $returnCode != 0 ]; then exit $returnCode; fi
 
-mv /opt/container_files/certs/* /opt/grouper/certs/
+#mv /opt/container_files/certs/* /opt/grouper/certs/
+#returnCode=$?
+#echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) mv /opt/container_files/certs/* /opt/grouper/certs/, result: $returnCode"
+#if [ $returnCode != 0 ]; then exit $returnCode; fi
+
+chmod u+w $JAVA_HOME/lib/security/cacerts
 returnCode=$?
-echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) mv /opt/container_files/certs/* /opt/grouper/certs/, result: $returnCode"
-if [ $returnCode != 0 ]; then exit $returnCode; fi
+echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) chmod u+w $JAVA_HOME/lib/security/cacerts , result=$returnCode"
+if [ $returnCode != 0 ]; then exit $returnCode; fi  
+  
+/usr/lib/jvm/java/bin/keytool -import -noprompt -cacerts -storepass changeit -alias "localhost" -file "/opt/container_files/certs/localhost.pem"
+returnCode=$?
+echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) /usr/lib/jvm/java/bin/keytool -import -noprompt -cacerts -storepass changeit -alias \"localhost\" -file \"/opt/container_files/certs/localhost.pem\" , result=$returnCode"
+if [ $returnCode != 0 ]; then exit $returnCode; fi  
+        
+chmod u-w $JAVA_HOME/lib/security/cacerts
+returnCode=$?
+echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) chmod u-w $JAVA_HOME/lib/security/cacerts , result=$returnCode"
+if [ $returnCode != 0 ]; then exit $returnCode; fi  
 
 echo 'umask 002' >> /home/tomcat/.bashrc
 returnCode=$?
