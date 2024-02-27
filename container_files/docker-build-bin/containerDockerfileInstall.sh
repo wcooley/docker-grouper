@@ -175,9 +175,9 @@ returnCode=$?
 echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) chmod u+w $JAVA_HOME/lib/security/cacerts , result=$returnCode"
 if [ $returnCode != 0 ]; then exit $returnCode; fi  
   
-/usr/lib/jvm/java/bin/keytool -import -noprompt -cacerts -storepass changeit -alias "localhost" -file "/opt/container_files/certs/localhost.pem"
+/usr/lib/jvm/java/bin/keytool -import -noprompt -cacerts -storepass changeit -alias "localhost" -file "/opt/container_files/certs/client/localhost.pem"
 returnCode=$?
-echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) /usr/lib/jvm/java/bin/keytool -import -noprompt -cacerts -storepass changeit -alias \"localhost\" -file \"/opt/container_files/certs/localhost.pem\" , result=$returnCode"
+echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) /usr/lib/jvm/java/bin/keytool -import -noprompt -cacerts -storepass changeit -alias \"localhost\" -file \"/opt/container_files/certs/client/localhost.pem\" , result=$returnCode"
 if [ $returnCode != 0 ]; then exit $returnCode; fi  
         
 chmod u-w $JAVA_HOME/lib/security/cacerts
