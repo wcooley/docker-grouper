@@ -75,10 +75,11 @@ if [ $lines -ne 0 ]; then
   if [ $returnCode != 0 ]; then exit $returnCode; fi
 fi
 
-chmod 660 /opt/grouper/certs/keys/*
+chmod -f 660 /opt/grouper/certs/keys/*
 returnCode=$?
 echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) chmod 660 /opt/grouper/certs/keys/*, result: $returnCode"
-if [ $returnCode != 0 ]; then exit $returnCode; fi
+#dont fail since if no files then it exits with 1
+#if [ $returnCode != 0 ]; then exit $returnCode; fi
 
 /opt/container_files/docker-build-bin/containerDockerfileInstallDos2unix.sh /usr/local/bin
 returnCode=$?
