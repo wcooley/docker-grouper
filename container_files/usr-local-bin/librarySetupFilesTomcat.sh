@@ -431,64 +431,69 @@ setupFilesTomcat_sslCertsAnchors() {
 
     
     if [ -n "$(ls -A /opt/grouper/certs/anchors/ 2>/dev/null)" ]; then
-      # if root
-      if [[ $EUID -eq 0 ]]; then
+      
+      if [ $EUID -eq 0 ] || [ "$GROUPER_TOMCAT_UID" = "$EUID"  ]; then
+    
+        # if root
+        if [[ $EUID -eq 0 ]]; then
+    
+          echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_sslCertsAnchors) There are anchor certs in /opt/grouper/certs/anchors/ to process"
+          
+          /usr/bin/cp -v /opt/grouper/certs/anchors/* /etc/pki/ca-trust/source/anchors
+          returnCode=$?
+          echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_sslCertsAnchors) /usr/bin/cp -v /opt/grouper/certs/anchors/* /etc/pki/ca-trust/source/anchors , result=$returnCode"
+          if [ $returnCode != 0 ]
+          then
+            exit $returnCode
+          fi  
+          
+          /bin/update-ca-trust
+          returnCode=$?
+          echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_sslCertsAnchors) /bin/update-ca-trust , result=$returnCode"
+          if [ $returnCode != 0 ]
+          then
+            exit $returnCode
+          fi  
+          
+        else
+          echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_sslCertsAnchors) There are anchor certs in /opt/grouper/certs/anchors/ to process but not running as root so you might need to run this in derived image: /usr/bin/cp -v /opt/grouper/certs/anchors/* /etc/pki/ca-trust/source/anchors; /bin/update-ca-trust"
+        fi
+        
+        chmod u+w $JAVA_HOME/lib/security/cacerts
+        returnCode=$?
+        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_sslCertsAnchors) chmod u+w $JAVA_HOME/lib/security/cacerts , result=$returnCode"
+        if [ $returnCode != 0 ]
+        then
+          exit $returnCode
+        fi  
+    
+        for fileName in /opt/grouper/certs/anchors/*.pem; do
+          [ -f "$fileName" ] || continue
   
-        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_sslCertsAnchors) There are anchor certs in /opt/grouper/certs/anchors/ to process"
-        
-        /usr/bin/cp -v /opt/grouper/certs/anchors/* /etc/pki/ca-trust/source/anchors
+          fileNameNoExtension=$(basename -- "$fileName")
+          fileNameNoExtension="${fileNameNoExtension%.*}"
+          /usr/lib/jvm/java/bin/keytool -import -trustcacerts -noprompt -cacerts -storepass changeit -alias "$fileNameNoExtension" -file "$fileName"
+  
+          returnCode=$?
+          echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_sslCertsAnchors) /usr/lib/jvm/java/bin/keytool -import -trustcacerts -noprompt -cacerts -storepass changeit -alias \"$fileNameNoExtension\" -file \"$fileName\" , result=$returnCode"
+          if [ $returnCode != 0 ]
+          then
+            exit $returnCode
+          fi  
+          
+        done
+  
+        chmod u-w $JAVA_HOME/lib/security/cacerts
         returnCode=$?
-        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_sslCertsAnchors) /usr/bin/cp -v /opt/grouper/certs/anchors/* /etc/pki/ca-trust/source/anchors , result=$returnCode"
+        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_sslCertsAnchors) chmod u-w $JAVA_HOME/lib/security/cacerts , result=$returnCode"
         if [ $returnCode != 0 ]
         then
           exit $returnCode
         fi  
-        
-        /bin/update-ca-trust
-        returnCode=$?
-        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_sslCertsAnchors) /bin/update-ca-trust , result=$returnCode"
-        if [ $returnCode != 0 ]
-        then
-          exit $returnCode
-        fi  
-        
+            
       else
-        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_sslCertsAnchors) There are anchor certs in /opt/grouper/certs/anchors/ to process but not running as root so you might need to run this in derived image: /usr/bin/cp -v /opt/grouper/certs/anchors/* /etc/pki/ca-trust/source/anchors; /bin/update-ca-trust"
-      fi
-      
-      chmod u+w $JAVA_HOME/lib/security/cacerts
-      returnCode=$?
-      echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_sslCertsAnchors) chmod u+w $JAVA_HOME/lib/security/cacerts , result=$returnCode"
-      if [ $returnCode != 0 ]
-      then
-        exit $returnCode
-      fi  
-  
-      for fileName in /opt/grouper/certs/anchors/*.pem; do
-        [ -f "$fileName" ] || continue
-
-        fileNameNoExtension=$(basename -- "$fileName")
-        fileNameNoExtension="${fileNameNoExtension%.*}"
-        /usr/lib/jvm/java/bin/keytool -import -trustcacerts -noprompt -cacerts -storepass changeit -alias "$fileNameNoExtension" -file "$fileName"
-
-        returnCode=$?
-        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_sslCertsAnchors) /usr/lib/jvm/java/bin/keytool -import -trustcacerts -noprompt -cacerts -storepass changeit -alias \"$fileNameNoExtension\" -file \"$fileName\" , result=$returnCode"
-        if [ $returnCode != 0 ]
-        then
-          exit $returnCode
-        fi  
-        
-      done
-
-      chmod u-w $JAVA_HOME/lib/security/cacerts
-      returnCode=$?
-      echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_sslCertsAnchors) chmod u-w $JAVA_HOME/lib/security/cacerts , result=$returnCode"
-      if [ $returnCode != 0 ]
-      then
-        exit $returnCode
-      fi  
-      
-      
+        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_sslCertsAnchors) Not running as root or tomcat user so not processing /opt/grouper/certs/anchors/"
+      fi      
     else
       echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_sslCertsAnchors) There are no anchor certs in /opt/grouper/certs/anchors/ to process"
     fi
@@ -499,37 +504,42 @@ setupFilesTomcat_sslCertsClient() {
 
     if [ -n "$(ls -A /opt/grouper/certs/client/*.pem 2>/dev/null)" ]; then
 
-      chmod u+w $JAVA_HOME/lib/security/cacerts
-      returnCode=$?
-      echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_sslCertsClient) chmod u+w $JAVA_HOME/lib/security/cacerts , result=$returnCode"
-      if [ $returnCode != 0 ]
-      then
-        exit $returnCode
-      fi  
-  
-      for fileName in /opt/grouper/certs/client/*.pem; do
-        [ -f "$fileName" ] || continue
+      if [ $EUID -eq 0 ] || [ "$GROUPER_TOMCAT_UID" = "$EUID"  ]; then
 
-        fileNameNoExtension=$(basename -- "$fileName")
-        fileNameNoExtension="${fileNameNoExtension%.*}"
-        /usr/lib/jvm/java/bin/keytool -import -noprompt -cacerts -storepass changeit -alias "$fileNameNoExtension" -file "$fileName"
-
+        chmod u+w $JAVA_HOME/lib/security/cacerts
         returnCode=$?
-        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_sslCertsClient) /usr/lib/jvm/java/bin/keytool -import -noprompt -cacerts -storepass changeit -alias \"$fileNameNoExtension\" -file \"$fileName\" , result=$returnCode"
+        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_sslCertsClient) chmod u+w $JAVA_HOME/lib/security/cacerts , result=$returnCode"
         if [ $returnCode != 0 ]
         then
           exit $returnCode
         fi  
-        
-      done
-
-      chmod u-w $JAVA_HOME/lib/security/cacerts
-      returnCode=$?
-      echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_sslCertsClient) chmod u-w $JAVA_HOME/lib/security/cacerts , result=$returnCode"
-      if [ $returnCode != 0 ]
-      then
-        exit $returnCode
-      fi  
+    
+        for fileName in /opt/grouper/certs/client/*.pem; do
+          [ -f "$fileName" ] || continue
+  
+          fileNameNoExtension=$(basename -- "$fileName")
+          fileNameNoExtension="${fileNameNoExtension%.*}"
+          /usr/lib/jvm/java/bin/keytool -import -noprompt -cacerts -storepass changeit -alias "$fileNameNoExtension" -file "$fileName"
+  
+          returnCode=$?
+          echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_sslCertsClient) /usr/lib/jvm/java/bin/keytool -import -noprompt -cacerts -storepass changeit -alias \"$fileNameNoExtension\" -file \"$fileName\" , result=$returnCode"
+          if [ $returnCode != 0 ]
+          then
+            exit $returnCode
+          fi  
+          
+        done
+  
+        chmod u-w $JAVA_HOME/lib/security/cacerts
+        returnCode=$?
+        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_sslCertsClient) chmod u-w $JAVA_HOME/lib/security/cacerts , result=$returnCode"
+        if [ $returnCode != 0 ]
+        then
+          exit $returnCode
+        fi  
+      else
+        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_sslCertsAnchors) Not running as root or tomcat user so not processing /opt/grouper/certs/client/"
+      fi      
       
     else
       echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_sslCertsClient) There are no client certs in /opt/grouper/certs/client/*.pem to process"
