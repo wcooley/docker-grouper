@@ -12,7 +12,7 @@ setupPipe() {
 
 setupPipe_logging() {
 
-  if [ "$GROUPER_USE_PIPES" == "true" ]; then
+  if [ "$GROUPER_USE_PIPES" == "true" ] && [ ! -e /tmp/logpipe ]; then
     # Make a "console" logging pipe that anyone can write too regardless of who owns the process.
     setupPipe /tmp/logpipe
     cat <> /tmp/logpipe &
@@ -21,14 +21,14 @@ setupPipe_logging() {
 
 # Make loggers pipes for the supervisord connected apps' console, so that we can prepend the streams.
 setupPipe_grouperLog() {
-  if [ "$GROUPER_USE_PIPES" == "true" ]; then
+  if [ "$GROUPER_USE_PIPES" == "true" ] && [ ! -e /tmp/loggrouper ]; then
     setupPipe /tmp/loggrouper
     (cat <> /tmp/loggrouper | awk -v ENV="$ENV" -v UT="$USERTOKEN" '{printf "grouper;console;%s;%s;%s\n", ENV, UT, $0; fflush()}' &>/tmp/logpipe) &
   fi
 }
 
 setupPipe_httpdLog() {
-  if [ "$GROUPER_USE_PIPES" == "true" ]; then
+  if [ "$GROUPER_USE_PIPES" == "true" ] && [ ! -e /tmp/loghttpd ]; then
     if [ "$GROUPER_RUN_APACHE" = "true" ]
       then
         setupPipe /tmp/loghttpd
@@ -38,7 +38,7 @@ setupPipe_httpdLog() {
 }
 
 setupPipe_shibdLog() {
-  if [ "$GROUPER_USE_PIPES" == "true" ]; then
+  if [ "$GROUPER_USE_PIPES" == "true" ] && [ ! -e /tmp/logshibd ]; then
     if [ "$GROUPER_RUN_SHIB_SP" = "true" ]
       then
         if [ "$GROUPER_SHIB_LOG_USE_PIPE" = "true" ]
@@ -51,7 +51,7 @@ setupPipe_shibdLog() {
 }
 
 setupPipe_tomcatLog() {
-  if [ "$GROUPER_USE_PIPES" == "true" ]; then
+  if [ "$GROUPER_USE_PIPES" == "true" ] && [ ! -e /tmp/logtomcat ]; then
     if [ "$GROUPER_RUN_TOMCAT" = "true" ] && [ "$GROUPER_LOG_TO_PIPE" = "true" ]
       then
         setupPipe /tmp/logtomcat
@@ -61,7 +61,7 @@ setupPipe_tomcatLog() {
 }
 
 setupPipe_tomcatAccessLog() {
-  if [ "$GROUPER_USE_PIPES" == "true" ]; then
+  if [ "$GROUPER_USE_PIPES" == "true" ] && [ ! -e /tmp/tomcat_access_log ]; then
     if [ "$GROUPER_TOMCAT_LOG_ACCESS" = "true" ]; then
     
       setupPipe /tmp/tomcat_access_log
@@ -71,7 +71,7 @@ setupPipe_tomcatAccessLog() {
 }
 
 setupPipe_supervisordLog() {
-  if [ "$GROUPER_USE_PIPES" == "true" ]; then
+  if [ "$GROUPER_USE_PIPES" == "true" ] && [ ! -e /tmp/logsuperd ]; then
     setupPipe /tmp/logsuperd
     (cat <> /tmp/logsuperd | awk -v ENV="$ENV" -v UT="$USERTOKEN" '{printf "supervisord;console;%s;%s;%s\n", ENV, UT, $0; fflush()}' &>/tmp/logpipe) &
   fi
