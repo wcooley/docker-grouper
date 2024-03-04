@@ -8,8 +8,8 @@ LABEL author="tier-packaging@internet2.edu <tier-packaging@internet2.edu>" \
 
 ARG GROUPER_CONTAINER_VERSION
 
-ENV GROUPER_VERSION=5.8.2 \
-    GROUPER_CONTAINER_VERSION=5.8.2 \
+ENV GROUPER_VERSION=5.8.3 \
+    GROUPER_CONTAINER_VERSION=5.8.3 \
     JAVA_HOME=/usr/lib/jvm/java-17-amazon-corretto \
     PATH=$PATH:$JAVA_HOME/bin \
     GROUPER_HOME=/opt/grouper/grouperWebapp/WEB-INF
