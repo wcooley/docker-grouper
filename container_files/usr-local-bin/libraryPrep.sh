@@ -354,10 +354,14 @@ prep_finishBegin() {
       export GROUPER_LOG_TO_HOST=false
     fi
     if [ -z "$GROUPER_LOG_TO_STDERR" ] ; then 
-      echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_analyzeOriginalFiles) export GROUPER_LOG_TO_STDERR=true"
-      export GROUPER_LOG_TO_STDERR=true
+      if [ "$GROUPER_LOG_TO_HOST" = "true" ]; then
+        echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_analyzeOriginalFiles) export GROUPER_LOG_TO_STDERR=false"
+        export GROUPER_LOG_TO_STDERR=false
+      else
+        echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_analyzeOriginalFiles) export GROUPER_LOG_TO_STDERR=true"
+        export GROUPER_LOG_TO_STDERR=true
+      fi
     fi
-    
     
 }
 
