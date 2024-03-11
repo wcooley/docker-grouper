@@ -207,27 +207,18 @@ prep_finishBegin() {
   
         # default the cert path to self signed and no chain file
         if [ -z "$GROUPER_SSL_CERT_FILE" ] ; then 
-          echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_SSL_CERT_FILE=/opt/grouper/certs/client/localhost.pem"
-          export GROUPER_SSL_CERT_FILE=/opt/grouper/certs/client/localhost.pem
+          echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_SSL_CERT_FILE=/opt/container_files/certs/client/localhost.pem"
+          export GROUPER_SSL_CERT_FILE=/opt/container_files/certs/client/localhost.pem
         fi
         if [ -z "$GROUPER_SSL_KEY_FILE" ] ; then 
-          echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_SSL_KEY_FILE=/opt/grouper/certs/keys/localhost.key"
-          export GROUPER_SSL_KEY_FILE=/opt/grouper/certs/keys/localhost.key
+          echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_SSL_KEY_FILE=/opt/container_files/certs/keys/localhost.key"
+          export GROUPER_SSL_KEY_FILE=/opt/container_files/certs/keys/localhost.key
         fi
         if [ -z "$GROUPER_SSL_CHAIN_FILE" ] && [ -z "$GROUPER_SSL_USE_CHAIN_FILE" ] ; then 
           echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_SSL_USE_CHAIN_FILE=false"
           export GROUPER_SSL_USE_CHAIN_FILE=false
         fi
       
-      fi
-      # default the cert path
-      if [ -z "$GROUPER_SSL_CERT_FILE" ] && [ -f /etc/pki/tls/certs/host-cert.pem ] ; then 
-        echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_SSL_CERT_FILE=/etc/pki/tls/certs/host-cert.pem"
-        export GROUPER_SSL_CERT_FILE=/etc/pki/tls/certs/host-cert.pem
-      fi
-      if [ -z "$GROUPER_SSL_KEY_FILE" ] && [ -f /etc/pki/tls/private/host-key.pem ] ; then 
-        echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_SSL_KEY_FILE=/etc/pki/tls/private/host-key.pem"
-        export GROUPER_SSL_KEY_FILE=/etc/pki/tls/private/host-key.pem
       fi
       if [ -z "$GROUPER_SSL_CHAIN_FILE" ] ; then 
       
@@ -353,6 +344,11 @@ prep_finishBegin() {
       echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_analyzeOriginalFiles) export GROUPER_LOG_TO_HOST=false"
       export GROUPER_LOG_TO_HOST=false
     fi
+    if [ -z "$GROUPER_LOG_TO_STDERR" ] ; then 
+      echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_analyzeOriginalFiles) export GROUPER_LOG_TO_STDERR=true"
+      export GROUPER_LOG_TO_STDERR=true
+    fi
+    
     
 }
 

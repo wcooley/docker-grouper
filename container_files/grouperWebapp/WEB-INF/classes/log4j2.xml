@@ -111,82 +111,102 @@
         <Root level="error">
             __LOGPIPESTART__<AppenderRef ref="logpipe_grouper_error"/>__LOGPIPEEND__
             __FILESTART__<AppenderRef ref="file_grouper_error"/>__FILEEND__
+            __STDERRSTART__<AppenderRef ref="stderr"/>__STDERREND__
         </Root>
         <Logger name="org.apache.catalina" level="info" additivity="false">
             __LOGPIPESTART__<AppenderRef ref="logpipe_catalina" />__LOGPIPEEND__
             __FILESTART__<AppenderRef ref="file_catalina"/>__FILEEND__
+            __STDERRSTART__<AppenderRef ref="stderr"/>__STDERREND__
         </Logger>
         <Logger name="edu.internet2.middleware" level="warn" additivity="false">
             __LOGPIPESTART__<AppenderRef ref="logpipe_grouper_error"/>__LOGPIPEEND__
             __FILESTART__<AppenderRef ref="file_grouper_error"/>__FILEEND__
+            __STDERRSTART__<AppenderRef ref="stderr"/>__STDERREND__
         </Logger>
         <Logger name="edu.internet2.middleware.grouper.app.loader.GrouperLoaderLog" level="debug" additivity="false">
             __LOGPIPESTART__<AppenderRef ref="logpipe_grouper_daemon"/>__LOGPIPEEND__
             __FILESTART__<AppenderRef ref="file_grouper_daemon"/>__FILEEND__
+            __STDERRSTART__<AppenderRef ref="stderr"/>__STDERREND__
         </Logger>
         <Logger name="edu.internet2.middleware.grouper.app.provisioning.GrouperProvisioningObjectLog" level="debug" additivity="false">
             __LOGPIPESTART__<AppenderRef ref="logpipe_grouper_provisioning"/>__LOGPIPEEND__
             __FILESTART__<AppenderRef ref="file_grouper_provisioning"/>__FILEEND__
+            __STDERRSTART__<AppenderRef ref="stderr"/>__STDERREND__
         </Logger>
         <Logger name="edu.internet2.middleware.grouper.app.syncToGrouper.SyncToGrouperFromSqlDaemon" level="debug" additivity="false">
             __LOGPIPESTART__<AppenderRef ref="logpipe_grouper_error"/>__LOGPIPEEND__
             __FILESTART__<AppenderRef ref="file_grouper_error"/>__FILEEND__
+            __STDERRSTART__<AppenderRef ref="stderr"/>__STDERREND__
         </Logger>
         <Logger name="edu.internet2.middleware.grouper.app.provisioning.GrouperProvisioningLogCommands" level="debug" additivity="false">
             __LOGPIPESTART__<AppenderRef ref="logpipe_grouper_error"/>__LOGPIPEEND__
             __FILESTART__<AppenderRef ref="file_grouper_error"/>__FILEEND__
+            __STDERRSTART__<AppenderRef ref="stderr"/>__STDERREND__
         </Logger>
         <Logger name="edu.internet2.middleware.grouper.stem.StemViewPrivilegeEsbListener" level="debug" additivity="false">
             __LOGPIPESTART__<AppenderRef ref="logpipe_grouper_error"/>__LOGPIPEEND__
             __FILESTART__<AppenderRef ref="file_grouper_error"/>__FILEEND__
+            __STDERRSTART__<AppenderRef ref="stderr"/>__STDERREND__
         </Logger>
         <Logger name="edu.internet2.middleware.grouper.stem.StemViewPrivilegeFullDaemonLogic" level="debug" additivity="false">
             __LOGPIPESTART__<AppenderRef ref="logpipe_grouper_error"/>__LOGPIPEEND__
             __FILESTART__<AppenderRef ref="file_grouper_error"/>__FILEEND__
+            __STDERRSTART__<AppenderRef ref="stderr"/>__STDERREND__
         </Logger>
         <Logger name="org.apache.tools.ant" level="warn" additivity="false">
             __LOGPIPESTART__<AppenderRef ref="logpipe_grouper_error"/>__LOGPIPEEND__
             __FILESTART__<AppenderRef ref="file_grouper_error"/>__FILEEND__
+            __STDERRSTART__<AppenderRef ref="stderr"/>__STDERREND__
         </Logger>
         <Logger name="edu.internet2.middleware.grouper.util.PerformanceLogger" level="info" additivity="false">
             __LOGPIPESTART__<AppenderRef ref="logpipe_grouper_error"/>__LOGPIPEEND__
             __FILESTART__<AppenderRef ref="file_grouper_error"/>__FILEEND__
+            __STDERRSTART__<AppenderRef ref="stderr"/>__STDERREND__
         </Logger>
         <Logger name="edu.internet2.middleware.grouper.ws.util.GrouperWsLog" level="off" additivity="false">
             __LOGPIPESTART__<AppenderRef ref="logpipe_grouper_ws"/>__LOGPIPEEND__
             __FILESTART__<AppenderRef ref="file_grouper_ws"/>__FILEEND__
+            __STDERRSTART__<AppenderRef ref="stderr"/>__STDERREND__
         </Logger>
         <Logger name="edu.internet2.middleware.grouper.ws.util.GrouperWsLongRunningLog" level="off" additivity="false">
             __LOGPIPESTART__<AppenderRef ref="logpipe_grouper_ws_longRunning"/>__LOGPIPEEND__
             __FILESTART__<AppenderRef ref="file_grouper_ws_longRunning"/>__FILEEND__
+            __STDERRSTART__<AppenderRef ref="stderr"/>__STDERREND__
         </Logger>
         <Logger name="edu.internet2.middleware.grouper.ui.customUi.CustomUiEngine" level="debug" additivity="false">
             __LOGPIPESTART__<AppenderRef ref="logpipe_grouper_error"/>__LOGPIPEEND__
             __FILESTART__<AppenderRef ref="file_grouper_error"/>__FILEEND__
+            __STDERRSTART__<AppenderRef ref="stderr"/>__STDERREND__
         </Logger>
         <Logger name="edu.upenn.isc.pennGrouper.o365" level="debug" additivity="false">
             __LOGPIPESTART__<AppenderRef ref="logpipe_grouper_error"/>__LOGPIPEEND__
             __FILESTART__<AppenderRef ref="file_grouper_error"/>__FILEEND__
+            __STDERRSTART__<AppenderRef ref="stderr"/>__STDERREND__
         </Logger>
         <Logger name="edu.internet2.middleware.grouper.app.remedy.GrouperRemedyLog" level="debug" additivity="false">
             __LOGPIPESTART__<AppenderRef ref="logpipe_grouper_provisioning"/>__LOGPIPEEND__
             __FILESTART__<AppenderRef ref="file_grouper_provisioning"/>__FILEEND__
+            __STDERRSTART__<AppenderRef ref="stderr"/>__STDERREND__
         </Logger>
         <Logger name="edu.internet2.middleware.grouper.app.remedy.digitalMarketplace.GrouperDigitalMarketplaceLog" level="debug" additivity="false">
             __LOGPIPESTART__<AppenderRef ref="logpipe_grouper_provisioning"/>__LOGPIPEEND__
             __FILESTART__<AppenderRef ref="file_grouper_provisioning"/>__FILEEND__
+            __STDERRSTART__<AppenderRef ref="stderr"/>__STDERREND__
         </Logger>
         <Logger name="edu.internet2.middleware.grouperBox.GrouperBoxLog" level="debug" additivity="false">
             __LOGPIPESTART__<AppenderRef ref="logpipe_grouper_provisioning"/>__LOGPIPEEND__
             __FILESTART__<AppenderRef ref="file_grouper_provisioning"/>__FILEEND__
+            __STDERRSTART__<AppenderRef ref="stderr"/>__STDERREND__
         </Logger>
         <Logger name="edu.internet2.middleware.grouperClient.jdbc.tableSync.GcTableSyncLog" level="debug" additivity="false">
             __LOGPIPESTART__<AppenderRef ref="logpipe_grouper_error"/>__LOGPIPEEND__
             __FILESTART__<AppenderRef ref="file_grouper_error"/>__FILEEND__
+            __STDERRSTART__<AppenderRef ref="stderr"/>__STDERREND__
         </Logger>
         <Logger name="edu.internet2.middleware.grouper.app.zoom" level="debug" additivity="false">
             __LOGPIPESTART__<AppenderRef ref="logpipe_grouper_provisioning"/>__LOGPIPEEND__
             __FILESTART__<AppenderRef ref="file_grouper_provisioning"/>__FILEEND__
+            __STDERRSTART__<AppenderRef ref="stderr"/>__STDERREND__
         </Logger>
 
         <!--MORELOGGERS-->
