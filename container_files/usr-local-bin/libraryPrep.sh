@@ -220,6 +220,15 @@ prep_finishBegin() {
         fi
       
       fi
+      # default the cert path
+      if [ -z "$GROUPER_SSL_CERT_FILE" ] && [ -f /etc/pki/tls/certs/host-cert.pem ] ; then 
+        echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_SSL_CERT_FILE=/etc/pki/tls/certs/host-cert.pem"
+        export GROUPER_SSL_CERT_FILE=/etc/pki/tls/certs/host-cert.pem
+      fi
+      if [ -z "$GROUPER_SSL_KEY_FILE" ] && [ -f /etc/pki/tls/private/host-key.pem ] ; then 
+        echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_SSL_KEY_FILE=/etc/pki/tls/private/host-key.pem"
+        export GROUPER_SSL_KEY_FILE=/etc/pki/tls/private/host-key.pem
+      fi
       if [ -z "$GROUPER_SSL_CHAIN_FILE" ] ; then 
       
         if [ -f /etc/pki/tls/certs/cachain.pem ]; then
