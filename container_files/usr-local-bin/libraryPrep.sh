@@ -76,35 +76,6 @@ prep_ui() {
     fi
 }
 
-prep_runUi() {
-  if [ -z "$GROUPER_PROXY_PASS" ]
-    then
-      if [ "$GROUPER_UI" == 'true' ]
-        then
-          echo "grouperContainer; INFO: (libraryPrep.sh-prep_runUi) export GROUPER_PROXY_PASS="    
-          export GROUPER_PROXY_PASS=
-        else
-          echo "grouperContainer; INFO: (libraryPrep.sh-prep_runUi) export GROUPER_PROXY_PASS=#"    
-          export GROUPER_PROXY_PASS=#
-      fi
-    
-  fi
-}
-prep_runWs() {
-  if [ -z "$GROUPERWS_PROXY_PASS" ]
-    then
-      if [ "$GROUPER_WS" == 'true' ]
-        then
-          echo "grouperContainer; INFO: (libraryPrep.sh-prep_runWs) export GROUPER_PROXY_PASS="    
-          export GROUPERWS_PROXY_PASS=
-        else
-          echo "grouperContainer; INFO: (libraryPrep.sh-prep_runWs) export GROUPER_PROXY_PASS=#"    
-          export GROUPERWS_PROXY_PASS=#
-      fi
-    
-  fi
-}
-
 prep_ws() {
 
     if [ -z "$GROUPER_WS" ]; then 
@@ -260,12 +231,6 @@ prep_finishBegin() {
         fi
       
       fi
-      if [ -z "$GROUPER_SSL_USE_STAPLING" ] ; then 
-
-        echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_SSL_USE_STAPLING=true"
-        export GROUPER_SSL_USE_STAPLING=true
-      
-      fi
       
     fi
     if [ -z "$GROUPER_WEBCLIENT_IS_SSL" ] ; then 
@@ -401,15 +366,8 @@ prep_finishEnd() {
       export GROUPER_TOMCAT_REMOTE_IP_VALVE=false
     fi
     if [ -z "$GROUPER_REDIRECT_FROM_SLASH_TO_GROUPER" ]; then 
-      if [ "$GROUPER_PROXY_PASS" = "#" ]; then 
-    
-        echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishEnd) export GROUPER_REDIRECT_FROM_SLASH_TO_GROUPER=false"
-        export GROUPER_REDIRECT_FROM_SLASH_TO_GROUPER=false
-      else
-        echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishEnd) export GROUPER_REDIRECT_FROM_SLASH_TO_GROUPER=true"
-        export GROUPER_REDIRECT_FROM_SLASH_TO_GROUPER=true
-      
-      fi
+      echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishEnd) export GROUPER_REDIRECT_FROM_SLASH_TO_GROUPER=true"
+      export GROUPER_REDIRECT_FROM_SLASH_TO_GROUPER=true
     
     fi
 
@@ -430,9 +388,6 @@ prep_finish() {
     prep_finishBegin
 
     prepOnly    
-
-    prep_runUi
-    prep_runWs
 
     prep_finishEnd
     
@@ -456,8 +411,6 @@ prep_unsetAll() {
   unset -f prep_initDeprecatedEnvVars
   unset -f prep_openshift
   unset -f prep_quickstart
-  unset -f prep_runUi
-  unset -f prep_runWs
   unset -f prep_unsetAll
   unset -f prep_unsetAllAndFromFiles
   unset -f prep_ui
@@ -474,8 +427,6 @@ prep_exportAll() {
   export -f prep_initDeprecatedEnvVars
   export -f prep_openshift
   export -f prep_quickstart
-  export -f prep_runUi
-  export -f prep_runWs
   export -f prep_unsetAll
   export -f prep_unsetAllAndFromFiles
   export -f prep_ui

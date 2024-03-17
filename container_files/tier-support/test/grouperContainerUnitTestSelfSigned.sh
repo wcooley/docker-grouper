@@ -22,9 +22,7 @@ testContainerSelfSigned() {
   assertEnvVar GROUPER_SSL_USE_CHAIN_FILE "false"
   assertEnvVar GROUPER_SSL_CERT_FILE "/etc/pki/tls/certs/localhost.crt"
   assertEnvVar GROUPER_SSL_KEY_FILE "/etc/pki/tls/private/localhost.key"
-  assertEnvVar GROUPER_SSL_USE_STAPLING "true"
 
-  assertEnvVar GROUPERWS_PROXY_PASS "#"
   assertEnvVar GROUPERWS_URL_CONTEXT "grouper-ws"
   assertEnvVar GROUPER_CHOWN_DIRS "true"
   assertEnvVar GROUPER_CONTAINER_VERSION "$containerVersion"
@@ -34,7 +32,6 @@ testContainerSelfSigned() {
   assertEnvVar GROUPER_HOME "/opt/grouper/grouperWebapp/WEB-INF"
   assertEnvVar GROUPER_LOG_PREFIX "grouper-ui"
   assertEnvVar GROUPER_MAX_MEMORY "1500m"
-  assertEnvVar GROUPER_PROXY_PASS ""
   assertEnvVar GROUPER_RUN_PROCESSES_AS_USERS "true"
   assertEnvVar GROUPER_RUN_TOMCAT "true"
   assertEnvVar GROUPER_SELF_SIGNED_CERT "true"

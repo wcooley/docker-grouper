@@ -24,7 +24,6 @@ testContainerUiNoSsl() {
   assertFileNotContains /opt/tomcat/conf/server.xml "maxHeaderCount"
 
   assertEnvVar GROUPER_TOMCAT_LOG_ACCESS "true"
-  assertEnvVar GROUPERWS_PROXY_PASS "#"
   assertEnvVar GROUPERWS_URL_CONTEXT "grouper-ws"
   assertEnvVar GROUPER_CHOWN_DIRS "true"
   assertEnvVar GROUPER_CONTAINER_VERSION "$containerVersion"
@@ -34,7 +33,6 @@ testContainerUiNoSsl() {
   assertEnvVar GROUPER_HOME "/opt/grouper/grouperWebapp/WEB-INF"
   assertEnvVar GROUPER_LOG_PREFIX "grouper-ui"
   assertEnvVar GROUPER_MAX_MEMORY "1500m"
-  assertEnvVar GROUPER_PROXY_PASS ""
   assertEnvVar GROUPER_RUN_PROCESSES_AS_USERS "true"
   assertEnvVar GROUPER_RUN_TOMCAT "true"
   assertEnvVar GROUPER_TOMCAT_CONTEXT "grouper"

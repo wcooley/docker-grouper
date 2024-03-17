@@ -33,7 +33,6 @@ testContainerUi() {
   assertEnvVar GROUPER_SSL_CERT_FILE "/etc/pki/tls/certs/host-cert.pem"
   assertEnvVar GROUPER_SSL_KEY_FILE "/etc/pki/tls/private/host-key.pem"
   assertEnvVarNot GROUPER_SSL_CHAIN_FILE "/etc/pki/tls/certs/cachain.pem"
-  assertEnvVar GROUPER_SSL_USE_STAPLING "true"
 
   assertFileContains /opt/tomcat/conf/Catalina/localhost/grouper.xml 'cookies="true"'
 
@@ -52,7 +51,6 @@ testContainerUi() {
   assertFileContains /opt/tomcat/conf/server.xml "tomcatAuthentication"
 
   assertEnvVar GROUPER_TOMCAT_LOG_ACCESS "false"
-  assertEnvVar GROUPERWS_PROXY_PASS "#"
   assertEnvVar GROUPERWS_URL_CONTEXT "grouper-ws"
   assertEnvVar GROUPER_CHOWN_DIRS "true"
   assertEnvVar GROUPER_CONTAINER_VERSION "$containerVersion"
@@ -62,7 +60,6 @@ testContainerUi() {
   assertEnvVar GROUPER_HOME "/opt/grouper/grouperWebapp/WEB-INF"
   assertEnvVar GROUPER_LOG_PREFIX "grouper-ui"
   assertEnvVar GROUPER_MAX_MEMORY "1500m"
-  assertEnvVar GROUPER_PROXY_PASS ""
   assertEnvVar GROUPER_RUN_PROCESSES_AS_USERS "true"
   assertEnvVar GROUPER_RUN_TOMCAT "true"
   assertEnvVar GROUPER_TOMCAT_CONTEXT "grouper"
