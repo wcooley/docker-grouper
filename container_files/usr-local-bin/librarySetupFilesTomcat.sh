@@ -44,13 +44,6 @@ setupFilesTomcat_rewriteValve() {
   
   fi
 }
-    
-
-        
-
-        <!---->
-
-
 
 setupFilesTomcat_remoteIpValve() {
 
