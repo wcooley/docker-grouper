@@ -437,6 +437,10 @@ prep_finishBegin() {
       echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_analyzeOriginalFiles) export GROUPER_LOG_TO_HOST=false"
       export GROUPER_LOG_TO_HOST=false
     fi
+    if [ -z "$GROUPER_LOG_TO_STDERR" ] ; then 
+      echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_analyzeOriginalFiles) export GROUPER_LOG_TO_STDERR=false"
+      export GROUPER_LOG_TO_STDERR=false
+    fi
     
     if [ -z "$GROUPER_LOG_TO_PIPE" ] ; then 
       if [ "$GROUPER_LOG_TO_HOST" = "true" ]; then
@@ -490,13 +494,13 @@ prep_finishEnd() {
       export GROUPER_TOMCAT_REMOTE_IP_VALVE=false
     fi
     if [ -z "$GROUPER_REDIRECT_FROM_SLASH_TO_GROUPER" ]; then 
-      if [ "$GROUPER_PROXY_PASS" = "#" ]; then 
+      if [ "$GROUPER_UI" == 'true' ]
     
-        echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishEnd) export GROUPER_REDIRECT_FROM_SLASH_TO_GROUPER=false"
-        export GROUPER_REDIRECT_FROM_SLASH_TO_GROUPER=false
-      else
         echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishEnd) export GROUPER_REDIRECT_FROM_SLASH_TO_GROUPER=true"
         export GROUPER_REDIRECT_FROM_SLASH_TO_GROUPER=true
+      else
+        echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishEnd) export GROUPER_REDIRECT_FROM_SLASH_TO_GROUPER=false"
+        export GROUPER_REDIRECT_FROM_SLASH_TO_GROUPER=false
       
       fi
     

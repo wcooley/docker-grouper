@@ -21,23 +21,26 @@ setupFilesTomcat() {
 
 setupFilesTomcat_rewriteValve() {
 
-  if [ ! -f /opt/tomcat/conf/Catalina/localhost/rewrite.config ]; then 
+  if [ "$GROUPER_REDIRECT_FROM_SLASH_TO_GROUPER" ] ; then 
     if [ "$GROUPER_UI" = "true" ]; then
-      mv /opt/tomcat/conf/Catalina/localhost/rewrite.config.grouper /opt/tomcat/conf/Catalina/localhost/rewrite.config
-      returnCode=$?
-      echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_rewriteValve) mv /opt/tomcat/conf/Catalina/localhost/rewrite.config.grouper /opt/tomcat/conf/Catalina/localhost/rewrite.config, result: $returnCode"
-      if [ $returnCode != 0 ]; then exit $returnCode; fi
+      if [ ! -f /opt/tomcat/conf/Catalina/localhost/rewrite.config ] ; then
+        mv /opt/tomcat/conf/Catalina/localhost/rewrite.config.grouper /opt/tomcat/conf/Catalina/localhost/rewrite.config
+        returnCode=$?
+        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_rewriteValve) mv /opt/tomcat/conf/Catalina/localhost/rewrite.config.grouper /opt/tomcat/conf/Catalina/localhost/rewrite.config, result: $returnCode"
+        if [ $returnCode != 0 ]; then exit $returnCode; fi
       
-      sed -i "s|__CONTEXT__|$GROUPER_TOMCAT_CONTEXT|g" /opt/tomcat/conf/Catalina/localhost/rewrite.config 
+        sed -i "s|__CONTEXT__|$GROUPER_TOMCAT_CONTEXT|g" /opt/tomcat/conf/Catalina/localhost/rewrite.config 
+        returnCode=$?
+        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_rewriteValve) sed -i \"s|__CONTEXT__|$GROUPER_TOMCAT_CONTEXT|g\" /opt/tomcat/conf/Catalina/localhost/rewrite.config, result: $returnCode"
+        if [ $returnCode != 0 ]; then exit $returnCode; fi
+
+      fi      
+
+      sed -i 's|<!--GROUPER_TOMCAT_REWRITE_VALVE-->|<Valve className="org.apache.catalina.valves.rewrite.RewriteValve" />|g' /opt/tomcat/conf/server.xml 
       returnCode=$?
-      echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_rewriteValve) sed -i \"s|__CONTEXT__|$GROUPER_TOMCAT_CONTEXT|g\" /opt/tomcat/conf/Catalina/localhost/rewrite.config, result: $returnCode"
+      echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_rewriteValve) Apply remote IP valve: sed -i 's|<!--GROUPER_TOMCAT_REWRITE_VALVE-->|<Valve className=\"org.apache.catalina.valves.rewrite.RewriteValve\" />|g' /opt/tomcat/conf/server.xml, result: $returnCode"
       if [ $returnCode != 0 ]; then exit $returnCode; fi
-      
-    else
-      touch /opt/tomcat/conf/Catalina/localhost/rewrite.config
-      returnCode=$?
-      echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_rewriteValve) touch /opt/tomcat/conf/Catalina/localhost/rewrite.config, result: $returnCode"
-      if [ $returnCode != 0 ]; then exit $returnCode; fi
+
     fi
   
   fi

@@ -173,7 +173,7 @@
 
         <!--GROUPER_TOMCAT_REMOTE_IP_VALVE-->
 
-        <Valve className="org.apache.catalina.valves.rewrite.RewriteValve" />
+        <!--GROUPER_TOMCAT_REWRITE_VALVE-->
 
         <!-- Access log processes all example.
              Documentation at: /docs/config/valve.html

@@ -89,6 +89,27 @@ setupFiles_localLogging() {
     if [ $returnCode != 0 ]; then exit $returnCode; fi
   fi
 
+  if [ "$GROUPER_LOG_TO_STDERR" = "true" ]; then
+    sed -i "s|__STDERRSTART__||g" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml
+    returnCode=$?
+    echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_localLogging) sed -i \"s|__STDERRSTART__||g\" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml, result: $?"
+    if [ $returnCode != 0 ]; then exit $returnCode; fi
+
+    sed -i "s|__STDERREND__||g" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml
+    returnCode=$?
+    echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_localLogging) sed -i \"s|__STDERREND__||g\" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml, result: $?"
+    if [ $returnCode != 0 ]; then exit $returnCode; fi
+  else
+    sed -i "s|__STDERRSTART__|<!--|g" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml
+    returnCode=$?
+    echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_localLogging) sed -i \"s|__STDERRSTART__|<!--|g\" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml, result: $?"
+    if [ $returnCode != 0 ]; then exit $returnCode; fi
+
+    sed -i "s|__STDERREND__|-->|g" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml
+    returnCode=$?
+    echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_localLogging) sed -i \"s|__STDERREND__|-->|g\" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml, result: $?"
+    if [ $returnCode != 0 ]; then exit $returnCode; fi
+  fi
   if [ "$GROUPER_LOG_TO_HOST" = "true" ]; then
     sed -i "s|__FILESTART__||g" /opt/grouper/grouperWebapp/WEB-INF/classes/log4j2.xml
     returnCode=$?
