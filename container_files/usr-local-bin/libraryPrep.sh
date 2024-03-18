@@ -494,7 +494,7 @@ prep_finishEnd() {
       export GROUPER_TOMCAT_REMOTE_IP_VALVE=false
     fi
     if [ -z "$GROUPER_REDIRECT_FROM_SLASH_TO_GROUPER" ]; then 
-      if [ "$GROUPER_UI" == 'true' ]
+      if [ "$GROUPER_UI" == 'true' ]; then
     
         echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishEnd) export GROUPER_REDIRECT_FROM_SLASH_TO_GROUPER=true"
         export GROUPER_REDIRECT_FROM_SLASH_TO_GROUPER=true
