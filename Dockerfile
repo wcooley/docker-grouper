@@ -1,4 +1,4 @@
-FROM i2incommon/shibboleth_sp:3.4.1_05152024_rocky9_multiarch
+FROM i2incommon/shibboleth_sp:3.4.1_03082024_rocky8_multiarch
 
 LABEL author="tier-packaging@internet2.edu <tier-packaging@internet2.edu>" \
       Vendor="TIER" \
