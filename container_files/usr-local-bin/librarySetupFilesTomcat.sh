@@ -5,6 +5,7 @@ setupFilesTomcat() {
   setupFilesTomcat_remoteCidrValve
   setupFilesTomcat_remoteIpValve
   setupFilesTomcat_rewriteValve
+  setupFilesTomcat_authnValve
   setupFilesTomcat_turnOnAjp
   setupFilesTomcat_supervisor
   setupFilesTomcat_turnOnHttp
@@ -19,9 +20,35 @@ setupFilesTomcat() {
   setupFilesTomcat_sslCertsClient
 }
 
+setupFilesTomcat_authnValve() {
+
+  if [ "$GROUPER_SETUP_AUTHN_VALVE" = "true" ] ; then 
+
+    if [ -f /opt/tomcat/lib/someOtherValve.jar ] ; then 
+    
+      if [ $(grep -c 'SomeOtherValve' /opt/tomcat/conf/server.xml) -eq 0 ]; then
+      
+        sed -i 's|</Host>|<Valve className="SomeOtherValve" /></Host>|g' /opt/tomcat/conf/server.xml
+        returnCode=$?
+        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_authnValve) Apply valve: sed -i 's|</Host>|<Valve className="SomeOtherValve" /></Host>|g' /opt/tomcat/conf/server.xml, result: $returnCode"
+        if [ $returnCode != 0 ]; then exit $returnCode; fi
+      
+      else
+        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_authnValve) Not setting up authn valve SomeOtherValve is in /opt/tomcat/conf/server.xml"
+      fi
+      
+    else
+      echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_authnValve) Not setting up authn valve since this file does not exist: /opt/tomcat/lib/someOtherValve.jar"
+    fi
+
+  else
+    echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_authnValve) Not setting up authn valve since GROUPER_SETUP_AUTHN_VALVE is not true"
+  fi
+}
+    
 setupFilesTomcat_rewriteValve() {
 
-  if [ "$GROUPER_REDIRECT_FROM_SLASH_TO_GROUPER" ] ; then 
+  if [ "$GROUPER_REDIRECT_FROM_SLASH_TO_GROUPER" = "true" ] ; then 
     if [ "$GROUPER_UI" = "true" ]; then
       if [ ! -f /opt/tomcat/conf/Catalina/localhost/rewrite.config ] ; then
         mv /opt/tomcat/conf/Catalina/localhost/rewrite.config.grouper /opt/tomcat/conf/Catalina/localhost/rewrite.config
@@ -321,11 +348,13 @@ setupFilesTomcat_ports() {
       fi
       
       if [ "$GROUPER_TOMCAT_MAX_HEADER_COUNT" != "-1" ]; then 
-        # add in maxHeaderCount since new chrome sends too many headers
-        sed -i "s|port=\"$GROUPER_TOMCAT_AJP_PORT\"|port=\"$GROUPER_TOMCAT_AJP_PORT\" maxHeaderCount=\"$GROUPER_TOMCAT_MAX_HEADER_COUNT\" |g" /opt/tomcat/conf/server.xml
-        returnCode=$?
-        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_ports) update server.xml add maxHeaderCount: sed -i \"s|port=\"$GROUPER_TOMCAT_AJP_PORT\"|port=\"$GROUPER_TOMCAT_AJP_PORT\" maxHeaderCount=\"$GROUPER_TOMCAT_MAX_HEADER_COUNT\" |g\" /opt/tomcat/conf/server.xml, result: $returnCode"
-        if [ $returnCode != 0 ]; then exit $returnCode; fi
+        if [ $(grep -c 'maxHeaderCount' /opt/tomcat/conf/server.xml) -eq 0 ]; then
+          # add in maxHeaderCount since new chrome sends too many headers
+          sed -i "s|port=\"$GROUPER_TOMCAT_AJP_PORT\"|port=\"$GROUPER_TOMCAT_AJP_PORT\" maxHeaderCount=\"$GROUPER_TOMCAT_MAX_HEADER_COUNT\" |g" /opt/tomcat/conf/server.xml
+          returnCode=$?
+          echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_ports) update server.xml add maxHeaderCount: sed -i \"s|port=\"$GROUPER_TOMCAT_AJP_PORT\"|port=\"$GROUPER_TOMCAT_AJP_PORT\" maxHeaderCount=\"$GROUPER_TOMCAT_MAX_HEADER_COUNT\" |g\" /opt/tomcat/conf/server.xml, result: $returnCode"
+          if [ $returnCode != 0 ]; then exit $returnCode; fi
+        fi
       fi
   
       if [ "$GROUPER_TOMCAT_SHUTDOWN_PORT" != "8005" ]; then 
@@ -609,6 +638,7 @@ setupFilesTomcat_unsetAll() {
 
   unset -f setupFilesTomcat
   unset -f setupFilesTomcat_authn
+  unset -f setupFilesTomcat_authnValve
   unset -f setupFilesTomcat_context
   unset -f setupFilesTomcat_ports
   unset -f setupFilesTomcat_remoteCidrValve
@@ -632,6 +662,7 @@ setupFilesTomcat_exportAll() {
 
   export -f setupFilesTomcat
   export -f setupFilesTomcat_authn
+  export -f setupFilesTomcat_authnValve
   export -f setupFilesTomcat_context
   export -f setupFilesTomcat_ports
   export -f setupFilesTomcat_remoteCidrValve

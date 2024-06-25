@@ -9,7 +9,7 @@ LABEL author="tier-packaging@internet2.edu <tier-packaging@internet2.edu>" \
 ARG GROUPER_CONTAINER_VERSION
 
 ENV GROUPER_VERSION=4.13.0 \
-    GROUPER_CONTAINER_VERSION=4.13.0 \
+    GROUPER_CONTAINER_VERSION=4.13.1 \
     JAVA_HOME=/usr/lib/jvm/java-17-amazon-corretto \
     PATH=$PATH:$JAVA_HOME/bin \
     GROUPER_HOME=/opt/grouper/grouperWebapp/WEB-INF
