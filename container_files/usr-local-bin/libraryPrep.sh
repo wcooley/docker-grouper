@@ -385,6 +385,10 @@ prep_finishBegin() {
       echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_CHOWN_DIRS=true"
       export GROUPER_CHOWN_DIRS=true
     fi
+    if [ -z "$GROUPER_SETUP_AUTHN_VALVE" ]; then 
+      echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_SETUP_AUTHN_VALVE=true"
+      export GROUPER_SETUP_AUTHN_VALVE=true
+    fi
     if [ -z "$GROUPER_TOMCAT_HTTP_PORT" ]; then 
       echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_TOMCAT_HTTP_PORT=8080"
       export GROUPER_TOMCAT_HTTP_PORT=8080
