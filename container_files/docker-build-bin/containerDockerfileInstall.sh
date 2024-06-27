@@ -160,6 +160,16 @@ returnCode=$?
 echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) mv /opt/tier-support/log4j_fix/webinfLib/* /opt/grouper/grouperWebapp/WEB-INF/lib/, result: $returnCode"
 if [ $returnCode != 0 ]; then exit $returnCode; fi
 
+mkdir /opt/grouper/grouperWebapp/WEB-INF/libPlaywright
+returnCode=$?
+echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) mkdir /opt/grouper/grouperWebapp/WEB-INF/libPlaywright, result: $returnCode"
+if [ $returnCode != 0 ]; then exit $returnCode; fi
+
+mv /opt/grouper/grouperWebapp/WEB-INF/lib/playwright* /opt/grouper/grouperWebapp/WEB-INF/libPlaywright
+returnCode=$?
+echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) mv /opt/grouper/grouperWebapp/WEB-INF/lib/playwright* /opt/grouper/grouperWebapp/WEB-INF/libPlaywright, result: $returnCode"
+if [ $returnCode != 0 ]; then exit $returnCode; fi
+
 touch /opt/grouper/grouperEnv.sh
 returnCode=$?
 echo "grouperDockerfile; INFO: (containerDockerfileInstall.sh) touch /opt/grouper/grouperEnv.sh, result: $returnCode"
