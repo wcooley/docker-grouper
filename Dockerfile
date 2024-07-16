@@ -52,6 +52,6 @@ WORKDIR /opt/grouper/grouperWebapp/WEB-INF/
 EXPOSE 80 443 8080 8443
 HEALTHCHECK NONE
 
-#ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
-ENTRYPOINT ["ping"]
-CMD ["google.com"]
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+#ENTRYPOINT ["ping"]
+#CMD ["google.com"]
