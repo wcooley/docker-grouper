@@ -1,4 +1,5 @@
 FROM i2incommon/shibboleth_sp:3.4.1_03082024_rocky8_multiarch
+#FROM i2incommon/shibboleth_sp:3.4.1_05152024_rocky9_multiarch
 
 LABEL author="tier-packaging@internet2.edu <tier-packaging@internet2.edu>" \
       Vendor="TIER" \
@@ -8,8 +9,8 @@ LABEL author="tier-packaging@internet2.edu <tier-packaging@internet2.edu>" \
 
 ARG GROUPER_CONTAINER_VERSION
 
-ENV GROUPER_VERSION=4.14.0 \
-    GROUPER_CONTAINER_VERSION=4.14.0 \
+ENV GROUPER_VERSION=4.14.1 \
+    GROUPER_CONTAINER_VERSION=4.14.1 \
     JAVA_HOME=/usr/lib/jvm/java-17-amazon-corretto \
     PATH=$PATH:$JAVA_HOME/bin \
     GROUPER_HOME=/opt/grouper/grouperWebapp/WEB-INF
@@ -51,6 +52,6 @@ WORKDIR /opt/grouper/grouperWebapp/WEB-INF/
 EXPOSE 80 443 8080 8443
 HEALTHCHECK NONE
 
-ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
-#ENTRYPOINT ["ping"]
-#CMD ["google.com"]
+#ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+ENTRYPOINT ["ping"]
+CMD ["google.com"]
