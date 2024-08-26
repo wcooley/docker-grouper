@@ -14,7 +14,7 @@ returnCode=$?
 echo "grouperDockerfile; INFO: (containerDockerfileInstallJava.sh) curl -L -o /etc/yum.repos.d/corretto.repo https://yum.corretto.aws/corretto.repo, result: $returnCode"
 if [ $returnCode != 0 ]; then exit $returnCode; fi
 
-yum install -y java-$JAVA_VERSION-amazon-corretto-devel
+dnf install -y java-$JAVA_VERSION-amazon-corretto-devel
 returnCode=$?
-echo "grouperDockerfile; INFO: (containerDockerfileInstallJava.sh) yum install -y java-$JAVA_VERSION-amazon-corretto-devel, result: $returnCode"
+echo "grouperDockerfile; INFO: (containerDockerfileInstallJava.sh) dnf install -y java-$JAVA_VERSION-amazon-corretto-devel, result: $returnCode"
 if [ $returnCode != 0 ]; then exit $returnCode; fi

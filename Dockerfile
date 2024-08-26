@@ -1,4 +1,5 @@
-FROM i2incommon/shibboleth_sp:3.4.1_03082024_rocky8_multiarch
+#FROM i2incommon/shibboleth_sp:3.4.1_03082024_rocky8_multiarch
+FROM i2incommon/shibboleth_sp:3.4.1_05152024_rocky9_multiarch
 
 LABEL author="tier-packaging@internet2.edu <tier-packaging@internet2.edu>" \
       Vendor="TIER" \
@@ -8,17 +9,17 @@ LABEL author="tier-packaging@internet2.edu <tier-packaging@internet2.edu>" \
 
 ARG GROUPER_CONTAINER_VERSION
 
-ENV GROUPER_VERSION=4.14.0 \
-    GROUPER_CONTAINER_VERSION=4.14.0 \
+ENV GROUPER_VERSION=4.15.0 \
+    GROUPER_CONTAINER_VERSION=4.15.0 \
     JAVA_HOME=/usr/lib/jvm/java-17-amazon-corretto \
     PATH=$PATH:$JAVA_HOME/bin \
     GROUPER_HOME=/opt/grouper/grouperWebapp/WEB-INF
 
 #  net-tools curl mlocate strace telnet man vim rsyslog cron httpd mod_ssl cronie
-RUN yum update -y \
-    && yum install -y diffutils logrotate python3-pip rsync sudo patch supervisor wget tar unzip dos2unix file \
+RUN dnf update -y \
+    && dnf install -y diffutils logrotate python3-pip rsync sudo patch supervisor wget tar unzip dos2unix file \
     && pip3 install --upgrade setuptools \
-    && yum clean -y all \
+    && dnf clean -y all \
     && groupadd -g 994 -r tomcat \
     && useradd -u 996 -r -m -s /sbin/nologin -g tomcat tomcat \
     && mkdir -p /opt/container_files
@@ -29,7 +30,7 @@ RUN yum update -y \
 # Install Corretto Java JDK (newer more arch independent way)
 RUN rpm --import https://yum.corretto.aws/corretto.key \
     && curl -L -o /etc/yum.repos.d/corretto.repo https://yum.corretto.aws/corretto.repo \
-    && yum install -y java-17-amazon-corretto-devel
+    && dnf install -y java-17-amazon-corretto-devel
 
 # real copy command (if not caching), uncomment this and change comments of COPY above to work on install script
 COPY container_files/ /opt/container_files/
