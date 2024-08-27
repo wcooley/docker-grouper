@@ -16,7 +16,7 @@ ENV GROUPER_VERSION=5.12.0 \
 
 #  net-tools curl mlocate strace telnet man vim rsyslog cron mod_ssl cronie
 RUN dnf update -y \
-    && dnf install -y logrotate python3-pip rsync sudo patch wget tar unzip dos2unix file net-tools diffutils curl mlocate logrotate strace telnet man vim rsyslog cronie findutils procps \
+    && dnf --allowerasing install -y logrotate python3-pip rsync sudo patch wget tar unzip dos2unix file net-tools diffutils curl mlocate logrotate strace telnet man vim rsyslog cronie findutils procps \
     && pip3 install --upgrade setuptools \
     && dnf clean -y all \
     && groupadd -g 994 -r tomcat \
@@ -29,16 +29,15 @@ RUN dnf update -y \
 # Install Corretto Java JDK (newer more arch independent way)
 RUN rpm --import https://yum.corretto.aws/corretto.key \
     && curl -L -o /etc/yum.repos.d/corretto.repo https://yum.corretto.aws/corretto.repo \
-    && dnf install -y java-17-amazon-corretto-devel
+    && dnf --allowerasing install -y java-17-amazon-corretto-devel
 
 # real copy command (if not caching), uncomment this and change comments of COPY above to work on install script
 COPY container_files/ /opt/container_files/
 
-# TODO put this back in one command
-RUN chmod +x /opt/container_files/docker-build-bin/*.sh
-RUN /opt/container_files/docker-build-bin/containerDockerfileInstallDos2unix.sh /opt/container_files 
-RUN /opt/container_files/docker-build-bin/containerDockerfileInstallGrouper.sh $JAVA_HOME $GROUPER_VERSION
-RUN /opt/container_files/docker-build-bin/containerDockerfileInstall.sh $JAVA_HOME $GROUPER_VERSION
+RUN chmod +x /opt/container_files/docker-build-bin/*.sh \
+  && /opt/container_files/docker-build-bin/containerDockerfileInstallDos2unix.sh /opt/container_files \
+  && /opt/container_files/docker-build-bin/containerDockerfileInstallGrouper.sh $JAVA_HOME $GROUPER_VERSION \
+  && /opt/container_files/docker-build-bin/containerDockerfileInstall.sh $JAVA_HOME $GROUPER_VERSION
 
 
 # testing container
