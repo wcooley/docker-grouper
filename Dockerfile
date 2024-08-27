@@ -1,4 +1,4 @@
-FROM --platform=$TARGETPLATFORM rockylinux:8.8
+FROM --platform=$TARGETPLATFORM rockylinux/rockylinux:9.4
 
 LABEL author="tier-packaging@internet2.edu <tier-packaging@internet2.edu>" \
       Vendor="TIER" \
@@ -8,17 +8,17 @@ LABEL author="tier-packaging@internet2.edu <tier-packaging@internet2.edu>" \
 
 ARG GROUPER_CONTAINER_VERSION
 
-ENV GROUPER_VERSION=5.11.3 \
-    GROUPER_CONTAINER_VERSION=5.11.3 \
+ENV GROUPER_VERSION=5.12.0 \
+    GROUPER_CONTAINER_VERSION=5.12.0 \
     JAVA_HOME=/usr/lib/jvm/java-17-amazon-corretto \
     PATH=$PATH:$JAVA_HOME/bin \
     GROUPER_HOME=/opt/grouper/grouperWebapp/WEB-INF
 
 #  net-tools curl mlocate strace telnet man vim rsyslog cron mod_ssl cronie
-RUN yum update -y \
-    && yum install -y logrotate python3-pip rsync sudo patch wget tar unzip dos2unix file net-tools diffutils curl mlocate logrotate strace telnet man vim rsyslog cronie findutils procps \
+RUN dnf update -y \
+    && dnf install -y logrotate python3-pip rsync sudo patch wget tar unzip dos2unix file net-tools diffutils curl mlocate logrotate strace telnet man vim rsyslog cronie findutils procps \
     && pip3 install --upgrade setuptools \
-    && yum clean -y all \
+    && dnf clean -y all \
     && groupadd -g 994 -r tomcat \
     && useradd -u 996 -r -m -s /sbin/nologin -g tomcat tomcat \
     && mkdir -p /opt/container_files
@@ -29,7 +29,7 @@ RUN yum update -y \
 # Install Corretto Java JDK (newer more arch independent way)
 RUN rpm --import https://yum.corretto.aws/corretto.key \
     && curl -L -o /etc/yum.repos.d/corretto.repo https://yum.corretto.aws/corretto.repo \
-    && yum install -y java-17-amazon-corretto-devel
+    && dnf install -y java-17-amazon-corretto-devel
 
 # real copy command (if not caching), uncomment this and change comments of COPY above to work on install script
 COPY container_files/ /opt/container_files/
