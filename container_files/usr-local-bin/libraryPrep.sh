@@ -438,20 +438,29 @@ prep_finishBegin() {
     fi
     
     if [ -z "$GROUPER_LOG_TO_HOST" ] ; then 
-      echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_analyzeOriginalFiles) export GROUPER_LOG_TO_HOST=false"
+      echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_LOG_TO_HOST=false"
       export GROUPER_LOG_TO_HOST=false
     fi
     if [ -z "$GROUPER_LOG_TO_STDERR" ] ; then 
-      echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_analyzeOriginalFiles) export GROUPER_LOG_TO_STDERR=false"
+      echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_LOG_TO_STDERR=false"
       export GROUPER_LOG_TO_STDERR=false
     fi
-    
+
+    if [ -z "$GROUPER_PLAYWRIGHT_MOVE_JARS" ] ; then 
+      echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_PLAYWRIGHT_MOVE_JARS=false"
+      export GROUPER_PLAYWRIGHT_MOVE_JARS=false
+    fi
+    if [ -z "$GROUPER_PLAYWRIGHT_INSTALL_OS_LIBS" ] ; then 
+      echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_PLAYWRIGHT_INSTALL_OS_LIBS=false"
+      export GROUPER_PLAYWRIGHT_INSTALL_OS_LIBS=false
+    fi
+
     if [ -z "$GROUPER_LOG_TO_PIPE" ] ; then 
       if [ "$GROUPER_LOG_TO_HOST" = "true" ]; then
-        echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_analyzeOriginalFiles) export GROUPER_LOG_TO_PIPE=false"
+        echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_LOG_TO_PIPE=false"
         export GROUPER_LOG_TO_PIPE=false
       else
-        echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_analyzeOriginalFiles) export GROUPER_LOG_TO_PIPE=true"
+        echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_LOG_TO_PIPE=true"
         export GROUPER_LOG_TO_PIPE=true
       fi
     fi
