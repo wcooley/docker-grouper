@@ -11,7 +11,7 @@ setupFilesForComponent_ws() {
        if [ $returnCode != 0 ]; then exit $returnCode; fi
        
        if [ ! -z "$GROUPERWS_URL_WITH_CONTEXT_NOSLASH" ]; then
-        sed -i "s|http://localhost:8400/grouper-ws|/$GROUPERWS_URL_WITH_CONTEXT_NOSLASH/|g" /opt/grouper/grouperWebapp/docs/index.html
+        sed -i "s|http://localhost:8400/grouper-ws|$GROUPERWS_URL_WITH_CONTEXT_NOSLASH|g" /opt/grouper/grouperWebapp/docs/index.html
         returnCode=$?
         echo "grouperContainer; INFO: (librarySetupFilesForComponent.sh-setupFilesForComponent_ws) sed -i \"s|http://localhost:8400/grouper-ws|/$GROUPERWS_URL_WITH_CONTEXT_NOSLASH/|g\" /opt/grouper/grouperWebapp/docs/index.html , result: $returnCode"
         if [ $returnCode != 0 ]; then exit $returnCode; fi
@@ -77,9 +77,9 @@ setupFilesForComponent_quickstart() {
 setupFilesForComponent_playwrightJars() {
   if [ "$GROUPER_PLAYWRIGHT_MOVE_JARS" = "true" ]
      then
-       mv /opt/grouper/grouperWebapp/WEB-INF/libPlaywright/playwright*.jar /opt/grouper/grouperWebapp/WEB-INF/lib/
+       cp -r /opt/grouper/grouperWebapp/WEB-INF/libPlaywright/playwright*.jar /opt/grouper/grouperWebapp/WEB-INF/lib/
        returnCode=$?
-       echo "grouperContainer; INFO: (librarySetupFilesForComponent.sh-setupFilesForComponent_playwright) mv /opt/grouper/grouperWebapp/WEB-INF/libPlaywright/playwright*.jar /opt/grouper/grouperWebapp/WEB-INF/lib/ , result: $returnCode"
+       echo "grouperContainer; INFO: (librarySetupFilesForComponent.sh-setupFilesForComponent_playwright) cp -r /opt/grouper/grouperWebapp/WEB-INF/libPlaywright/playwright*.jar /opt/grouper/grouperWebapp/WEB-INF/lib/ , result: $returnCode"
        if [ $returnCode != 0 ]; then exit $returnCode; fi
   fi
 
