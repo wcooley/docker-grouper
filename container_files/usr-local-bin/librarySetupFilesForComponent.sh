@@ -9,6 +9,25 @@ setupFilesForComponent_ws() {
        returnCode=$?
        echo "grouperContainer; INFO: (librarySetupFilesForComponent.sh-setupFilesForComponent_ws) cp -r /opt/grouper/grouperWebapp/WEB-INF/libWs/* /opt/grouper/grouperWebapp/WEB-INF/lib/ , result: $returnCode"
        if [ $returnCode != 0 ]; then exit $returnCode; fi
+       
+       if [ ! -z "$GROUPERWS_URL_WITH_CONTEXT_NOSLASH" ]; then
+        sed -i "s|http://localhost:8400/grouper-ws|/$GROUPERWS_URL_WITH_CONTEXT_NOSLASH/|g" /opt/grouper/grouperWebapp/docs/index.html
+        returnCode=$?
+        echo "grouperContainer; INFO: (librarySetupFilesForComponent.sh-setupFilesForComponent_ws) sed -i \"s|http://localhost:8400/grouper-ws|/$GROUPERWS_URL_WITH_CONTEXT_NOSLASH/|g\" /opt/grouper/grouperWebapp/docs/index.html , result: $returnCode"
+        if [ $returnCode != 0 ]; then exit $returnCode; fi
+       else
+        echo "grouperContainer; INFO: (librarySetupFilesForComponent.sh-setupFilesForComponent_ws) GROUPERWS_URL_WITH_CONTEXT_NOSLASH is not set, so not adjusting URL in swagger , result: $returnCode"
+       fi
+       
+       if [ ! -z "$GROUPERWS_URL_CONTEXT" ]; then
+        sed -i "s|/grouper-ws/|/$GROUPERWS_URL_CONTEXT/|g" /opt/grouper/grouperWebapp/docs/index.json
+        returnCode=$?
+        echo "grouperContainer; INFO: (librarySetupFilesForComponent.sh-setupFilesForComponent_ws) sed -i \"s|/grouper-ws/|/$GROUPERWS_URL_CONTEXT/|g\" /opt/grouper/grouperWebapp/docs/index.json , result: $returnCode"
+        if [ $returnCode != 0 ]; then exit $returnCode; fi
+       else
+        echo "grouperContainer; INFO: (librarySetupFilesForComponent.sh-setupFilesForComponent_ws) GROUPERWS_URL_CONTEXT is not set, so not adjusting context in swagger , result: $returnCode"
+       fi
+       
   else 
     rm -rf /opt/grouper/grouperWebapp/docs
     returnCode=$?
