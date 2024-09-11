@@ -77,9 +77,9 @@ setupFilesForComponent_quickstart() {
 setupFilesForComponent_playwrightJars() {
   if [ "$GROUPER_PLAYWRIGHT_MOVE_JARS" = "true" ]
      then
-       mv /opt/grouper/grouperWebapp/WEB-INF/libPlaywright/playwriight*.jar /opt/grouper/grouperWebapp/WEB-INF/lib/
+       mv /opt/grouper/grouperWebapp/WEB-INF/libPlaywright/playwright*.jar /opt/grouper/grouperWebapp/WEB-INF/lib/
        returnCode=$?
-       echo "grouperContainer; INFO: (librarySetupFilesForComponent.sh-setupFilesForComponent_playwright) mv /opt/grouper/grouperWebapp/WEB-INF/libPlaywright/playwriight*.jar /opt/grouper/grouperWebapp/WEB-INF/lib/ , result: $returnCode"
+       echo "grouperContainer; INFO: (librarySetupFilesForComponent.sh-setupFilesForComponent_playwright) mv /opt/grouper/grouperWebapp/WEB-INF/libPlaywright/playwright*.jar /opt/grouper/grouperWebapp/WEB-INF/lib/ , result: $returnCode"
        if [ $returnCode != 0 ]; then exit $returnCode; fi
   fi
 
