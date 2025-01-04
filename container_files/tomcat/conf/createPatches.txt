@@ -1,2 +1,2 @@
-# note: get the server.xml into the original, make sure it ends with newline if the file does
+# note: get the server.xml into the original, adjust server.xml.grouper, make sure it ends with newline if the file does
 diff -u server.xml.original server.xml.grouper > server.xml.grouper.patch
