@@ -221,9 +221,9 @@ setupFilesTomcat_serverXml() {
     echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_serverXml) cp /opt/tomcat/conf/server.xml /opt/tomcat/conf/server.xml.currentOriginalInContainer , result: $returnCode"
     if [ $returnCode != 0 ]; then exit $returnCode; fi
 
-    patch /opt/tomcat/conf/server.xml /opt/tomcat/conf/server.xml.grouper.patch
+    patch --ignore-whitespace /opt/tomcat/conf/server.xml /opt/tomcat/conf/server.xml.grouper.patch
     returnCode=$?
-    echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_serverXml) Patch server.xml to apply grouper settings: patch /opt/tomcat/conf/server.xml /opt/tomcat/conf/server.xml.grouper.patch, result: $returnCode"
+    echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_serverXml) Patch server.xml to apply grouper settings: patch --ignore-whitespace /opt/tomcat/conf/server.xml /opt/tomcat/conf/server.xml.grouper.patch, result: $returnCode"
     if [ $returnCode != 0 ]; then exit $returnCode; fi
   else
     echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_serverXml) /opt/tomcat/conf/server.xml is not the original file so will not be edited"
