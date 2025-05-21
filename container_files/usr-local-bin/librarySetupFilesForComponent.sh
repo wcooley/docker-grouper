@@ -75,6 +75,39 @@ setupFilesForComponent_quickstart() {
 
 }
 
+setupFilesForComponent_playwrightJars() {
+  if [ "$GROUPER_PLAYWRIGHT_MOVE_JARS" = "true" ]
+     then
+       cp -r /opt/grouper/grouperWebapp/WEB-INF/libPlaywright/playwright*.jar /opt/grouper/grouperWebapp/WEB-INF/lib/
+       returnCode=$?
+       echo "grouperContainer; INFO: (librarySetupFilesForComponent.sh-setupFilesForComponent_playwright) cp -r /opt/grouper/grouperWebapp/WEB-INF/libPlaywright/playwright*.jar /opt/grouper/grouperWebapp/WEB-INF/lib/ , result: $returnCode"
+       if [ $returnCode != 0 ]; then exit $returnCode; fi
+  fi
+
+}
+
+
+setupFilesForComponent_playwrightInstallOsLibs() {
+  if [ "$GROUPER_PLAYWRIGHT_INSTALL_OS_LIBS" = "true" ]
+     then
+     setupFilesForComponent_playwrightInstallOsLibsHelper
+  fi
+
+}
+
+setupFilesForComponent_playwrightInstallOsLibsHelper() {
+
+  if [[ $EUID -ne 0 ]]; then
+     echo "grouperContainer; ERROR: (librarySetupFilesForComponent.sh-setupFilesForComponent_playwrightInstallOsLibsHelper) This script must be run as root" 
+     exit 1
+  fi
+
+  dnf install -y alsa-lib at-spi2-atk at-spi2-core atk bash cairo cups-libs dbus-libs expat flac-libs gdk-pixbuf2 glib2 glibc gtk3 libX11 libXcomposite libXdamage libXext libXfixes libXrandr libXtst libcanberra-gtk3 libdrm libgcc libstdc++ libxcb libxkbcommon libxshmfence libxslt mesa-libgbm nspr nss nss-util pango policycoreutils policycoreutils-python-utils zlib
+  returnCode=$?
+  echo "grouperContainer; INFO: (librarySetupFilesForComponent.sh-setupFilesForComponent_playwrightInstallOsLibsHelper) dnf install -y alsa-lib at-spi2-atk at-spi2-core atk bash cairo cups-libs dbus-libs expat flac-libs gdk-pixbuf2 glib2 glibc gtk3 libX11 libXcomposite libXdamage libXext libXfixes libXrandr libXtst libcanberra-gtk3 libdrm libgcc libstdc++ libxcb libxkbcommon libxshmfence libxslt mesa-libgbm nspr nss nss-util pango policycoreutils policycoreutils-python-utils zlib , result: $returnCode"
+  if [ $returnCode != 0 ]; then exit $returnCode; fi
+}
+
 setupFilesForComponent() {
   
   setupFilesForComponent_ws
@@ -82,6 +115,10 @@ setupFilesForComponent() {
   setupFilesForComponent_ui
 
   setupFilesForComponent_quickstart
+
+  setupFilesForComponent_playwrightJars
+
+  setupFilesForComponent_playwrightInstallOsLibs
 
 }
 
@@ -92,6 +129,9 @@ setupFilesForComponent_unsetAll() {
   unset -f setupFilesForComponent_ui
   unset -f setupFilesForComponent_unsetAll
   unset -f setupFilesForComponent_ws
+  unset -f setupFilesForComponent_playwrightJars
+  unset -f setupFilesForComponent_playwrightInstallOsLibs
+  unset -f setupFilesForComponent_playwrightInstallOsLibsHelper
 }
 
 setupFilesForComponent_exportAll() {
@@ -100,7 +140,9 @@ setupFilesForComponent_exportAll() {
   export -f setupFilesForComponent_ui
   export -f setupFilesForComponent_unsetAll
   export -f setupFilesForComponent_ws
-  
+  export -f setupFilesForComponent_playwrightJars
+  export -f setupFilesForComponent_playwrightInstallOsLibs
+  export -f setupFilesForComponent_playwrightInstallOsLibsHelper
 }
 
 # export everything
