@@ -1,5 +1,5 @@
---- server.xml.original	2025-01-04 15:19:50
-+++ server.xml.grouper	2025-01-04 15:22:01
+--- server.xml.original	2025-05-21 05:39:23
++++ server.xml.grouper	2025-01-04 15:28:28
 @@ -68,11 +68,12 @@
           APR (HTTP/AJP) Connector: /docs/apr.html
           Define a non-SSL/TLS HTTP/1.1 Connector on port 8080
