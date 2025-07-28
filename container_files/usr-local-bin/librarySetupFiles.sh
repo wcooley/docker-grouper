@@ -188,9 +188,9 @@ setupFiles_chownDirs() {
     # do this last
     if [ "$GROUPER_CHOWN_DIRS" = "true" ]
       then
-        /opt/container_files/docker-build-bin/containerDockerfileInstallPermissions.sh tomcat $GROUPER_TOMCAT_UNIX_GROUP
+        /usr/local/bin/containerDockerfileInstallPermissions.sh tomcat $GROUPER_TOMCAT_UNIX_GROUP
         returnCode=$?
-        echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_chownDirs) /opt/container_files/docker-build-bin/containerDockerfileInstallPermissions.sh tomcat $GROUPER_TOMCAT_UNIX_GROUP, result: $returnCode"
+        echo "grouperContainer; INFO: (librarySetupFiles.sh-setupFiles_chownDirs) /usr/local/bin/containerDockerfileInstallPermissions.sh tomcat $GROUPER_TOMCAT_UNIX_GROUP, result: $returnCode"
         if [ $returnCode != 0 ]; then exit $returnCode; fi
     fi
 }

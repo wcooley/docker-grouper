@@ -178,12 +178,12 @@ prep_finishBegin() {
   
         # default the cert path to self signed and no chain file
         if [ -z "$GROUPER_SSL_CERT_FILE" ] ; then 
-          echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_SSL_CERT_FILE=/opt/container_files/certs/client/localhost.pem"
-          export GROUPER_SSL_CERT_FILE=/opt/container_files/certs/client/localhost.pem
+          echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_SSL_CERT_FILE=/opt/grouper/certs/localhost.pem"
+          export GROUPER_SSL_CERT_FILE=/opt/grouper/certs/localhost.pem
         fi
         if [ -z "$GROUPER_SSL_KEY_FILE" ] ; then 
-          echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_SSL_KEY_FILE=/opt/container_files/certs/keys/localhost.key"
-          export GROUPER_SSL_KEY_FILE=/opt/container_files/certs/keys/localhost.key
+          echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_SSL_KEY_FILE=/opt/grouper/certs/localhost.key"
+          export GROUPER_SSL_KEY_FILE=/opt/grouper/certs/localhost.key
         fi
         if [ -z "$GROUPER_SSL_CHAIN_FILE" ] && [ -z "$GROUPER_SSL_USE_CHAIN_FILE" ] ; then 
           echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishBegin) export GROUPER_SSL_USE_CHAIN_FILE=false"
