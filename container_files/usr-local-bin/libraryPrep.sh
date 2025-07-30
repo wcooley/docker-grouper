@@ -349,6 +349,10 @@ prep_finishEnd() {
       echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishEnd) export GROUPER_MAX_MEMORY=1500m"
       export GROUPER_MAX_MEMORY=1500m
     fi
+    if [ -z "$GROUPER_CRSF_HEADER" ]; then 
+      echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishEnd) export GROUPER_CRSF_HEADER=OWASPCSRFTOKEN"
+      export GROUPER_CRSF_HEADER=OWASPCSRFTOKEN
+    fi
     if [ -z "$GROUPER_CONTEXT_COOKIES" ]; then 
       echo "grouperContainer; INFO: (libraryPrep.sh-prep_finishEnd) export GROUPER_CONTEXT_COOKIES=true"
       export GROUPER_CONTEXT_COOKIES=true

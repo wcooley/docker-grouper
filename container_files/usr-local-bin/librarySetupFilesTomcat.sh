@@ -11,6 +11,7 @@ setupFilesTomcat() {
   setupFilesTomcat_turnOnHttps
   setupFilesTomcat_authn
   setupFilesTomcat_context
+  setupFilesTomcat_owaspHeader
   setupFilesTomcat_ports
   setupFilesTomcat_accessLogs
   setupFilesTomcat_sessionTimeout
@@ -420,6 +421,25 @@ setupFilesTomcat_authn() {
 
 }
 
+setupFilesTomcat_owaspHeader() {
+
+    if [ "$GROUPER_CRSF_HEADER" != "OWASPCSRFTOKEN" ] 
+      then
+      
+        sed -i "s|OWASPCSRFTOKEN|$GROUPER_CRSF_HEADER|g" /opt/grouper/grouperWebapp/grouperExternal/public/assets/js/grouperUi.js
+        returnCode=$?
+        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_owaspHeader) sed -i \"s|OWASPCSRFTOKEN|$GROUPER_CRSF_HEADER|g\" /opt/grouper/grouperWebapp/grouperExternal/public/assets/js/grouperUi.js, result: $returnCode"
+        if [ $returnCode != 0 ]; then exit $returnCode; fi
+
+        sed -i "s|OWASPCSRFTOKEN|$GROUPER_CRSF_HEADER|g" /opt/grouper/grouperWebapp/WEB-INF/classes/Owasp.CsrfGuard.overlay.properties
+        returnCode=$?
+        echo "grouperContainer; INFO: (librarySetupFilesTomcat.sh-setupFilesTomcat_owaspHeader) sed -i \"s|OWASPCSRFTOKEN|$GROUPER_CRSF_HEADER|g\" /opt/grouper/grouperWebapp/WEB-INF/classes/Owasp.CsrfGuard.overlay.properties, result: $returnCode"
+        if [ $returnCode != 0 ]; then exit $returnCode; fi
+
+    fi
+
+}
+
 setupFilesTomcat_sessionTimeout() {
 
   if [ "$GROUPER_RUN_TOMCAT" = "true" ] && [ "$GROUPER_TOMCAT_SESSION_TIMEOUT_MINUTES" != "-2" ]
@@ -585,6 +605,7 @@ setupFilesTomcat_unsetAll() {
   unset -f setupFilesTomcat_authn
   unset -f setupFilesTomcat_authnValve
   unset -f setupFilesTomcat_context
+  unset -f setupFilesTomcat_owaspHeader
   unset -f setupFilesTomcat_ports
   unset -f setupFilesTomcat_remoteCidrValve
   unset -f setupFilesTomcat_remoteIpValve
@@ -608,6 +629,7 @@ setupFilesTomcat_exportAll() {
   export -f setupFilesTomcat_authn
   export -f setupFilesTomcat_authnValve
   export -f setupFilesTomcat_context
+  export -f setupFilesTomcat_owaspHeader
   export -f setupFilesTomcat_ports
   export -f setupFilesTomcat_remoteCidrValve
   export -f setupFilesTomcat_remoteIpValve
