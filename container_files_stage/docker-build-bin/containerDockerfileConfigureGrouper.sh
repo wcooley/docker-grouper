@@ -86,20 +86,6 @@ runCmd "rsync -avzpl $grouperReleaseDir/grouper-ws/grouper-ws/webapp/docs/* $web
 # make gsh executable
 runCmd "chmod +x $webAppDir/WEB-INF/bin/gsh.sh"
 
-# download grouper jars
-for app in grouper grouperClient; do
-    runCmd "curl -L -k https://oss.sonatype.org/service/local/repositories/releases/content/edu/internet2/middleware/grouper/$app/$GROUPER_VERSION/$app-$GROUPER_VERSION.jar --output $webAppDir/WEB-INF/lib/$app-$GROUPER_VERSION.jar"
-done
-
-# Removed in v5: grouper-pspng  grouper-box grouper-duo grouper-azure-provisioner
-for app in grouper-ui; do
-    runCmd "curl -L -k https://oss.sonatype.org/service/local/repositories/releases/content/edu/internet2/middleware/grouper/$app/$GROUPER_VERSION/$app-$GROUPER_VERSION.jar --output $webAppDir/WEB-INF/libUiAndDaemon/$app-$GROUPER_VERSION.jar"
-done
-
-for app in grouper-ws; do
-    runCmd "curl -L -k https://oss.sonatype.org/service/local/repositories/releases/content/edu/internet2/middleware/grouper/$app/$GROUPER_VERSION/$app-$GROUPER_VERSION.jar --output $webAppDir/WEB-INF/libWs/$app-$GROUPER_VERSION.jar"
-done
-
 
 # delete slf4j related jars from all the lib dirs
 ## not needed?

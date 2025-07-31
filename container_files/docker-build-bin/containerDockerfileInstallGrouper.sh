@@ -96,3 +96,18 @@ runCmd "cp -p $grouperReleaseDir/grouper-container/grouper-uiDaemon-container/ta
 # copy dependencies - WS
 runCmd "$MVN -f $grouperReleaseDir/grouper-container/grouper-ws-container -DincludeScope=runtime -Dgrouper.version=$GROUPER_VERSION dependency:copy-dependencies"
 runCmd "cp -p $grouperReleaseDir/grouper-container/grouper-ws-container/target/dependency/*.jar $webAppDir/WEB-INF/libWs"
+
+
+# download grouper jars
+for app in grouper grouperClient; do
+    runCmd "curl -L -k https://oss.sonatype.org/content/repositories/releases/edu/internet2/middleware/grouper/$app/$GROUPER_VERSION/$app-$GROUPER_VERSION.jar --output $webAppDir/WEB-INF/lib/$app-$GROUPER_VERSION.jar"
+done
+
+# Removed in v5: grouper-pspng  grouper-box grouper-duo grouper-azure-provisioner
+for app in grouper-ui; do
+    runCmd "curl -L -k https://oss.sonatype.org/content/repositories/releases/edu/internet2/middleware/grouper/$app/$GROUPER_VERSION/$app-$GROUPER_VERSION.jar --output $webAppDir/WEB-INF/libUiAndDaemon/$app-$GROUPER_VERSION.jar"
+done
+
+for app in grouper-ws; do
+    runCmd "curl -L -k https://oss.sonatype.org/content/repositories/releases/edu/internet2/middleware/grouper/$app/$GROUPER_VERSION/$app-$GROUPER_VERSION.jar --output $webAppDir/WEB-INF/libWs/$app-$GROUPER_VERSION.jar"
+done
