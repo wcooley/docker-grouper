@@ -1,6 +1,0 @@
-FROM i2incommon/grouper:5.7.0
-
-COPY container_files/usr-local-bin /usr/local/bin
-COPY container_files /opt
-
-EXPOSE 8080 8443 8009
