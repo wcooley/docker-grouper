@@ -15,9 +15,9 @@ returnCode=$?
 echo "grouperDockerfile; INFO: (containerDockerfileInstallGrouper.sh) , result: $returnCode"
 if [ $returnCode != 0 ]; then exit $returnCode; fi
 
-wget -q -O /opt/grouper/$GROUPER_VERSION/grouperInstaller.jar https://oss.sonatype.org/service/local/repositories/releases/content/edu/internet2/middleware/grouper/grouper-installer/$GROUPER_VERSION/grouper-installer-$GROUPER_VERSION.jar
+wget -q -O /opt/grouper/$GROUPER_VERSION/grouperInstaller.jar https://oss.sonatype.org/content/repositories/releases/edu/internet2/middleware/grouper/grouper-installer/$GROUPER_VERSION/grouper-installer-$GROUPER_VERSION.jar
 returnCode=$?
-echo "grouperDockerfile; INFO: (containerDockerfileInstallGrouper.sh) wget -q -O /opt/grouper/$GROUPER_VERSION/grouperInstaller.jar https://oss.sonatype.org/service/local/repositories/releases/content/edu/internet2/middleware/grouper/grouper-installer/$GROUPER_VERSION/grouper-installer-$GROUPER_VERSION.jar, result: $returnCode"
+echo "grouperDockerfile; INFO: (containerDockerfileInstallGrouper.sh) wget -q -O /opt/grouper/$GROUPER_VERSION/grouperInstaller.jar https://oss.sonatype.org/content/repositories/releases/edu/internet2/middleware/grouper/grouper-installer/$GROUPER_VERSION/grouper-installer-$GROUPER_VERSION.jar, result: $returnCode"
 if [ $returnCode != 0 ]; then exit $returnCode; fi
 
 mv /opt/container_files/grouper.installer.properties /opt/grouper/$GROUPER_VERSION
